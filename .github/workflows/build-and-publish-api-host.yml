@@ -25,7 +25,7 @@ jobs:
       run: dotnet restore
     
     - name: Build
-      run: dotnet build --no-restore -c Release
+      run: dotnet build src/Laraue.Apps.RealEstate.ApiHost --no-restore -c Release
     
     - name: Upload
       uses: marcodallasanta/ssh-scp-deploy@v1.2.0
