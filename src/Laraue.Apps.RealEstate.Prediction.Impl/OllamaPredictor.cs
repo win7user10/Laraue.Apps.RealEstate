@@ -1,0 +1,237 @@
+﻿using System.Collections;
+using System.Net.Http.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using Microsoft.Extensions.Logging;
+
+namespace Laraue.Apps.RealEstate.Prediction.Impl;
+
+public interface IOllamaPredictor<TModel> where TModel : class
+{
+    public Task<TModel> PredictAsync(
+        string model,
+        string prompt,
+        string base64EncodedImage,
+        CancellationToken ct = default);
+}
+
+public class OllamaPredictor<TModel>(HttpClient client, ILogger<OllamaPredictor<TModel>> logger)
+    : IOllamaPredictor<TModel>
+    where TModel : class
+{
+    private readonly JsonSerializerOptions _options = new()
+    {
+        Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) },
+        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+    };
+
+    private FormatGenerator.OllamaSchemaProperty? _schema;
+    
+    public async Task<TModel> PredictAsync(
+        string model,
+        string prompt,
+        string base64EncodedImage,
+        CancellationToken ct = default)
+    {
+        if (_schema is null)
+        {
+            _schema = FormatGenerator.GetSchema(typeof(TModel));
+            logger.LogInformation("Output schema initiated fot type {Type} {Schema}...", typeof(TModel), _schema);
+        }
+
+        var request = new
+        {
+            temperature = 0,
+            model,
+            prompt,
+            stream = false,
+            images = new[] { base64EncodedImage },
+            format = _schema
+        };
+        
+        var response = await client.PostAsJsonAsync(
+            "api/generate", 
+            request,
+            _options,
+            ct);
+
+        try
+        {
+            response.EnsureSuccessStatusCode();
+            var ollamaResult = await response.Content.ReadFromJsonAsync<OllamaResult>(JsonSerializerOptions.Web, ct);
+            return JsonSerializer.Deserialize<TModel>(ollamaResult!.Response, JsonSerializerOptions.Web)!;
+        }
+        catch (Exception e)
+        {
+            var message = await response.Content.ReadAsStringAsync(ct);
+            throw new InvalidOperationException(message, e);
+        }
+    }
+    
+    private class OllamaResult
+    {
+        public required string Response { get; set; }
+    }
+}
+
+public static class FormatGenerator
+{
+    public static OllamaSchemaProperty GetSchema(Type outputType)
+    {
+        var propertyType = GetOllamaType(outputType);
+
+        return propertyType switch
+        {
+            OllamaSchemaPropertyType.Object => GetObjectSchema(outputType),
+            OllamaSchemaPropertyType.Array => GetArraySchema(outputType),
+            _ => new OllamaSchemaProperty
+            {
+                Type = [propertyType]
+            }
+        };
+    }
+
+    private static OllamaSchemaObjectProperty GetObjectSchema(Type outputType)
+    {
+        var resultProperties = new Dictionary<string, OllamaSchemaProperty>();
+        
+        var properties = outputType.GetProperties();
+        foreach (var property in properties)
+        {
+            resultProperties.Add(property.Name, GetSchema(property.PropertyType));
+        }
+
+        return new OllamaSchemaObjectProperty
+        {
+            Properties = resultProperties,
+            Type = [OllamaSchemaPropertyType.Object]
+        };
+    }
+    
+    private static OllamaSchemaArrayProperty GetArraySchema(Type outputType)
+    {
+        var elementClrType = outputType.GetElementType() ?? throw new InvalidOperationException();
+        var elementType =  GetOllamaType(elementClrType);
+
+        if (elementType is OllamaSchemaPropertyType.Object)
+        {
+            var schema = GetObjectSchema(elementClrType);
+            return new OllamaSchemaArrayProperty
+            {
+                Items = new OllamaSchemaArrayItem
+                {
+                    Type = [elementType],
+                    Properties = schema.Properties,
+                },
+                Type = [OllamaSchemaPropertyType.Array]
+            };
+        }
+
+        if (elementType is OllamaSchemaPropertyType.Array)
+        {
+            return new OllamaSchemaArrayProperty
+            {
+                Items = new OllamaSchemaArrayItem
+                {
+                    Type = [OllamaSchemaPropertyType.Array],
+                },
+                Type = [OllamaSchemaPropertyType.Array]
+            };
+        }
+        else
+        {
+            return new OllamaSchemaArrayProperty
+            {
+                Items = new OllamaSchemaArrayItem
+                {
+                    Type = [elementType],
+                },
+                Type = [OllamaSchemaPropertyType.Array]
+            };
+        }
+    }
+    
+    private static OllamaSchemaPropertyType GetOllamaType(Type type)
+    {
+        if (type == typeof(string))
+        {
+            return OllamaSchemaPropertyType.String;
+        }
+
+        if (type == typeof(int) || type == typeof(long) || type == typeof(float) || type == typeof(double) || type == typeof(decimal))
+        {
+            return OllamaSchemaPropertyType.Number;
+        }
+
+        if (type == typeof(bool))
+        {
+            return OllamaSchemaPropertyType.Boolean;
+        }
+
+        if (type == typeof(DateTime))
+        {
+            return OllamaSchemaPropertyType.String;
+        }
+
+        if (type.IsArray || typeof(IList).IsAssignableFrom(type))
+        {
+            return OllamaSchemaPropertyType.Array;
+        }
+
+        if (typeof(IDictionary).IsAssignableFrom(type))
+        {
+            return OllamaSchemaPropertyType.Object;
+        }
+
+        if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>))
+        {
+            return OllamaSchemaPropertyType.Array;
+        }
+
+        return OllamaSchemaPropertyType.Object;
+    }
+    
+    [JsonDerivedType(typeof(OllamaSchemaObjectProperty))]
+    [JsonDerivedType(typeof(OllamaSchemaArrayProperty))]
+    public class OllamaSchemaProperty
+    {
+        [JsonPropertyName("type")]
+        public required OllamaSchemaPropertyType[] Type { get; init; }
+    }
+    
+    public class OllamaSchemaObjectProperty : OllamaSchemaProperty
+    {
+        [JsonPropertyName("properties")]
+        public required Dictionary<string, OllamaSchemaProperty> Properties { get; init; }
+    }
+    
+    public class OllamaSchemaArrayProperty : OllamaSchemaProperty
+    {
+        public OllamaSchemaArrayProperty()
+        {
+            Type = [OllamaSchemaPropertyType.Array];
+        }
+        
+        [JsonPropertyName("items")]
+        public required OllamaSchemaArrayItem Items { get; init; }
+    }
+
+    public class OllamaSchemaArrayItem
+    {
+        [JsonPropertyName("type")]
+        public required OllamaSchemaPropertyType[] Type { get; init; }
+        
+        [JsonPropertyName("properties")]
+        public Dictionary<string, OllamaSchemaProperty>? Properties { get; init; }
+    }
+
+    public enum OllamaSchemaPropertyType
+    {
+        Null,
+        Boolean,
+        Number,
+        String,
+        Array,
+        Object,
+    }
+}

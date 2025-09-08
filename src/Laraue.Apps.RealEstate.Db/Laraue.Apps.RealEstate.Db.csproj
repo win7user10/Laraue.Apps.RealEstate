@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Laraue.Core.Extensions.Hosting.EfCore" Version="9.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Laraue.Core.DataAccess.Linq2DB" Version="9.0.0" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
+    <PackageReference Include="EFCore.NamingConventions" Version="9.0.0" />
+    <PackageReference Include="Laraue.Telegram.NET.Authentication" Version="2.6.1" />
+    <PackageReference Include="Laraue.Telegram.NET.Interceptors.EFCore" Version="2.6.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Laraue.Apps.RealEstate.Abstractions\Laraue.Apps.RealEstate.Abstractions.csproj" />
+    <ProjectReference Include="..\Laraue.Apps.RealEstate.Crawling.Abstractions\Laraue.Apps.RealEstate.Crawling.Abstractions.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Data\metro.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,499 @@
+﻿[
+  {
+    "id": 1,
+    "cianId":167,
+    "name":"Девяткино",
+    "color":"#cf0000",
+    "priority": 4
+  },
+  {
+    "id": 2,
+    "cianId":168,
+    "name":"Гражданский проспект",
+    "color":"#cf0000",
+    "priority": 4
+  },
+  {
+    "id": 3,
+    "cianId":169,
+    "name":"Академическая",
+    "color":"#cf0000",
+    "priority": 3
+  },
+  {
+    "id": 4,
+    "cianId":170,
+    "name":"Политехническая",
+    "color":"#cf0000",
+    "priority": 3
+  },
+  {
+    "id": 5,
+    "cianId":171,
+    "name":"Площадь Мужества",
+    "color":"#cf0000",
+    "priority": 3
+  },
+  {
+    "id": 6,
+    "cianId":172,
+    "name":"Лесная",
+    "color":"#cf0000",
+    "priority": 2
+  },
+  {
+    "id": 7,
+    "cianId":173,
+    "name":"Выборгская",
+    "color":"#cf0000",
+    "priority": 2
+  },
+  {
+    "id": 8,
+    "cianId":174,
+    "name":"Площадь Ленина",
+    "color":"#cf0000",
+    "priority": 2
+  },
+  {
+    "id": 9,
+    "cianId":175,
+    "name":"Чернышевская",
+    "color":"#cf0000",
+    "priority": 2
+  },
+  {
+    "id": 10,
+    "cianId":176,
+    "name":"Площадь Восстания",
+    "color":"#cf0000",
+    "priority": 1
+  },
+  {
+    "id": 11,
+    "cianId":177,
+    "name":"Владимирская",
+    "color":"#cf0000",
+    "priority": 1
+  },
+  {
+    "id": 12,
+    "cianId":178,
+    "name":"Пушкинская",
+    "color":"#cf0000",
+    "priority": 1
+  },
+  {
+    "id": 13,
+    "cianId":179,
+    "name":"Технологический институт",
+    "color":"#03238b",
+    "priority": 2
+  },
+  {
+    "id": 14,
+    "cianId":180,
+    "name":"Балтийская",
+    "color":"#cf0000",
+    "priority": 3
+  },
+  {
+    "id": 15,
+    "cianId":181,
+    "name":"Нарвская",
+    "color":"#cf0000",
+    "priority": 3
+  },
+  {
+    "id": 16,
+    "cianId":182,
+    "name":"Кировский завод",
+    "color":"#cf0000",
+    "priority": 4
+  },
+  {
+    "id": 17,
+    "cianId":183,
+    "name":"Автово",
+    "color":"#cf0000",
+    "priority": 4
+  },
+  {
+    "id": 18,
+    "cianId":184,
+    "name":"Ленинский проспект",
+    "color":"#cf0000",
+    "priority": 4
+  },
+  {
+    "id": 19,
+    "cianId":185,
+    "name":"Проспект Ветеранов",
+    "color":"#cf0000",
+    "priority": 4
+  },
+  {
+    "id": 20,
+    "cianId":186,
+    "name":"Парнас",
+    "color":"#03238b",
+    "priority": 4
+  },
+  {
+    "id": 21,
+    "cianId":187,
+    "name":"Проспект Просвещения",
+    "color":"#03238b",
+    "priority": 4
+  },
+  {
+    "id": 22,
+    "cianId":188,
+    "name":"Озерки",
+    "color":"#03238b",
+    "priority": 4
+  },
+  {
+    "id": 23,
+    "cianId":189,
+    "name":"Удельная",
+    "color":"#03238b",
+    "priority": 3
+  },
+  {
+    "id": 24,
+    "cianId":190,
+    "name":"Пионерская",
+    "color":"#03238b",
+    "priority": 3
+  },
+  {
+    "id": 25,
+    "cianId":191,
+    "name":"Черная речка",
+    "color":"#03238b",
+    "priority": 3
+  },
+  {
+    "id": 26,
+    "cianId":192,
+    "name":"Петроградская",
+    "color":"#03238b",
+    "priority": 1
+  },
+  {
+    "id": 27,
+    "cianId":193,
+    "name":"Горьковская",
+    "color":"#03238b",
+    "priority": 1
+  },
+  {
+    "id": 28,
+    "cianId":194,
+    "name":"Невский проспект",
+    "color":"#03238b",
+    "priority": 1
+  },
+  {
+    "id": 29,
+    "cianId":195,
+    "name":"Сенная площадь",
+    "color":"#03238b",
+    "priority": 1
+  },
+  {
+    "id": 30,
+    "cianId":197,
+    "name":"Фрунзенская",
+    "color":"#03238b",
+    "priority": 3
+  },
+  {
+    "id": 31,
+    "cianId":198,
+    "name":"Московские Ворота",
+    "color":"#03238b",
+    "priority": 3
+  },
+  {
+    "id": 32,
+    "cianId":199,
+    "name":"Электросила",
+    "color":"#03238b",
+    "priority": 2
+  },
+  {
+    "id": 33,
+    "cianId":200,
+    "name":"Парк Победы",
+    "color":"#03238b",
+    "priority": 3
+  },
+  {
+    "id": 34,
+    "cianId":201,
+    "name":"Московская",
+    "color":"#03238b",
+    "priority": 3
+  },
+  {
+    "id": 35,
+    "cianId":202,
+    "name":"Звездная",
+    "color":"#03238b",
+    "priority": 4
+  },
+  {
+    "id": 36,
+    "cianId":203,
+    "name":"Купчино",
+    "color":"#03238b",
+    "priority": 4
+  },
+  {
+    "id": 37,
+    "cianId":204,
+    "name":"Приморская",
+    "color":"#00701a",
+    "priority": 4
+  },
+  {
+    "id": 38,
+    "cianId":205,
+    "name":"Василеостровская",
+    "color":"#00701a",
+    "priority": 2
+  },
+  {
+    "id": 39,
+    "cianId":206,
+    "name":"Гостиный Двор",
+    "color":"#00701a",
+    "priority": 1
+  },
+  {
+    "id": 40,
+    "cianId":207,
+    "name":"Маяковская",
+    "color":"#00701a",
+    "priority": 1
+  },
+  {
+    "id": 41,
+    "cianId":208,
+    "name":"Площадь Александра Невского",
+    "color":"#ff7f00",
+    "priority": 2
+  },
+  {
+    "id": 42,
+    "cianId":210,
+    "name":"Елизаровская",
+    "color":"#00701a",
+    "priority": 3
+  },
+  {
+    "id": 43,
+    "cianId":211,
+    "name":"Ломоносовская",
+    "color":"#00701a",
+    "priority": 3
+  },
+  {
+    "id": 44,
+    "cianId":212,
+    "name":"Пролетарская",
+    "color":"#00701a",
+    "priority": 4
+  },
+  {
+    "id": 45,
+    "cianId":213,
+    "name":"Обухово",
+    "color":"#00701a",
+    "priority": 4
+  },
+  {
+    "id": 46,
+    "cianId":214,
+    "name":"Рыбацкое",
+    "color":"#00701a",
+    "priority": 4
+  },
+  {
+    "id": 47,
+    "cianId":215,
+    "name":"Комендантский проспект",
+    "color":"#94007c",
+    "priority": 4
+  },
+  {
+    "id": 48,
+    "cianId":216,
+    "name":"Старая Деревня",
+    "color":"#94007c",
+    "priority": 4
+  },
+  {
+    "id": 49,
+    "cianId":217,
+    "name":"Крестовский остров",
+    "color":"#94007c",
+    "priority": 2
+  },
+  {
+    "id": 50,
+    "cianId":218,
+    "name":"Чкаловская",
+    "color":"#94007c",
+    "priority": 1
+  },
+  {
+    "id": 51,
+    "cianId":219,
+    "name":"Спортивная",
+    "color":"#94007c",
+    "priority": 2
+  },
+  {
+    "id": 52,
+    "cianId":220,
+    "name":"Садовая",
+    "color":"#94007c",
+    "priority": 1
+  },
+  {
+    "id": 53,
+    "cianId":221,
+    "name":"Достоевская",
+    "color":"#ff7f00",
+    "priority": 1
+  },
+  {
+    "id": 54,
+    "cianId":222,
+    "name":"Лиговский проспект",
+    "color":"#ff7f00",
+    "priority": 1
+  },
+  {
+    "id": 55,
+    "cianId":224,
+    "name":"Новочеркасская",
+    "color":"#ff7f00",
+    "priority": 3
+  },
+  {
+    "id": 56,
+    "cianId":225,
+    "name":"Ладожская",
+    "color":"#ff7f00",
+    "priority": 3
+  },
+  {
+    "id": 57,
+    "cianId":226,
+    "name":"Проспект Большевиков",
+    "color":"#ff7f00",
+    "priority": 4
+  },
+  {
+    "id": 58,
+    "cianId":227,
+    "name":"Улица Дыбенко",
+    "color":"#ff7f00",
+    "priority": 4
+  },
+  {
+    "id": 59,
+    "cianId":230,
+    "name":"Волковская",
+    "color":"#94007c",
+    "priority": 3
+  },
+  {
+    "id": 60,
+    "cianId":231,
+    "name":"Звенигородская",
+    "color":"#94007c",
+    "priority": 1
+  },
+  {
+    "id": 61,
+    "cianId":232,
+    "name":"Спасская",
+    "color":"#ff7f00",
+    "priority": 1
+  },
+  {
+    "id": 62,
+    "cianId":241,
+    "name":"Обводный канал",
+    "color":"#94007c",
+    "priority": 2
+  },
+  {
+    "id": 63,
+    "cianId":242,
+    "name":"Адмиралтейская",
+    "color":"#94007c",
+    "priority": 1
+  },
+  {
+    "id": 64,
+    "cianId":246,
+    "name":"Международная",
+    "color":"#94007c",
+    "priority": 4
+  },
+  {
+    "id": 65,
+    "cianId":247,
+    "name":"Бухарестская",
+    "color":"#94007c",
+    "priority": 4
+  },
+  {
+    "id": 66,
+    "cianId":355,
+    "name":"Беговая",
+    "color":"#00701a",
+    "priority": 4
+  },
+  {
+    "id": 67,
+    "cianId":356,
+    "name":"Новокрестовская",
+    "color":"#00701a",
+    "priority": 3
+  },
+  {
+    "id": 68,
+    "cianId":357,
+    "name":"Проспект Славы",
+    "color":"#94007c",
+    "priority": 4
+  },
+  {
+    "id": 69,
+    "cianId":358,
+    "name":"Дунайская",
+    "color":"#94007c",
+    "priority": 4
+  },
+  {
+    "id": 70,
+    "cianId":359,
+    "name":"Шушары",
+    "color":"#94007c",
+    "priority": 4
+  },
+  {
+    "id": 71,
+    "cianId":382,
+    "name":"Горный институт",
+    "color":"#ff7f00",
+    "priority": 4
+  }
+]
