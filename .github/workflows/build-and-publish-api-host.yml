@@ -22,7 +22,7 @@ jobs:
         dotnet-version: 9.0.x
     
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore src/Laraue.Apps.RealEstate.ApiHost
     
     - name: Build
       run: dotnet build src/Laraue.Apps.RealEstate.ApiHost --no-restore -c Release
