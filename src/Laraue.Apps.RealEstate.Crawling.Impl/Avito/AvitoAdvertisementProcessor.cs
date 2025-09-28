@@ -11,14 +11,12 @@ public sealed class AvitoAdvertisementProcessor : BaseAdvertisementProcessor<lon
 {
     public AvitoAdvertisementProcessor(
         AdvertisementsDbContext dbContext,
-        IRemoteImagesPredictor imagesPredictor,
         IAverageRatingCalculator calculator,
         IMetroStationsStorage metroStationsStorage,
         IAdvertisementComputedFieldsCalculator computedFieldsCalculator)
         : base(
             AdvertisementSource.Avito,
             dbContext,
-            imagesPredictor,
             calculator,
             computedFieldsCalculator,
             metroStationsStorage)

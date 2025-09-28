@@ -6,18 +6,24 @@ using Microsoft.Extensions.Logging;
 
 namespace Laraue.Apps.RealEstate.Prediction.Impl;
 
-public interface IOllamaPredictor<TModel> where TModel : class
+public interface IOllamaPredictor
 {
-    public Task<TModel> PredictAsync(
+    public Task<TModel> PredictAsync<TModel>(
         string model,
         string prompt,
         string base64EncodedImage,
-        CancellationToken ct = default);
+        CancellationToken ct = default)
+        where TModel : class;
+    
+    public Task<TModel> PredictAsync<TModel>(
+        string model,
+        string prompt,
+        CancellationToken ct = default)
+        where TModel : class;
 }
 
-public class OllamaPredictor<TModel>(HttpClient client, ILogger<OllamaPredictor<TModel>> logger)
-    : IOllamaPredictor<TModel>
-    where TModel : class
+public class OllamaPredictor(HttpClient client, ILogger<OllamaPredictor> logger)
+    : IOllamaPredictor
 {
     private readonly JsonSerializerOptions _options = new()
     {
@@ -25,29 +31,47 @@ public class OllamaPredictor<TModel>(HttpClient client, ILogger<OllamaPredictor<
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
     };
 
-    private FormatGenerator.OllamaSchemaProperty? _schema;
+    private Dictionary<Type, FormatGenerator.OllamaSchemaProperty?> _schemas = new ();
     
-    public async Task<TModel> PredictAsync(
+    public Task<TModel> PredictAsync<TModel>(string model, string prompt, string base64EncodedImage, CancellationToken ct = default)
+        where TModel : class
+    {
+        return PredictInternalAsync<TModel>(model, prompt, base64EncodedImage, ct);
+    }
+
+    public Task<TModel> PredictAsync<TModel>(string model, string prompt, CancellationToken ct = default)
+        where TModel : class
+    {
+        return PredictInternalAsync<TModel>(model, prompt, null, ct);
+    }
+    
+    private async Task<TModel> PredictInternalAsync<TModel>(
         string model,
         string prompt,
-        string base64EncodedImage,
+        string? base64EncodedImage,
         CancellationToken ct = default)
+        where TModel : class
     {
-        if (_schema is null)
+        if (!_schemas.TryGetValue(typeof(TModel), out var schema))
         {
-            _schema = FormatGenerator.GetSchema(typeof(TModel));
-            logger.LogInformation("Output schema initiated fot type {Type} {Schema}...", typeof(TModel), _schema);
+            schema = FormatGenerator.GetSchema(typeof(TModel));
+            logger.LogInformation("Output schema initiated fot type {Type} {Schema}...", typeof(TModel), schema);
+            _schemas.Add(typeof(TModel), schema);
         }
 
-        var request = new
+        var request = new Dictionary<string, object>()
         {
-            temperature = 0,
-            model,
-            prompt,
-            stream = false,
-            images = new[] { base64EncodedImage },
-            format = _schema
+            ["temperature"] = 0,
+            ["model"] = model,
+            ["prompt"] = prompt,
+            ["stream"] = false,
+            ["format"] = schema!,
         };
+
+        if (base64EncodedImage is not null)
+        {
+            request["images"] = new[] { base64EncodedImage };
+        }
         
         var response = await client.PostAsJsonAsync(
             "api/generate", 
@@ -67,7 +91,8 @@ public class OllamaPredictor<TModel>(HttpClient client, ILogger<OllamaPredictor<
             throw new InvalidOperationException(message, e);
         }
     }
-    
+
+
     private class OllamaResult
     {
         public required string Response { get; set; }
@@ -113,41 +138,39 @@ public static class FormatGenerator
         var elementClrType = outputType.GetElementType() ?? throw new InvalidOperationException();
         var elementType =  GetOllamaType(elementClrType);
 
-        if (elementType is OllamaSchemaPropertyType.Object)
+        switch (elementType)
         {
-            var schema = GetObjectSchema(elementClrType);
-            return new OllamaSchemaArrayProperty
+            case OllamaSchemaPropertyType.Object:
             {
-                Items = new OllamaSchemaArrayItem
+                var schema = GetObjectSchema(elementClrType);
+                return new OllamaSchemaArrayProperty
                 {
-                    Type = [elementType],
-                    Properties = schema.Properties,
-                },
-                Type = [OllamaSchemaPropertyType.Array]
-            };
-        }
-
-        if (elementType is OllamaSchemaPropertyType.Array)
-        {
-            return new OllamaSchemaArrayProperty
-            {
-                Items = new OllamaSchemaArrayItem
+                    Items = new OllamaSchemaArrayItem
+                    {
+                        Type = [elementType],
+                        Properties = schema.Properties,
+                    },
+                    Type = [OllamaSchemaPropertyType.Array]
+                };
+            }
+            case OllamaSchemaPropertyType.Array:
+                return new OllamaSchemaArrayProperty
                 {
-                    Type = [OllamaSchemaPropertyType.Array],
-                },
-                Type = [OllamaSchemaPropertyType.Array]
-            };
-        }
-        else
-        {
-            return new OllamaSchemaArrayProperty
-            {
-                Items = new OllamaSchemaArrayItem
+                    Items = new OllamaSchemaArrayItem
+                    {
+                        Type = [OllamaSchemaPropertyType.Array],
+                    },
+                    Type = [OllamaSchemaPropertyType.Array]
+                };
+            default:
+                return new OllamaSchemaArrayProperty
                 {
-                    Type = [elementType],
-                },
-                Type = [OllamaSchemaPropertyType.Array]
-            };
+                    Items = new OllamaSchemaArrayItem
+                    {
+                        Type = [elementType],
+                    },
+                    Type = [OllamaSchemaPropertyType.Array]
+                };
         }
     }
     

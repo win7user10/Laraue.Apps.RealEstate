@@ -53,5 +53,5 @@ public sealed class Advertisement
 
     public ICollection<AdvertisementTransportStop> TransportStops { get; init; } = new List<AdvertisementTransportStop>();
     
-    public ICollection<AdvertisementImage> Images { get; init; } = new List<AdvertisementImage>();
+    public ICollection<AdvertisementImage> LinkedImages { get; init; } = new List<AdvertisementImage>();
 }

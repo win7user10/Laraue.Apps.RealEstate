@@ -9,7 +9,7 @@ public interface IPredictor
 }
 
 public class OllamaRealEstatePredictor(
-    IOllamaPredictor<OllamaPredictionResult> ollamaPredictor,
+    IOllamaPredictor ollamaPredictor,
     ILogger<OllamaRealEstatePredictor> logger)
     : IPredictor
 {
@@ -22,9 +22,9 @@ public class OllamaRealEstatePredictor(
         return polly.ExecuteAsync(async () => await PredictInternalAsync(base64EncodedImage, ct));
     }
 
-    private Task<OllamaPredictionResult> PredictInternalAsync(string base64EncodedImage, CancellationToken ct = default)
+    private async Task<OllamaPredictionResult> PredictInternalAsync(string base64EncodedImage, CancellationToken ct = default)
     {
-        var prompt = @"
+        var promptImageAnalyze = @"
 Analyze this image and determine if it depicts a flat interior, whether it has been renovated, and provide a renovation rating.
 Return as JSON.
 ```
@@ -57,11 +57,34 @@ The next things are matter when classifying
 ```
 ";
         
-        return ollamaPredictor.PredictAsync(
+        var predictionResult = await ollamaPredictor.PredictAsync<OllamaPredictionResult>(
             "gemma3:4b",
-            prompt,
+            promptImageAnalyze,
             base64EncodedImage,
             ct);
+
+        const string prompt = @"
+Check provided tags and return json.
+```
+{
+  isApplicable: True when tags mentions flat interior, renovation. False if exterior mentions.
+}
+```
+";
+
+        var currentPrompt = string.Join(',', predictionResult.Tags) + prompt;
+
+        var checkResult = await ollamaPredictor.PredictAsync<CheckTagsResult>(
+            "gemma3:4b",
+            currentPrompt,
+            ct);
+
+        return new OllamaPredictionResult
+        {
+            RenovationRating = checkResult.IsApplicable ? predictionResult.RenovationRating : 0,
+            Description = predictionResult.Description,
+            Tags = predictionResult.Tags,
+        };
     }
 }
 
@@ -70,4 +93,9 @@ public record OllamaPredictionResult
     public double RenovationRating { get; init; }
     public string[] Tags { get; init; } = [];
     public string Description { get; init; } = string.Empty;
+}
+
+public record CheckTagsResult
+{
+    public bool IsApplicable { get; init; }
 }

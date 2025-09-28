@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Laraue.Apps.RealEstate.Db;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Laraue.Apps.RealEstate.Db.Migrations
 {
     [DbContext(typeof(AdvertisementsDbContext))]
-    partial class AdvertisimentsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250928075544_MakeImagesRelationManyToMany")]
+    partial class MakeImagesRelationManyToMany
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -105,17 +108,8 @@ namespace Laraue.Apps.RealEstate.Db.Migrations
                     b.HasKey("Id")
                         .HasName("pk_advertisements");
 
-                    b.HasIndex("FloorNumber")
-                        .HasDatabaseName("ix_advertisements_floor_number");
-
-                    b.HasIndex("RoomsCount")
-                        .HasDatabaseName("ix_advertisements_rooms_count");
-
                     b.HasIndex("SourceId")
                         .HasDatabaseName("ix_advertisements_source_id");
-
-                    b.HasIndex("Square")
-                        .HasDatabaseName("ix_advertisements_square");
 
                     b.HasIndex("UpdatedAt")
                         .HasDatabaseName("ix_advertisements_updated_at");

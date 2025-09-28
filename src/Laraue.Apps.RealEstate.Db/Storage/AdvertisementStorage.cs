@@ -146,13 +146,13 @@ public sealed class AdvertisementStorage : IAdvertisementStorage
                 }),
             RealSquareMeterPrice = Math.Round(x.SquareMeterPredictedPrice, 2),
             UpdatedAt = x.UpdatedAt,
-            Images = x.Images
+            Images = x.LinkedImages
                 .Select(y => new AdvertisementImageDto
                 {
-                    Url = y.Url,
-                    Description = y.Decription,
-                    RenovationRating = y.RenovationRating,
-                    Tags = y.Tags,
+                    Url = y.Image.Url,
+                    Description = y.Image.Description,
+                    RenovationRating = y.Image.RenovationRating,
+                    Tags = y.Image.Tags,
                 })
         }).ShortPaginateEFAsync(request);
     }

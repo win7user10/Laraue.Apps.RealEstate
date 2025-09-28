@@ -11,14 +11,12 @@ public sealed class CianAdvertisementProcessor : BaseAdvertisementProcessor<int>
 {
     public CianAdvertisementProcessor(
         AdvertisementsDbContext dbContext,
-        IRemoteImagesPredictor imagesPredictor,
         IAverageRatingCalculator calculator,
         IMetroStationsStorage metroStationsStorage,
         IAdvertisementComputedFieldsCalculator computedFieldsCalculator)
         : base(
             AdvertisementSource.Cian,
             dbContext,
-            imagesPredictor,
             calculator,
             computedFieldsCalculator,
             metroStationsStorage)

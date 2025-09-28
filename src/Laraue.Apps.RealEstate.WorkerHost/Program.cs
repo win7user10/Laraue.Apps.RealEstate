@@ -50,7 +50,8 @@ services.AddScoped<IMetroStationsStorage, MetroStationsStorage>();
 services.AddSingleton<IMemoryCache>(new MemoryCache(new MemoryCacheOptions()));
 services.AddSingleton<IAdvertisementComputedFieldsCalculator, AdvertisementComputedFieldsCalculator>();
 services.AddSingleton<IPageParser, PageParser>();
-services.AddHttpClient<IPredictor, OllamaRealEstatePredictor>(x =>
+services.AddScoped<IPredictor, OllamaRealEstatePredictor>();
+services.AddHttpClient<IOllamaPredictor, OllamaPredictor>(x =>
 {
     x.BaseAddress = new Uri("http://localhost:11434/");
 });

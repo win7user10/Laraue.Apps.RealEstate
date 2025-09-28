@@ -94,10 +94,10 @@ public class CianAdvertisementProcessorTests : TestWithDatabase
             SourceId = "12",
             TotalFloorsNumber = 5,
             ShortDescription = "abc",
-            Images = new List<AdvertisementImage>()
+            LinkedImages = new List<AdvertisementImage>()
             {
-                new () { RenovationRating = 0.54, Url = "link1" },
-                new () { RenovationRating = 0.52, Url = "link2" },
+                new() { Image = new () { RenovationRating = 0.54, Url = "link1" } },
+                new() { Image = new () { RenovationRating = 0.52, Url = "link2" } },
             },
             TransportStops = new List<AdvertisementTransportStop>()
             {
@@ -118,15 +118,15 @@ public class CianAdvertisementProcessorTests : TestWithDatabase
                 RoomsCount = 2,
                 ShortDescription = "sh",
                 TotalPrice = 10_000_000,
-                TransportStops = new TransportStop[]
-                {
-                     new ()
+                TransportStops =
+                [
+                    new ()
                      {
                          Minutes = 10,
                          DistanceType = DistanceType.Foot,
                          Name = "Лесная"
                      }
-                },
+                ],
                 UpdatedAt = new DateTime(2023, 01, 01, 0, 0, 0, DateTimeKind.Utc),
                 TotalFloorsNumber = 9,
             }
@@ -150,6 +150,6 @@ public class CianAdvertisementProcessorTests : TestWithDatabase
         Assert.Equal(10_000_000, advertisement.TotalPrice);
         
         Assert.Equal(2, advertisement.TransportStops.Count);
-        Assert.Equal(2, advertisement.Images.Count);
+        Assert.Equal(2, advertisement.LinkedImages.Count);
     }
 }

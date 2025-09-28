@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Laraue.Apps.RealEstate.Db;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Laraue.Apps.RealEstate.Db.Migrations
 {
     [DbContext(typeof(AdvertisementsDbContext))]
-    partial class AdvertisimentsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250928062440_Init")]
+    partial class Init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -105,17 +108,8 @@ namespace Laraue.Apps.RealEstate.Db.Migrations
                     b.HasKey("Id")
                         .HasName("pk_advertisements");
 
-                    b.HasIndex("FloorNumber")
-                        .HasDatabaseName("ix_advertisements_floor_number");
-
-                    b.HasIndex("RoomsCount")
-                        .HasDatabaseName("ix_advertisements_rooms_count");
-
                     b.HasIndex("SourceId")
                         .HasDatabaseName("ix_advertisements_source_id");
-
-                    b.HasIndex("Square")
-                        .HasDatabaseName("ix_advertisements_square");
 
                     b.HasIndex("UpdatedAt")
                         .HasDatabaseName("ix_advertisements_updated_at");
@@ -125,19 +119,48 @@ namespace Laraue.Apps.RealEstate.Db.Migrations
 
             modelBuilder.Entity("Laraue.Apps.RealEstate.Db.Models.AdvertisementImage", b =>
                 {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
                     b.Property<long>("AdvertisementId")
                         .HasColumnType("bigint")
                         .HasColumnName("advertisement_id");
 
-                    b.Property<long>("ImageId")
-                        .HasColumnType("bigint")
-                        .HasColumnName("image_id");
+                    b.Property<string>("Description")
+                        .HasColumnType("text")
+                        .HasColumnName("description");
 
-                    b.HasKey("AdvertisementId", "ImageId")
+                    b.Property<int>("ProcessState")
+                        .HasColumnType("integer")
+                        .HasColumnName("process_state");
+
+                    b.Property<double>("RenovationRating")
+                        .HasColumnType("double precision")
+                        .HasColumnName("renovation_rating");
+
+                    b.PrimitiveCollection<string[]>("Tags")
+                        .IsRequired()
+                        .HasColumnType("text[]")
+                        .HasColumnName("tags");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("url");
+
+                    b.HasKey("Id")
                         .HasName("pk_advertisement_images");
 
-                    b.HasIndex("ImageId")
-                        .HasDatabaseName("ix_advertisement_images_image_id");
+                    b.HasIndex("AdvertisementId")
+                        .HasDatabaseName("ix_advertisement_images_advertisement_id");
+
+                    b.HasIndex("Url")
+                        .IsUnique()
+                        .HasDatabaseName("ix_advertisement_images_url");
 
                     b.ToTable("advertisement_images", (string)null);
                 });
@@ -224,47 +247,6 @@ namespace Laraue.Apps.RealEstate.Db.Migrations
                         .HasDatabaseName("ix_crawling_session_advertisements_crawling_session_id");
 
                     b.ToTable("crawling_session_advertisements", (string)null);
-                });
-
-            modelBuilder.Entity("Laraue.Apps.RealEstate.Db.Models.Image", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
-                    b.Property<string>("Description")
-                        .HasColumnType("text")
-                        .HasColumnName("description");
-
-                    b.Property<int>("ProcessState")
-                        .HasColumnType("integer")
-                        .HasColumnName("process_state");
-
-                    b.Property<double>("RenovationRating")
-                        .HasColumnType("double precision")
-                        .HasColumnName("renovation_rating");
-
-                    b.PrimitiveCollection<string[]>("Tags")
-                        .IsRequired()
-                        .HasColumnType("text[]")
-                        .HasColumnName("tags");
-
-                    b.Property<string>("Url")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("url");
-
-                    b.HasKey("Id")
-                        .HasName("pk_images");
-
-                    b.HasIndex("Url")
-                        .IsUnique()
-                        .HasDatabaseName("ix_images_url");
-
-                    b.ToTable("images", (string)null);
                 });
 
             modelBuilder.Entity("Laraue.Apps.RealEstate.Db.Models.Selection", b =>
@@ -983,22 +965,13 @@ namespace Laraue.Apps.RealEstate.Db.Migrations
             modelBuilder.Entity("Laraue.Apps.RealEstate.Db.Models.AdvertisementImage", b =>
                 {
                     b.HasOne("Laraue.Apps.RealEstate.Db.Models.Advertisement", "Advertisement")
-                        .WithMany("LinkedImages")
+                        .WithMany("Images")
                         .HasForeignKey("AdvertisementId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_advertisement_images_advertisements_advertisement_id");
 
-                    b.HasOne("Laraue.Apps.RealEstate.Db.Models.Image", "Image")
-                        .WithMany()
-                        .HasForeignKey("ImageId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_advertisement_images_images_image_id");
-
                     b.Navigation("Advertisement");
-
-                    b.Navigation("Image");
                 });
 
             modelBuilder.Entity("Laraue.Apps.RealEstate.Db.Models.AdvertisementTransportStop", b =>
@@ -1057,7 +1030,7 @@ namespace Laraue.Apps.RealEstate.Db.Migrations
 
             modelBuilder.Entity("Laraue.Apps.RealEstate.Db.Models.Advertisement", b =>
                 {
-                    b.Navigation("LinkedImages");
+                    b.Navigation("Images");
 
                     b.Navigation("TransportStops");
                 });

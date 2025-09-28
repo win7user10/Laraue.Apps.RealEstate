@@ -18,9 +18,9 @@ public class RemoteImagesPredictorTests
         _predictor = new RemoteImagesPredictor(
             new Mock<ILogger<RemoteImagesPredictor>>().Object,
             new OllamaRealEstatePredictor(
-                new OllamaPredictor<OllamaPredictionResult>(
+                new OllamaPredictor(
                     new HttpClient { BaseAddress = new Uri("http://localhost:11434/") },
-                    new Mock<ILogger<OllamaPredictor<OllamaPredictionResult>>>().Object),
+                    new Mock<ILogger<OllamaPredictor>>().Object),
                 new Mock<ILogger<OllamaRealEstatePredictor>>().Object),
             new HttpClient());
     }

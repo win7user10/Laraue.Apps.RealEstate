@@ -23,6 +23,7 @@ public sealed class AdvertisementsDbContext : DbContext, IJobsDbContext, IInterc
     
     public DbSet<AdvertisementTransportStop> AdvertisementTransportStops { get; init; }
     
+    public DbSet<Image> Images { get; init; }
     public DbSet<AdvertisementImage> AdvertisementImages { get; init; }
     
     public DbSet<TransportStop> TransportStops { get; init; }
@@ -60,9 +61,16 @@ public sealed class AdvertisementsDbContext : DbContext, IJobsDbContext, IInterc
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<AdvertisementImage>()
+        modelBuilder.Entity<Image>()
+            .Property(x => x.Id)
+            .ValueGeneratedOnAdd();
+        
+        modelBuilder.Entity<Image>()
             .HasIndex(x => x.Url)
             .IsUnique();
+        
+        modelBuilder.Entity<AdvertisementImage>()
+            .HasKey(x => new { x.AdvertisementId, x.ImageId });
 
         modelBuilder.Entity<AdvertisementTransportStop>()
             .HasIndex(x => new { x.TransportStopId, x.AdvertisementId })
@@ -76,6 +84,15 @@ public sealed class AdvertisementsDbContext : DbContext, IJobsDbContext, IInterc
         
         modelBuilder.Entity<Advertisement>()
             .HasIndex(x => x.UpdatedAt);
+        
+        modelBuilder.Entity<Advertisement>()
+            .HasIndex(x => x.Square);
+        
+        modelBuilder.Entity<Advertisement>()
+            .HasIndex(x => x.RoomsCount);
+        
+        modelBuilder.Entity<Advertisement>()
+            .HasIndex(x => x.FloorNumber);
         
         modelBuilder.Entity<CrawlingSessionAdvertisement>()
             .HasKey(x => new { x.AdvertisementId, x.CrawlingSessionId });

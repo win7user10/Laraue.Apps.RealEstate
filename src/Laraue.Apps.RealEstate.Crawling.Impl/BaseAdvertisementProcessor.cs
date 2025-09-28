@@ -17,7 +17,6 @@ public abstract class BaseAdvertisementProcessor<TExternalIdentifier> : IAdverti
 {
     public AdvertisementSource Source { get; }
     private readonly AdvertisementsDbContext _dbContext;
-    private readonly IRemoteImagesPredictor _imagesPredictor;
     private readonly IAverageRatingCalculator _calculator;
     private readonly IAdvertisementComputedFieldsCalculator _computedFieldsCalculator;
     private readonly IMetroStationsStorage _metroStationsStorage;
@@ -28,14 +27,12 @@ public abstract class BaseAdvertisementProcessor<TExternalIdentifier> : IAdverti
     protected BaseAdvertisementProcessor(
         AdvertisementSource source,
         AdvertisementsDbContext dbContext,
-        IRemoteImagesPredictor imagesPredictor,
         IAverageRatingCalculator calculator,
         IAdvertisementComputedFieldsCalculator computedFieldsCalculator,
         IMetroStationsStorage metroStationsStorage)
     {
         Source = source;
         _dbContext = dbContext;
-        _imagesPredictor = imagesPredictor;
         _calculator = calculator;
         _computedFieldsCalculator = computedFieldsCalculator;
         _metroStationsStorage = metroStationsStorage;
@@ -46,9 +43,8 @@ public abstract class BaseAdvertisementProcessor<TExternalIdentifier> : IAdverti
         CancellationToken ct = default)
     {
         var existsAdvertisements = await GetExistsAdvertisementsAsync(advertisements, ct);
-        
-        var urlsToPredict = await GetNotPredictedImageUrlsAsync(advertisements);
-        var imagePredictions = await _imagesPredictor.PredictAsync(urlsToPredict, ct);
+
+        var imageIdByUrl = await UpsertImagesAsync(advertisements, ct);
         
         var updatedAdvertisements = new List<Db.Models.Advertisement>();
         foreach (var parsedPage in advertisements)
@@ -65,7 +61,7 @@ public abstract class BaseAdvertisementProcessor<TExternalIdentifier> : IAdverti
                 advertisement = new Db.Models.Advertisement();
                 _dbContext.Add(advertisement);
                 
-                UpdateAdvertisement(advertisement, parsedPage, imagePredictions);
+                UpdateAdvertisement(advertisement, parsedPage, imageIdByUrl);
             }
             else
             {
@@ -74,7 +70,7 @@ public abstract class BaseAdvertisementProcessor<TExternalIdentifier> : IAdverti
                     continue;
                 }
                 
-                UpdateAdvertisement(advertisement, parsedPage, imagePredictions);
+                UpdateAdvertisement(advertisement, parsedPage, imageIdByUrl);
             }
 
             var computedFields = _computedFieldsCalculator.ComputeFields(
@@ -101,53 +97,51 @@ public abstract class BaseAdvertisementProcessor<TExternalIdentifier> : IAdverti
     }
 
     private void UpdateAdvertisement(
-        Db.Models.Advertisement advertisement,
-        Advertisement page,
-        IDictionary<string, PredictionResult> imagePredictions)
+        Db.Models.Advertisement dbAdvertisement,
+        Advertisement parsedAdvertisement,
+        IDictionary<string, long> imageIdByUrl)
     {
         // Upd common fields
-        advertisement.Link = page.Link;
-        advertisement.SourceType = Source;
-        advertisement.Square = page.Square;
-        advertisement.SourceId = page.Id;
-        advertisement.FloorNumber = page.FloorNumber;
-        advertisement.RoomsCount = page.RoomsCount;
-        advertisement.TotalFloorsNumber = page.TotalFloorsNumber;
-        advertisement.ShortDescription = page.ShortDescription;
-        advertisement.TotalPrice = page.TotalPrice;
-        advertisement.UpdatedAt = page.UpdatedAt.GetValueOrDefault();
-        advertisement.CrawledAt = DateTime.UtcNow;
-        advertisement.FlatType = page.FlatType;
+        dbAdvertisement.Link = parsedAdvertisement.Link;
+        dbAdvertisement.SourceType = Source;
+        dbAdvertisement.Square = parsedAdvertisement.Square;
+        dbAdvertisement.SourceId = parsedAdvertisement.Id;
+        dbAdvertisement.FloorNumber = parsedAdvertisement.FloorNumber;
+        dbAdvertisement.RoomsCount = parsedAdvertisement.RoomsCount;
+        dbAdvertisement.TotalFloorsNumber = parsedAdvertisement.TotalFloorsNumber;
+        dbAdvertisement.ShortDescription = parsedAdvertisement.ShortDescription;
+        dbAdvertisement.TotalPrice = parsedAdvertisement.TotalPrice;
+        dbAdvertisement.UpdatedAt = parsedAdvertisement.UpdatedAt.GetValueOrDefault();
+        dbAdvertisement.CrawledAt = DateTime.UtcNow;
+        dbAdvertisement.FlatType = parsedAdvertisement.FlatType;
         
         // upd images via sync to actual state logic
-        foreach (var removedImage in advertisement.Images
-            .Where(x => !page.ImageLinks.Contains(x.Url)))
+        foreach (var removedAdvertisementImage in dbAdvertisement.LinkedImages
+            .Where(x => !parsedAdvertisement.ImageLinks.Contains(x.Image.Url)))
         {
-            _dbContext.Remove(removedImage);
+            _dbContext.Remove(removedAdvertisementImage);
         }
 
-        var existsLinks = advertisement.Images.Select(y => y.Url);
-        var newLinks = page.ImageLinks.Except(existsLinks);
-        var newPredictions = GetPredictedImagesModels(newLinks, imagePredictions);
+        var existImagesUrls = dbAdvertisement.LinkedImages.Select(y => y.Image.Url);
+        var newImageUrls = parsedAdvertisement.ImageLinks.Except(existImagesUrls).ToHashSet();
 
-        foreach (var newPrediction in newPredictions)
+        foreach (var newLink in newImageUrls)
         {
-            advertisement.Images.Add(newPrediction);
-        }
-        
-        // Update average rating
-        advertisement.RenovationRating = _calculator.Calculate(advertisement.Images
-            .Select(x => new PredictionResult
+            if (imageIdByUrl.TryGetValue(newLink, out var imageId))
             {
-                RenovationRating = x.RenovationRating,
-            }));
+                dbAdvertisement.LinkedImages.Add(new AdvertisementImage
+                {
+                    ImageId = imageId
+                });
+            }
+        }
         
         // upd transport stops via add new logic
-        var existStops = advertisement.TransportStops
+        var existStops = dbAdvertisement.TransportStops
             .Select(x => x.TransportStopId)
             .ToHashSet();
         
-        foreach (var transportStop in page.TransportStops ?? Array.Empty<TransportStop>())
+        foreach (var transportStop in parsedAdvertisement.TransportStops ?? [])
         {
             // Metro stations are different 
             if (!TryGetPublicStopByName(transportStop.Name, out var metroStationData))
@@ -160,7 +154,7 @@ public abstract class BaseAdvertisementProcessor<TExternalIdentifier> : IAdverti
                 continue;
             }
                 
-            advertisement.TransportStops.Add(new AdvertisementTransportStop
+            dbAdvertisement.TransportStops.Add(new AdvertisementTransportStop
             {
                 DistanceType = transportStop.DistanceType,
                 DistanceInMinutes = transportStop.Minutes,
@@ -210,7 +204,7 @@ public abstract class BaseAdvertisementProcessor<TExternalIdentifier> : IAdverti
         CancellationToken ct = default)
     {
         return _dbContext.Advertisements
-            .Include(x => x.Images)
+            .Include(x => x.LinkedImages)
             .Include(x => x.TransportStops)
             .ThenInclude(x => x.TransportStop)
             .Where(x => x.SourceType == Source && 
@@ -220,37 +214,34 @@ public abstract class BaseAdvertisementProcessor<TExternalIdentifier> : IAdverti
             .ToDictionaryAsyncEF(x => ParseIdentifier(x.SourceId), ct);
     }
     
-    private async Task<IEnumerable<string>> GetNotPredictedImageUrlsAsync(
-        IEnumerable<Advertisement> advertisements)
+    private async Task<IDictionary<string, long>> UpsertImagesAsync(
+        IEnumerable<Advertisement> advertisements,
+        CancellationToken ct = default)
     {
         var allAdvertisementImagesUrls = advertisements
             .SelectMany(y => y.ImageLinks)
+            .Where(y => Uri.TryCreate(y, UriKind.Absolute, out _))
             .ToArray();
         
-        var existUrls = await _dbContext.AdvertisementImages
+        var existUrls = await _dbContext.Images
             .Where(x => allAdvertisementImagesUrls.Contains(x.Url))
-            .Select(x => x.Url)
-            .ToListAsync();
-        
-        return allAdvertisementImagesUrls.Except(existUrls);
-    }
-    
-    private static IEnumerable<AdvertisementImage> GetPredictedImagesModels(
-        IEnumerable<string> links,
-        IDictionary<string, PredictionResult> predictionDictionary)
-    {
-        foreach (var imageLink in links)
+            .ToDictionaryAsyncEF(x => x.Url, x => x.Id, ct);
+
+        var notExistUrls = allAdvertisementImagesUrls
+            .Except(existUrls.Keys);
+
+        var newImages = notExistUrls
+            .Select(notExistUrl => new Image { Url = notExistUrl })
+            .ToList();
+
+        _dbContext.Images.AddRange(newImages);
+        await _dbContext.SaveChangesAsync(ct);
+
+        foreach (var newImage in newImages)
         {
-            if (predictionDictionary.TryGetValue(imageLink, out var prediction))
-            {
-                yield return new AdvertisementImage
-                {
-                    Url = imageLink,
-                    RenovationRating = prediction.RenovationRating,
-                    Tags = prediction.Tags,
-                    Decription = prediction.Description
-                };
-            }
+            existUrls.Add(newImage.Url, newImage.Id);
         }
+
+        return existUrls;
     }
 }
