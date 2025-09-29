@@ -1,5 +1,6 @@
 ﻿using Laraue.Telegram.NET.Authentication.Services;
 using Laraue.Telegram.NET.Core.Extensions;
+using Laraue.Telegram.NET.Core.Utils;
 using Laraue.Telegram.NET.Interceptors.Services;
 using Telegram.Bot;
 
@@ -24,7 +25,7 @@ public abstract class BaseRequestInterceptor<TInput> : BaseRequestInterceptor<Gu
     {
         return _client.SendTextMessageAsync(
             chatId: _requestContext.Update.GetUserId(),
-            text: GetBeforeSetMessage());
+            messageBuilder: new TelegramMessageBuilder().Append(GetBeforeSetMessage()));
     }
 
     protected abstract string GetBeforeSetMessage();

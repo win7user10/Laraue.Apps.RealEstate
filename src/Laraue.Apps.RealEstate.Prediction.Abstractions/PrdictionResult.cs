@@ -6,4 +6,5 @@ public record PredictionResult
     public double RenovationRating { get; init; }
     public string? Description { get; init; }
     public string[] Tags { get; init; } = [];
+    public bool ErrorWhileRequesting { get; init; }
 }

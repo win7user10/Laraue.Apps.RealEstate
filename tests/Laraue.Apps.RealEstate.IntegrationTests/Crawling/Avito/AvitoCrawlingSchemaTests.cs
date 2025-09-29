@@ -3,7 +3,6 @@ using Laraue.Core.DateTime.Services.Impl;
 using Laraue.Core.Testing.Logging;
 using Laraue.Crawling.Dynamic.PuppeterSharp;
 using Microsoft.Extensions.Logging;
-using Moq;
 using PuppeteerSharp;
 using Xunit;
 using Xunit.Abstractions;

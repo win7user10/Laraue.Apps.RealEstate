@@ -1,5 +1,6 @@
 ﻿using Laraue.Apps.RealEstate.Abstractions;
 using Laraue.Apps.RealEstate.Db;
+using Laraue.Core.DataAccess.Contracts;
 using Laraue.Core.DateTime.Services.Abstractions;
 using LinqToDB;
 
@@ -43,14 +44,20 @@ public sealed class PublicAdvertisementsPicker : IPublicAdvertisementsPicker
         
         var request = new AdvertisementsRequest
         {
-            MaxDate = maxDate,
-            MinDate = minValue,
-            MinRenovationRating = 0.65,
-            PerPage = 3,
-            SortBy = AdvertisementsSort.RealSquareMeterPrice,
-            SortOrderBy = SortOrder.Ascending,
-            MinPrice = 5_000_000,
-            MaxPrice = 8_999_999,
+            Filter = new Filter
+            {
+                MaxDate = maxDate,
+                MinDate = minValue,
+                MinRenovationRating = 0.65,
+                SortBy = AdvertisementsSort.RealSquareMeterPrice,
+                SortOrderBy = SortOrder.Ascending,
+                MinPrice = 5_000_000,
+                MaxPrice = 8_999_999,
+            },
+            Pagination = new PaginationData
+            {
+                PerPage = 3,
+            }
         };
 
         var advertisements = await _advertisementStorage

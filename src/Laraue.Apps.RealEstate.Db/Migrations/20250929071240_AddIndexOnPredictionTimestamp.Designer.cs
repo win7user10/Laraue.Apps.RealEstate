@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Laraue.Apps.RealEstate.Db;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Laraue.Apps.RealEstate.Db.Migrations
 {
     [DbContext(typeof(AdvertisementsDbContext))]
-    partial class AdvertisimentsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250929071240_AddIndexOnPredictionTimestamp")]
+    partial class AddIndexOnPredictionTimestamp
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -52,10 +55,6 @@ namespace Laraue.Apps.RealEstate.Db.Migrations
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("link");
-
-                    b.Property<DateTime?>("PredictedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("predicted_at");
 
                     b.Property<double?>("RenovationRating")
                         .HasColumnType("double precision")

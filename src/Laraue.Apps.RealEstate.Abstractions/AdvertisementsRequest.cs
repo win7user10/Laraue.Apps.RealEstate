@@ -4,6 +4,12 @@ namespace Laraue.Apps.RealEstate.Abstractions;
 
 public sealed record AdvertisementsRequest : IPaginatedRequest
 {
+    public Filter Filter { get; init; } = new();
+    public PaginationData Pagination { get; init; } = new();
+}
+
+public class Filter
+{
     public DateTime? MinDate { get; init; }
     
     public DateTime? MaxDate { get; init; }
@@ -35,10 +41,6 @@ public sealed record AdvertisementsRequest : IPaginatedRequest
     public IList<long>? MetroIds { get; init; }
     
     public IList<int>? RoomsCount { get; init; }
-    
-    public int Page { get; init; }
-    
-    public int PerPage { get; init; }
 
     public int? DistanceInMinutes { get; set; }
 }

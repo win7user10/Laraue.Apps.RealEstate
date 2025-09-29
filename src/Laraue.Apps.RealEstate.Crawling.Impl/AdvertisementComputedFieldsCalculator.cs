@@ -19,7 +19,7 @@ public sealed class AdvertisementComputedFieldsCalculator : IAdvertisementComput
             ? squareMeterPrice / squareMeterPredictedPrice
             : 0;
 
-        return new ComputedFields(squareMeterPrice, squareMeterPredictedPrice, (double)ideality);
+        return new ComputedFields(squareMeterPredictedPrice, (double)ideality);
     }
     
     private double GetPredictedSquareMeterPriceFineCoef(AdvertisementData advertisementData)

@@ -6,6 +6,12 @@ namespace Laraue.Apps.RealEstate.ApiHost.Requests;
 
 public sealed record GetAdvertisementsRequest : IPaginatedRequest
 {
+    public Filter Filter { get; init; } = new();
+    public PaginationData Pagination { get; init; } = new();
+}
+
+public class Filter
+{
     public DateTime? MinDate { get; init; }
     
     public DateTime? MaxDate { get; init; }
@@ -40,9 +46,4 @@ public sealed record GetAdvertisementsRequest : IPaginatedRequest
     public IList<long>? MetroIds { get; init; }
     
     public IList<int>? RoomsCount { get; init; }
-    
-    public int Page { get; init; }
-    
-    [Range(1, 20)]
-    public int PerPage { get; init; }
 }

@@ -27,35 +27,55 @@ public sealed class RemoteImagesPredictor : IRemoteImagesPredictor
         var imagePredictions = new Dictionary<string, PredictionResult>();
         
         var urlsArray = urls.ToArray();
-        
-        foreach (var urlToPredict in urlsArray)
-        {
-            _logger.LogInformation("Start loading image [{Url}]", urlToPredict);
 
-            await using var stream = await _client.GetStreamAsync(urlToPredict, ct);
+        foreach (var url in urlsArray)
+        {
+            ct.ThrowIfCancellationRequested();
             
-            var bytes = ResizeImage(stream, 500, 400);
-            
-            _logger.LogInformation("Image resized to [{Size}] bytes", bytes.Length);
-            
-            var base64String = Convert.ToBase64String(bytes);
-            
-            _logger.LogInformation("Start prediction for image [{Url}]", urlToPredict);
-            
-            var result = await _predictor.PredictAsync(base64String, ct);
-            
-            _logger.LogInformation(
-                "Prediction finished. Result is [{Result}]",
-                result);
-            
-            imagePredictions.Add(urlToPredict, new PredictionResult
+            var urlToPredict = url;
+            _logger.LogDebug("Start loading image [{Url}]", urlToPredict);
+
+            try
             {
-                RenovationRating = result.RenovationRating,
-                Description = result.Description,
-                Tags = result.Tags
-            });
-            
-            _logger.LogInformation("Completed [{Current}/{Total}]", imagePredictions.Count, urlsArray.Length);
+                var bytes = await _client.GetByteArrayAsync(urlToPredict, ct);
+
+                // var bytes = ResizeImage(stream, 500, 400);
+
+                _logger.LogInformation("Image Size is [{Size}] bytes", bytes.Length);
+
+                var base64String = Convert.ToBase64String(bytes);
+
+                _logger.LogDebug("Start prediction for image [{Url}]", urlToPredict);
+
+                var result = await _predictor.PredictAsync(base64String, ct);
+
+                _logger.LogDebug(
+                    "Prediction finished. Result is [{Result}]",
+                    result);
+
+                imagePredictions.Add(urlToPredict, new PredictionResult
+                {
+                    RenovationRating = result.RenovationRating,
+                    Description = result.Description,
+                    Tags = result.Tags
+                });
+
+                _logger.LogInformation("Completed [{Current}/{Total}]", imagePredictions.Count, urlsArray.Length);
+            }
+            catch (Exception e)
+            {
+                imagePredictions.Add(urlToPredict, new PredictionResult
+                {
+                    ErrorWhileRequesting = true
+                });
+                
+                _logger.LogWarning(
+                    e,
+                    "Fail [{CurrentNumber}/{Total}]. Url '{UrlToPredict}' is not loaded",
+                    imagePredictions.Count,
+                    urlsArray.Length,
+                    urlToPredict);
+            }
         }
 
         return imagePredictions;

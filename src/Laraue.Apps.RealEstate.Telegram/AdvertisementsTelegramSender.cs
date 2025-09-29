@@ -51,13 +51,13 @@ public sealed class AdvertisementsTelegramSender : IAdvertisementsTelegramSender
             getRequest: selection => selection.ToAdvertisementsRequest(
                 getMinDateFromNotificationInterval: true),
             getMessageBuilder: (selection, result, request) => GetMessage(
-                request.MinDate.GetValueOrDefault(),
-                request.MaxDate.GetValueOrDefault(),
+                request.Filter.MinDate.GetValueOrDefault(),
+                request.Filter.MaxDate.GetValueOrDefault(),
                 selection.Name,
                 result,
                 new CallbackRoutePath(TelegramHostUrls.GetViewSelectionFromNotificationUrl(selectionId))
-                    .WithQueryParameter("f", request.MinDate?.ToString(DateFormat))
-                    .WithQueryParameter("t", request.MaxDate?.ToString(DateFormat))),
+                    .WithQueryParameter("f", request.Filter.MinDate?.ToString(DateFormat))
+                    .WithQueryParameter("t", request.Filter.MaxDate?.ToString(DateFormat))),
             messageId: null,
             ct: ct);
     }
@@ -110,14 +110,20 @@ public sealed class AdvertisementsTelegramSender : IAdvertisementsTelegramSender
         
         var request = new AdvertisementsRequest
         {
-            MaxDate = maxDate,
-            MinDate = minValue,
-            MinRenovationRating = 0.65,
-            PerPage = 3,
-            SortBy = AdvertisementsSort.RealSquareMeterPrice,
-            SortOrderBy = SortOrder.Ascending,
-            MinPrice = 5_000_000,
-            MaxPrice = 9_000_000,
+            Filter = new Filter
+            {
+                MaxDate = maxDate,
+                MinDate = minValue,
+                MinRenovationRating = 0.65,
+                SortBy = AdvertisementsSort.RealSquareMeterPrice,
+                SortOrderBy = SortOrder.Ascending,
+                MinPrice = 5_000_000,
+                MaxPrice = 9_000_000,
+            },
+            Pagination = new PaginationData
+            {
+                PerPage = 3
+            },
         };
 
         var botUsername = await GetBotNameAsync(ct);
@@ -129,8 +135,8 @@ public sealed class AdvertisementsTelegramSender : IAdvertisementsTelegramSender
             {
                 var messageBuilder = GetMessage(
                     intervalTitle: $"За последние {sendInterval.ToReadableString()}",
-                    categoryTitle: $"от {advertisementsRequest.MinPrice?.ToHumanReadableCurrencyString()} " +
-                                   $"до {advertisementsRequest.MaxPrice?.ToHumanReadableCurrencyString()}",
+                    categoryTitle: $"от {advertisementsRequest.Filter.MinPrice?.ToHumanReadableCurrencyString()} " +
+                                   $"до {advertisementsRequest.Filter.MaxPrice?.ToHumanReadableCurrencyString()}",
                     result: result.Data);
 
                 messageBuilder.AppendRow();
@@ -181,7 +187,7 @@ public sealed class AdvertisementsTelegramSender : IAdvertisementsTelegramSender
             return _botUsername;
         }
         
-        var me = await _botClient.GetMeAsync(cancellationToken);
+        var me = await _botClient.GetMe(cancellationToken);
         _botUsername = $"@{me.Username}";
 
         return _botUsername!;

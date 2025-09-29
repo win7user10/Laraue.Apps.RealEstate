@@ -62,12 +62,11 @@ public sealed class AdvertisementsDbContext : DbContext, IJobsDbContext, IInterc
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Image>()
-            .Property(x => x.Id)
-            .ValueGeneratedOnAdd();
-        
-        modelBuilder.Entity<Image>()
             .HasIndex(x => x.Url)
             .IsUnique();
+        
+        modelBuilder.Entity<Image>()
+            .HasIndex(x => x.PredictedAt);
         
         modelBuilder.Entity<AdvertisementImage>()
             .HasKey(x => new { x.AdvertisementId, x.ImageId });

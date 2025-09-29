@@ -9,7 +9,7 @@
   <ItemGroup>
     <PackageReference Include="Laraue.Crawling.Dynamic.PuppeterSharp" Version="0.5.0" />
     <PackageReference Include="Laraue.Crawling.Crawler" Version="0.5.0" />
-    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.9" />
   </ItemGroup>
 
   <ItemGroup>

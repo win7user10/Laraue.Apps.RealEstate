@@ -1,7 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using Polly;
-
-namespace Laraue.Apps.RealEstate.Prediction.Impl;
+﻿namespace Laraue.Apps.RealEstate.Prediction.Impl;
 
 public interface IPredictor
 {
@@ -9,28 +6,14 @@ public interface IPredictor
 }
 
 public class OllamaRealEstatePredictor(
-    IOllamaPredictor ollamaPredictor,
-    ILogger<OllamaRealEstatePredictor> logger)
+    IOllamaPredictor ollamaPredictor)
     : IPredictor
 {
-    public Task<OllamaPredictionResult> PredictAsync(string base64EncodedImage, CancellationToken ct = default)
-    {
-        var polly = Policy
-            .Handle<Exception>()           
-            .RetryAsync(2, (exception, retryCount, _) => logger.LogError($"Try: {retryCount}, Exception: {exception.Message}"));
-        
-        return polly.ExecuteAsync(async () => await PredictInternalAsync(base64EncodedImage, ct));
-    }
-
-    private async Task<OllamaPredictionResult> PredictInternalAsync(string base64EncodedImage, CancellationToken ct = default)
+    public async Task<OllamaPredictionResult> PredictAsync(string base64EncodedImage, CancellationToken ct = default)
     {
         var promptImageAnalyze = @"
 Analyze this image and determine if it depicts a flat interior, whether it has been renovated, and provide a renovation rating.
-Return as JSON.
-```
-{
-    renovationRating: 
-The values should equal to 0 when impossible to determine interior or photo contains not enough details to make classification.
+Formula of renovation rating: The value should equal to 0 when impossible to determine interior or photo contains not enough details to make classification.
 Also it should be 0 when on the picture: view of the house outside, view of the yard, trees on photo, exterior view, etc
 Approximate ranges: 
 Value > 0.9 - Luxury
@@ -50,41 +33,24 @@ The next things are matter when classifying
 7. Balanced color scheme (+).
 8. Finished renovation (+).
 9. The floor quality and nice materials (+)
-10. Curtains, TV size and other (+).
-    tags: [Picture features, no more 50 symbols for each tag (max 5 tags)],
-    description: Why this renovation rating was chosen (max 100 symbols)
+10. Curtains, TV size and other (+)
+Return as JSON.
+```
+{
+    renovationRating: double value,
+    tags: [Picture features, no more 50 symbols for each tag (no more than 5 tags)],
+    description: Why this renovation rating was chosen (no more than 100 symbols)
 }
 ```
 ";
         
         var predictionResult = await ollamaPredictor.PredictAsync<OllamaPredictionResult>(
-            "gemma3:4b",
+            "qwen2.5vl:7b",
             promptImageAnalyze,
             base64EncodedImage,
             ct);
 
-        const string prompt = @"
-Check provided tags and return json.
-```
-{
-  isApplicable: True when tags mentions flat interior, renovation. False if exterior mentions.
-}
-```
-";
-
-        var currentPrompt = string.Join(',', predictionResult.Tags) + prompt;
-
-        var checkResult = await ollamaPredictor.PredictAsync<CheckTagsResult>(
-            "gemma3:4b",
-            currentPrompt,
-            ct);
-
-        return new OllamaPredictionResult
-        {
-            RenovationRating = checkResult.IsApplicable ? predictionResult.RenovationRating : 0,
-            Description = predictionResult.Description,
-            Tags = predictionResult.Tags,
-        };
+        return predictionResult;
     }
 }
 

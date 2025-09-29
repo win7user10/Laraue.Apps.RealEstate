@@ -35,6 +35,7 @@ public sealed class Advertisement
     public DateTime UpdatedAt { get; set; }
     
     public DateTime CrawledAt { get; set; }
+    public DateTime? PredictedAt { get; set; }
 
     public double? RenovationRating { get; set; }
 
@@ -43,13 +44,6 @@ public sealed class Advertisement
     public double Ideality { get; set; }
 
     public FlatType? FlatType { get; set; }
-
-    public void UpdateComputedFields(ComputedFields computedFields)
-    {
-        SquareMeterPrice = computedFields.SquareMeterPrice;
-        SquareMeterPredictedPrice = computedFields.SquareMeterPredictedPrice;
-        Ideality = computedFields.Ideality;
-    }
 
     public ICollection<AdvertisementTransportStop> TransportStops { get; init; } = new List<AdvertisementTransportStop>();
     

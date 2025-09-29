@@ -60,7 +60,8 @@ public sealed class UtilsController : ControllerBase
                                 ts.DistanceType))
                             .ToArray()));
                 
-                advertisement.UpdateComputedFields(computedFields);
+                advertisement.Ideality = computedFields.Ideality;
+                advertisement.SquareMeterPredictedPrice = computedFields.SquareMeterPredictedPrice;
             }
             
             await _dbContext.SaveChangesAsync(cancellationToken);

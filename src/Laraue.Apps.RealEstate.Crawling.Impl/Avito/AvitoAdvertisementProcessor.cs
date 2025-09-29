@@ -1,9 +1,8 @@
 ﻿using Laraue.Apps.RealEstate.Abstractions;
-using Laraue.Apps.RealEstate.Crawling.Abstractions.Crawler;
 using Laraue.Apps.RealEstate.Crawling.Abstractions.Crawler.Avito;
 using Laraue.Apps.RealEstate.Crawling.Abstractions.Crawler.TransportStops;
 using Laraue.Apps.RealEstate.Db;
-using Laraue.Apps.RealEstate.Prediction.Abstractions;
+using Laraue.Core.DateTime.Services.Abstractions;
 
 namespace Laraue.Apps.RealEstate.Crawling.Impl.Avito;
 
@@ -11,15 +10,13 @@ public sealed class AvitoAdvertisementProcessor : BaseAdvertisementProcessor<lon
 {
     public AvitoAdvertisementProcessor(
         AdvertisementsDbContext dbContext,
-        IAverageRatingCalculator calculator,
         IMetroStationsStorage metroStationsStorage,
-        IAdvertisementComputedFieldsCalculator computedFieldsCalculator)
+        IDateTimeProvider dateTimeProvider)
         : base(
             AdvertisementSource.Avito,
             dbContext,
-            calculator,
-            computedFieldsCalculator,
-            metroStationsStorage)
+            metroStationsStorage,
+            dateTimeProvider)
     {
     }
 

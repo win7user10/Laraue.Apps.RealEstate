@@ -34,6 +34,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laraue.Apps.RealEstate.Abst
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laraue.Apps.RealEstate.Telegram", "src\Laraue.Apps.RealEstate.Telegram\Laraue.Apps.RealEstate.Telegram.csproj", "{AFF041CB-9DD6-424F-85E4-2A7C275FDC7D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laraue.Apps.RealEstate.GpuWorkerHost", "src\Laraue.Apps.RealEstate.GpuWorkerHost\Laraue.Apps.RealEstate.GpuWorkerHost.csproj", "{EA3AA985-DDDB-4412-8C3F-09D3E5FE3CD6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -84,6 +86,10 @@ Global
 		{AFF041CB-9DD6-424F-85E4-2A7C275FDC7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AFF041CB-9DD6-424F-85E4-2A7C275FDC7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AFF041CB-9DD6-424F-85E4-2A7C275FDC7D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA3AA985-DDDB-4412-8C3F-09D3E5FE3CD6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA3AA985-DDDB-4412-8C3F-09D3E5FE3CD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA3AA985-DDDB-4412-8C3F-09D3E5FE3CD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA3AA985-DDDB-4412-8C3F-09D3E5FE3CD6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{E37EC740-7089-46FB-9E0F-BEEB0F1965A2} = {1567B5D8-BD5E-4A97-B3D6-2972F63288D6}
@@ -97,5 +103,6 @@ Global
 		{928BE7AF-29B4-4A6D-A9CC-904507CC05A4} = {7AC4807E-55B9-4F27-B6D2-0EBA99AEFFD2}
 		{815D9DB1-0FA9-44AF-8BB5-3E7C3465BBC8} = {AC8F37B5-607C-4287-9C63-5F298FCCE041}
 		{AFF041CB-9DD6-424F-85E4-2A7C275FDC7D} = {AC8F37B5-607C-4287-9C63-5F298FCCE041}
+		{EA3AA985-DDDB-4412-8C3F-09D3E5FE3CD6} = {7AC4807E-55B9-4F27-B6D2-0EBA99AEFFD2}
 	EndGlobalSection
 EndGlobal

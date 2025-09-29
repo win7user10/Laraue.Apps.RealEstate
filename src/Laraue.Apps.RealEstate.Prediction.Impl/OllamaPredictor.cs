@@ -55,7 +55,11 @@ public class OllamaPredictor(HttpClient client, ILogger<OllamaPredictor> logger)
         if (!_schemas.TryGetValue(typeof(TModel), out var schema))
         {
             schema = FormatGenerator.GetSchema(typeof(TModel));
-            logger.LogInformation("Output schema initiated fot type {Type} {Schema}...", typeof(TModel), schema);
+            logger.LogInformation(
+                "Ollama schema of type {Type} is {Schema}",
+                typeof(TModel),
+                JsonSerializer.Serialize(schema, _options));
+            
             _schemas.Add(typeof(TModel), schema);
         }
 
@@ -73,7 +77,7 @@ public class OllamaPredictor(HttpClient client, ILogger<OllamaPredictor> logger)
             request["images"] = new[] { base64EncodedImage };
         }
         
-        var response = await client.PostAsJsonAsync(
+        using var response = await client.PostAsJsonAsync(
             "api/generate", 
             request,
             _options,

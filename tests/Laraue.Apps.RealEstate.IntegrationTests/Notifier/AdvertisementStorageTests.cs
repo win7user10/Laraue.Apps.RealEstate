@@ -1,6 +1,7 @@
 ﻿using Laraue.Apps.RealEstate.Abstractions;
 using Laraue.Apps.RealEstate.Db.Models;
 using Laraue.Apps.RealEstate.Db.Storage;
+using Laraue.Core.DataAccess.Contracts;
 using Xunit;
 
 namespace Laraue.Apps.RealEstate.IntegrationTests.Notifier;
@@ -56,11 +57,17 @@ public sealed class AdvertisementStorageTests : TestWithDatabase
         var results = await _storage.GetAdvertisementsAsync(
             new AdvertisementsRequest
             {
-                MaxDate = new DateTime(2022, 01, 02, 0, 0, 0, DateTimeKind.Utc),
-                MinDate = new DateTime(2022, 01, 01, 0, 0, 0, DateTimeKind.Utc),
-                SortOrderBy = SortOrder.Ascending,
-                SortBy = AdvertisementsSort.UpdatedAt,
-                PerPage = 5
+                Filter = new Filter()
+                {
+                    MaxDate = new DateTime(2022, 01, 02, 0, 0, 0, DateTimeKind.Utc),
+                    MinDate = new DateTime(2022, 01, 01, 0, 0, 0, DateTimeKind.Utc),
+                    SortOrderBy = SortOrder.Ascending,
+                    SortBy = AdvertisementsSort.UpdatedAt,
+                },
+                Pagination = new PaginationData
+                {
+                    PerPage = 5
+                }
             });
         
         Assert.Single(results.Data);

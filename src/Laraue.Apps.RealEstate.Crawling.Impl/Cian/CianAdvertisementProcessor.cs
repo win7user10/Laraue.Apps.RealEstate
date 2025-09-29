@@ -1,9 +1,8 @@
 ﻿using Laraue.Apps.RealEstate.Abstractions;
-using Laraue.Apps.RealEstate.Crawling.Abstractions.Crawler;
 using Laraue.Apps.RealEstate.Crawling.Abstractions.Crawler.Cian;
 using Laraue.Apps.RealEstate.Crawling.Abstractions.Crawler.TransportStops;
 using Laraue.Apps.RealEstate.Db;
-using Laraue.Apps.RealEstate.Prediction.Abstractions;
+using Laraue.Core.DateTime.Services.Abstractions;
 
 namespace Laraue.Apps.RealEstate.Crawling.Impl.Cian;
 
@@ -11,15 +10,13 @@ public sealed class CianAdvertisementProcessor : BaseAdvertisementProcessor<int>
 {
     public CianAdvertisementProcessor(
         AdvertisementsDbContext dbContext,
-        IAverageRatingCalculator calculator,
         IMetroStationsStorage metroStationsStorage,
-        IAdvertisementComputedFieldsCalculator computedFieldsCalculator)
+        IDateTimeProvider dateTimeProvider)
         : base(
             AdvertisementSource.Cian,
             dbContext,
-            calculator,
-            computedFieldsCalculator,
-            metroStationsStorage)
+            metroStationsStorage,
+            dateTimeProvider)
     {
     }
 

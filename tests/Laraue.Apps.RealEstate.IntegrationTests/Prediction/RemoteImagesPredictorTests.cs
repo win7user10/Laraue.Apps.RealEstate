@@ -20,8 +20,7 @@ public class RemoteImagesPredictorTests
             new OllamaRealEstatePredictor(
                 new OllamaPredictor(
                     new HttpClient { BaseAddress = new Uri("http://localhost:11434/") },
-                    new Mock<ILogger<OllamaPredictor>>().Object),
-                new Mock<ILogger<OllamaRealEstatePredictor>>().Object),
+                    new Mock<ILogger<OllamaPredictor>>().Object)),
             new HttpClient());
     }
 
@@ -31,6 +30,7 @@ public class RemoteImagesPredictorTests
     [InlineData("https://images.cdn-cian.ru/images/2455996934-1.jpg", 0.75, 1)]
     [InlineData("https://images.cdn-cian.ru/images/2367886657-1.jpg", 0.65, 0.9)]
     [InlineData("https://images.cdn-cian.ru/images/dolya-v-kvartire-sanktpeterburg-alleya-kotelnikova-2609865031-1.jpg", 0.25, 0.5)]
+    [InlineData("https://images.cdn-cian.ru/images/2623741669-4.jpg", 0, 0)]
     [Theory]
     public async Task PredictTest(string url, double minRate, double maxRate)
     {

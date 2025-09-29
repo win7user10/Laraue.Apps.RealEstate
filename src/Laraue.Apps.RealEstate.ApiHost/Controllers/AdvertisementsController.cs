@@ -2,10 +2,12 @@
 using Laraue.Apps.RealEstate.ApiHost.Requests;
 using Laraue.Core.DataAccess.Contracts;
 using Microsoft.AspNetCore.Mvc;
+using Filter = Laraue.Apps.RealEstate.Abstractions.Filter;
 
 namespace Laraue.Apps.RealEstate.ApiHost.Controllers;
 
 [Route("/api/advertisements")]
+[ApiController]
 public sealed class AdvertisementsController : ControllerBase
 {
    private readonly IAdvertisementStorage _storage;
@@ -15,30 +17,36 @@ public sealed class AdvertisementsController : ControllerBase
       _storage = storage;
    }
 
-   [HttpGet("list")]
-   public Task<IShortPaginatedResult<AdvertisementDto>> GetAdvertisementsAsync(GetAdvertisementsRequest request)
+   [HttpPost("list")]
+   public Task<IShortPaginatedResult<AdvertisementDto>> GetAdvertisementsAsync([FromBody] GetAdvertisementsRequest request)
    {
       return _storage.GetAdvertisementsAsync(
          new AdvertisementsRequest
          {
-            Page = request.Page,
-            MaxDate = request.MaxDate,
-            MinDate = request.MinDate,
-            MetroIds = request.MetroIds,
-            PerPage = request.PerPage,
-            MaxPrice = request.MaxPrice,
-            MinPrice = request.MinPrice,
-            ExcludeFirstFloor = request.ExcludeFirstFloor,
-            ExcludeLastFloor = request.ExcludeLastFloor,
-            MaxRenovationRating = request.MaxRenovationRating,
-            MinRenovationRating = request.MinRenovationRating,
-            MaxPerSquareMeterPrice = request.MaxPerSquareMeterPrice,
-            MinPerSquareMeterPrice = request.MinPerSquareMeterPrice,
-            MinMetroStationPriority = request.MinMetroStationPriority,
-            SortOrderBy = request.SortOrder,
-            SortBy = request.SortBy,
-            MinSquare = request.MinSquare,
-            RoomsCount = request.RoomsCount,
+            Filter = new Filter()
+            {
+               MaxDate = request.Filter.MaxDate,
+               MinDate = request.Filter.MinDate,
+               MetroIds = request.Filter.MetroIds,
+               MaxPrice = request.Filter.MaxPrice,
+               MinPrice = request.Filter.MinPrice,
+               ExcludeFirstFloor = request.Filter.ExcludeFirstFloor,
+               ExcludeLastFloor = request.Filter.ExcludeLastFloor,
+               MaxRenovationRating = request.Filter.MaxRenovationRating,
+               MinRenovationRating = request.Filter.MinRenovationRating,
+               MaxPerSquareMeterPrice = request.Filter.MaxPerSquareMeterPrice,
+               MinPerSquareMeterPrice = request.Filter.MinPerSquareMeterPrice,
+               MinMetroStationPriority = request.Filter.MinMetroStationPriority,
+               SortOrderBy = request.Filter.SortOrder,
+               SortBy = request.Filter.SortBy,
+               MinSquare = request.Filter.MinSquare,
+               RoomsCount = request.Filter.RoomsCount,
+            },
+            Pagination = new PaginationData
+            {
+               Page = request.Pagination.Page,
+               PerPage = request.Pagination.PerPage,
+            }
          });
    }
 

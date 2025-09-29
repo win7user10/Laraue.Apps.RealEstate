@@ -4,7 +4,6 @@ using Laraue.Apps.RealEstate.Crawling.Abstractions.Crawler.Avito;
 using Laraue.Core.DateTime.Services.Abstractions;
 using Laraue.Crawling.Abstractions;
 using Laraue.Crawling.Abstractions.Schema.Binding;
-using Laraue.Crawling.Common.Extensions;
 using Laraue.Crawling.Common.Impl;
 using Laraue.Crawling.Dynamic.PuppeterSharp;
 using Microsoft.Extensions.Logging;

@@ -4,11 +4,10 @@ using Laraue.Apps.RealEstate.Crawling.Abstractions.Crawler;
 using Laraue.Apps.RealEstate.Crawling.Abstractions.Crawler.TransportStops;
 using Laraue.Apps.RealEstate.Db;
 using Laraue.Apps.RealEstate.Db.Models;
-using Laraue.Apps.RealEstate.Prediction.Abstractions;
+using Laraue.Core.DateTime.Services.Abstractions;
 using LinqToDB.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Advertisement = Laraue.Apps.RealEstate.Crawling.Abstractions.Contracts.Advertisement;
-using TransportStop = Laraue.Apps.RealEstate.Crawling.Abstractions.Contracts.TransportStop;
 
 namespace Laraue.Apps.RealEstate.Crawling.Impl;
 
@@ -17,9 +16,8 @@ public abstract class BaseAdvertisementProcessor<TExternalIdentifier> : IAdverti
 {
     public AdvertisementSource Source { get; }
     private readonly AdvertisementsDbContext _dbContext;
-    private readonly IAverageRatingCalculator _calculator;
-    private readonly IAdvertisementComputedFieldsCalculator _computedFieldsCalculator;
     private readonly IMetroStationsStorage _metroStationsStorage;
+    private readonly IDateTimeProvider _dateTimeProvider;
 
     private IDictionary<string, MetroStationData>? _externalPublicStopsIds;
     private IDictionary<long, MetroStationData>? _systemPublicStopsIds;
@@ -27,15 +25,13 @@ public abstract class BaseAdvertisementProcessor<TExternalIdentifier> : IAdverti
     protected BaseAdvertisementProcessor(
         AdvertisementSource source,
         AdvertisementsDbContext dbContext,
-        IAverageRatingCalculator calculator,
-        IAdvertisementComputedFieldsCalculator computedFieldsCalculator,
-        IMetroStationsStorage metroStationsStorage)
+        IMetroStationsStorage metroStationsStorage,
+        IDateTimeProvider dateTimeProvider)
     {
         Source = source;
         _dbContext = dbContext;
-        _calculator = calculator;
-        _computedFieldsCalculator = computedFieldsCalculator;
         _metroStationsStorage = metroStationsStorage;
+        _dateTimeProvider = dateTimeProvider;
     }
     
     public async Task<HashSet<long>> ProcessAsync(
@@ -73,21 +69,6 @@ public abstract class BaseAdvertisementProcessor<TExternalIdentifier> : IAdverti
                 UpdateAdvertisement(advertisement, parsedPage, imageIdByUrl);
             }
 
-            var computedFields = _computedFieldsCalculator.ComputeFields(
-                new AdvertisementData(
-                    advertisement.Square,
-                    advertisement.TotalPrice,
-                    advertisement.RenovationRating,
-                    advertisement.FloorNumber,
-                    advertisement.TotalFloorsNumber,
-                    advertisement.TransportStops
-                        .Select(ts => new TransportStopData(
-                            GetPublicStopCached(ts.TransportStopId).Priority,
-                            ts.DistanceInMinutes,
-                            ts.DistanceType))
-                        .ToArray()));
-            
-            advertisement.UpdateComputedFields(computedFields);
             updatedAdvertisements.Add(advertisement);
         }
         
@@ -112,8 +93,9 @@ public abstract class BaseAdvertisementProcessor<TExternalIdentifier> : IAdverti
         dbAdvertisement.ShortDescription = parsedAdvertisement.ShortDescription;
         dbAdvertisement.TotalPrice = parsedAdvertisement.TotalPrice;
         dbAdvertisement.UpdatedAt = parsedAdvertisement.UpdatedAt.GetValueOrDefault();
-        dbAdvertisement.CrawledAt = DateTime.UtcNow;
+        dbAdvertisement.CrawledAt = _dateTimeProvider.UtcNow;
         dbAdvertisement.FlatType = parsedAdvertisement.FlatType;
+        dbAdvertisement.PredictedAt = null;
         
         // upd images via sync to actual state logic
         foreach (var removedAdvertisementImage in dbAdvertisement.LinkedImages
@@ -205,6 +187,7 @@ public abstract class BaseAdvertisementProcessor<TExternalIdentifier> : IAdverti
     {
         return _dbContext.Advertisements
             .Include(x => x.LinkedImages)
+            .ThenInclude(x => x.Image)
             .Include(x => x.TransportStops)
             .ThenInclude(x => x.TransportStop)
             .Where(x => x.SourceType == Source && 

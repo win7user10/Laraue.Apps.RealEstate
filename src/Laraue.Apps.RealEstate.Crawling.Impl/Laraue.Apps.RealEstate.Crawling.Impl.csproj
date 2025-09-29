@@ -15,7 +15,7 @@
   <ItemGroup>
     <PackageReference Include="Laraue.Core.DateTime" Version="9.0.0" />
     <PackageReference Include="Laraue.Crawling.Crawler.Database" Version="0.1.12" />
-    <PackageReference Include="Polly" Version="8.6.3" />
+    <PackageReference Include="Polly" Version="8.6.4" />
   </ItemGroup>
 
 </Project>

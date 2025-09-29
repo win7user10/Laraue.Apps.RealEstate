@@ -61,7 +61,7 @@ public sealed class Advertisement : ICrawlingModel
     /// <summary>
     /// Image links related to this advertisement.
     /// </summary>
-    public string[] ImageLinks { get; init; }
+    public string[] ImageLinks { get; init; } = [];
 
     /// <summary>
     /// The flat type.

@@ -37,9 +37,6 @@ services.AddCrawlingServices(launchOptions);
 // Configure system services
 services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
 
-// Configure prediction services
-services.AddScoped<IRemoteImagesPredictor, RemoteImagesPredictor>();
-
 // Configure database
 services.AddDbContext<AdvertisementsDbContext>(s =>
     s.UseNpgsql(builder.Configuration.GetConnectionString("Postgre"))
@@ -47,14 +44,10 @@ services.AddDbContext<AdvertisementsDbContext>(s =>
 
 services.AddScoped<IJobsDbContext>(sp => sp.GetRequiredService<AdvertisementsDbContext>());
 services.AddScoped<IMetroStationsStorage, MetroStationsStorage>();
+services.AddScoped<UpdateAdvertisementsPredictionJob.IRepository, UpdateAdvertisementsPredictionJob.Repository>();
 services.AddSingleton<IMemoryCache>(new MemoryCache(new MemoryCacheOptions()));
 services.AddSingleton<IAdvertisementComputedFieldsCalculator, AdvertisementComputedFieldsCalculator>();
 services.AddSingleton<IPageParser, PageParser>();
-services.AddScoped<IPredictor, OllamaRealEstatePredictor>();
-services.AddHttpClient<IOllamaPredictor, OllamaPredictor>(x =>
-{
-    x.BaseAddress = new Uri("http://localhost:11434/");
-});
 
 services.AddLinq2Db();
 
@@ -85,6 +78,9 @@ services
 services
     .AddBackgroundJob<SendSelectionsAdvertisementsJob, EmptyJobData>(
         "SendSelectionsAdvertisementsJob");
+services
+    .AddBackgroundJob<UpdateAdvertisementsPredictionJob, EmptyJobData>(
+        "UpdateAdvertisementsPredictionJob");
 
 
 services.AddControllers();

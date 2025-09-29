@@ -47,6 +47,6 @@ public sealed class SendSelectionsAdvertisementsJob : BaseJob
                 .ExecuteUpdateAsync(s => s.SetProperty(x => x.SentAt, utcNow), stoppingToken);
         }
 
-        return TimeSpan.FromMinutes(1);
+        return TimeSpan.FromMinutes(5);
     }
 }

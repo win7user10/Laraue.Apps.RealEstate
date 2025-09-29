@@ -7,21 +7,15 @@ public sealed record Image
     /// <summary>
     /// Rating of renovation if it exists.
     /// </summary>
-    public double RenovationRating { get; init; }
+    public double RenovationRating { get; set; }
 
     /// <summary>
     /// Image address.
     /// </summary>
     public string Url { get; init; } = default!;
 
-    public string? Description { get; init; }
-    public string[] Tags { get; init; } = [];
+    public string? Description { get; set; }
+    public string[] Tags { get; set; } = [];
     
-    public AdvertisementImageProcessState ProcessState { get; init; }
-}
-
-public enum AdvertisementImageProcessState
-{
-    None,
-    Processed,
+    public DateTime? PredictedAt { get; set; }
 }

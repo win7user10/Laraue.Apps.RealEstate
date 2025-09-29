@@ -8,7 +8,6 @@ public interface IAdvertisementComputedFieldsCalculator
 }
 
 public record struct ComputedFields(
-    decimal SquareMeterPrice,
     decimal SquareMeterPredictedPrice,
     double Ideality);
 

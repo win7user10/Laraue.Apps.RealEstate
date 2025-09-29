@@ -22,102 +22,104 @@ public sealed class AdvertisementStorage : IAdvertisementStorage
         var query = _dbContext.Advertisements
             .Where(x => x.RenovationRating != null);
         
-        if (request.MinDate is not null)
+        var filter = request.Filter;
+        
+        if (filter.MinDate is not null)
         {
-            query = query.Where(x => x.UpdatedAt >= request.MinDate);
+            query = query.Where(x => x.UpdatedAt >= filter.MinDate);
         }
         
-        if (request.MaxDate is not null)
+        if (filter.MaxDate is not null)
         {
-            query = query.Where(x => x.UpdatedAt <= request.MaxDate);
+            query = query.Where(x => x.UpdatedAt <= filter.MaxDate);
         }
         
-        if (request.ExcludeFirstFloor)
+        if (filter.ExcludeFirstFloor)
         {
             query = query.Where(x => x.FloorNumber != 1);
         }
 
-        if (request.ExcludeLastFloor)
+        if (filter.ExcludeLastFloor)
         {
             query = query.Where(x => x.FloorNumber != x.TotalFloorsNumber);
         }
 
-        if (request.MinPrice is not null)
+        if (filter.MinPrice is not null)
         {
-            query = query.Where(x => x.TotalPrice > request.MinPrice);
+            query = query.Where(x => x.TotalPrice > filter.MinPrice);
         }
         
-        if (request.MaxPrice is not null)
+        if (filter.MaxPrice is not null)
         {
-            query = query.Where(x => x.TotalPrice <= request.MaxPrice);
+            query = query.Where(x => x.TotalPrice <= filter.MaxPrice);
         }
         
-        if (request.MaxRenovationRating is not null)
+        if (filter.MaxRenovationRating is not null)
         {
-            query = query.Where(x => x.RenovationRating < request.MaxRenovationRating);
+            query = query.Where(x => x.RenovationRating < filter.MaxRenovationRating);
         }
         
-        if (request.MinRenovationRating is not null)
+        if (filter.MinRenovationRating is not null)
         {
-            query = query.Where(x => x.RenovationRating > request.MinRenovationRating);
+            query = query.Where(x => x.RenovationRating > filter.MinRenovationRating);
         }
         
-        if (request.MetroIds?.Any() ?? false)
+        if (filter.MetroIds?.Any() ?? false)
         {
             query = query
                 .Where(adv => adv.TransportStops
-                .Any(transportStop => request.MetroIds
+                .Any(transportStop => filter.MetroIds
                     .Contains(transportStop.TransportStopId)));
         }
         
-        if (request.MinMetroStationPriority is not null)
+        if (filter.MinMetroStationPriority is not null)
         {
             query = query
                 .Where(adv => adv.TransportStops
                 .Any(transportStop =>
                     transportStop.TransportStop!.Priority
-                    > request.MinMetroStationPriority));
+                    > filter.MinMetroStationPriority));
         }
 
-        if (request.DistanceInMinutes is not null)
+        if (filter.DistanceInMinutes is not null)
         {
             query = query
                 .Where(adv => adv.TransportStops
                     .Any(transportStop =>
                         transportStop.DistanceInMinutes
-                        <= request.DistanceInMinutes));
+                        <= filter.DistanceInMinutes));
         }
         
-        if (request.MaxPerSquareMeterPrice is not null)
+        if (filter.MaxPerSquareMeterPrice is not null)
         {
-            query = query.Where(x => x.SquareMeterPrice <= request.MaxPerSquareMeterPrice);
+            query = query.Where(x => x.SquareMeterPrice <= filter.MaxPerSquareMeterPrice);
         }
         
-        if (request.MinPerSquareMeterPrice is not null)
+        if (filter.MinPerSquareMeterPrice is not null)
         {
-            query = query.Where(x => x.SquareMeterPrice >= request.MinPerSquareMeterPrice);
+            query = query.Where(x => x.SquareMeterPrice >= filter.MinPerSquareMeterPrice);
         }
         
-        if (request.MinSquare is not null)
+        if (filter.MinSquare is not null)
         {
-            query = query.Where(x => x.Square >= request.MinSquare);
+            query = query.Where(x => x.Square >= filter.MinSquare);
         }
         
-        if (request.RoomsCount?.Any() ?? false)
+        if (filter.RoomsCount?.Any() ?? false)
         {
-            query = query.Where(x => request.RoomsCount.Contains(x.RoomsCount));
+            query = query.Where(x => filter.RoomsCount.Contains(x.RoomsCount));
         }
         
-        query = request.SortBy switch
+        query = filter.SortBy switch
         {
-            AdvertisementsSort.UpdatedAt => query.OrderBy(x => x.UpdatedAt, request.SortOrderBy),
-            AdvertisementsSort.SquareMeterPrice => query.OrderBy(x => x.SquareMeterPrice, request.SortOrderBy),
-            AdvertisementsSort.RenovationRating => query.OrderBy(x => x.RenovationRating, request.SortOrderBy),
-            AdvertisementsSort.TotalPrice => query.OrderBy(x => x.TotalPrice, request.SortOrderBy),
-            AdvertisementsSort.Square => query.OrderBy(x => x.Square, request.SortOrderBy),
-            AdvertisementsSort.RealSquareMeterPrice => query.OrderBy(x => x.SquareMeterPredictedPrice, request.SortOrderBy),
-            AdvertisementsSort.RoomsCount => query.OrderBy(x => x.RoomsCount, request.SortOrderBy),
-            AdvertisementsSort.Ideality => query.OrderBy(x => x.Ideality, request.SortOrderBy),
+            AdvertisementsSort.UpdatedAt => query.OrderBy(x => x.UpdatedAt, filter.SortOrderBy),
+            AdvertisementsSort.SquareMeterPrice => query.OrderBy(x => x.SquareMeterPrice, filter.SortOrderBy),
+            AdvertisementsSort.RenovationRating => query.OrderBy(x => x.RenovationRating, filter.SortOrderBy),
+            AdvertisementsSort.TotalPrice => query.OrderBy(x => x.TotalPrice, filter.SortOrderBy),
+            AdvertisementsSort.Square => query.OrderBy(x => x.Square, filter.SortOrderBy),
+            AdvertisementsSort.RealSquareMeterPrice => query.OrderBy(x => x.SquareMeterPredictedPrice, filter.SortOrderBy),
+            AdvertisementsSort.RoomsCount => query.OrderBy(x => x.RoomsCount, filter.SortOrderBy),
+            AdvertisementsSort.Ideality => query.OrderBy(x => x.Ideality, filter.SortOrderBy),
             _ => throw new Exception(),
         };
         
