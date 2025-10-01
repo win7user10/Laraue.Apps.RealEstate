@@ -7,7 +7,7 @@ namespace Laraue.Apps.RealEstate.Crawling.Impl.Cian;
 public static class CianTitleExtractor
 {
     private static readonly Regex GetRoomsRegex = new ("(\\d+)-к", RegexOptions.Compiled);
-    private static readonly Regex GetSquareRegex = new ("(\\d+((.|,)\\d+)?)\\s?(м²|кв.м)", RegexOptions.Compiled);
+    private static readonly Regex GetSquareRegex = new ("([\\d|,]+)[\\s]м²", RegexOptions.Compiled);
     private static readonly Regex GetFloorsNumberRegex = new ("(\\d+)/(\\d+)[\\s]эт", RegexOptions.Compiled);
     private const string FlatName = "квартир";
     private const string ApartmentsName = "апартамент";

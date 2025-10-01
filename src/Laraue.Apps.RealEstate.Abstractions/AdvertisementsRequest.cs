@@ -42,5 +42,7 @@ public class Filter
     
     public IList<int>? RoomsCount { get; init; }
 
-    public int? DistanceInMinutes { get; set; }
+    public int? DistanceInMinutes { get; init; }
+    
+    public AdvertisementSource? Source { get; init; }
 }

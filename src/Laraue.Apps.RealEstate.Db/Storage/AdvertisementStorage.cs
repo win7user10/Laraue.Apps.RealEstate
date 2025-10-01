@@ -109,6 +109,11 @@ public sealed class AdvertisementStorage : IAdvertisementStorage
         {
             query = query.Where(x => filter.RoomsCount.Contains(x.RoomsCount));
         }
+
+        if (filter.Source is not null)
+        {
+            query = query.Where(x => x.SourceType == filter.Source);
+        }
         
         query = filter.SortBy switch
         {

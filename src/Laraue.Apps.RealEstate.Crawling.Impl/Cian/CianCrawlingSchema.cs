@@ -45,11 +45,6 @@ public sealed class CianCrawlingSchema : CompiledDocumentSchema<IElementHandle, 
                         .UseSelector("span[data-mark=MainPrice]")
                         .Map(s => long.Parse(s.GetOnlyDigits())));
                 pageBuilder.HasProperty(
-                    x => x.SquareMeterPrice,
-                    builder => builder
-                        .UseSelector("p[data-mark=PriceInfo]")
-                        .Map(s => long.Parse(s.GetOnlyDigits())));
-                pageBuilder.HasProperty(
                     x => x.UpdatedAt,
                     builder => builder
                         .UseSelector("div[data-name=TimeLabel] div:nth-child(2)")
@@ -81,6 +76,11 @@ public sealed class CianCrawlingSchema : CompiledDocumentSchema<IElementHandle, 
                     if (extractResult.TotalFloors is not null)
                     {
                         modelBinder.BindProperty(x => x.TotalFloorsNumber, extractResult.TotalFloors);
+                    }
+                    
+                    if (extractResult.Square is not null)
+                    {
+                        modelBinder.BindProperty(x => x.Square, extractResult.Square.Value);
                     }
                     
                     logger.LogInformation(

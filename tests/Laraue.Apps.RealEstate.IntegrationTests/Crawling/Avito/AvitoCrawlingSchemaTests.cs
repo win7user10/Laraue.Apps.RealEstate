@@ -1,4 +1,5 @@
-﻿using Laraue.Apps.RealEstate.Crawling.Impl.Avito;
+﻿using System.Net;
+using Laraue.Apps.RealEstate.Crawling.Impl.Avito;
 using Laraue.Core.DateTime.Services.Impl;
 using Laraue.Core.Testing.Logging;
 using Laraue.Crawling.Dynamic.PuppeterSharp;
@@ -38,13 +39,19 @@ public sealed class AvitoCrawlingSchemaTests : IAsyncLifetime
     [Fact]
     public async Task SmokeAsync()
     {
-        await _page!.GoToAsync("https://www.avito.ru/sankt-peterburg/kvartiry/prodam-ASgBAgICAUSSA8YQ?cd=1");
+        var response = await _page!.GoToAsync("https://www.avito.ru/sankt-peterburg/kvartiry/prodam-ASgBAgICAUSSA8YQ?cd=1&context=H4sIAAAAAAAA_wEjANz_YToxOntzOjg6ImZyb21QYWdlIjtzOjc6ImNhdGFsb2ciO312FITcIwAAAA&localPriority=0&s=104", WaitUntilNavigation.DOMContentLoaded);
+
+        if (response.Status > HttpStatusCode.Redirect)
+        {
+            throw new Exception(response.Status.ToString());
+        }
 
         var schema = new AvitoCrawlingSchema(new DateTimeProvider(), new TestOutputHelperLogger<AvitoCrawlingSchema>(_outputHelper));
 
         var result = await _parser.RunAsync(schema, await _page.QuerySelectorAsync("body"));
         
         Assert.True(result!.Advertisements.Length > 5);
+        Assert.All(result.Advertisements, x => Assert.NotNull(x.UpdatedAt));
     }
 
     public async Task DisposeAsync()

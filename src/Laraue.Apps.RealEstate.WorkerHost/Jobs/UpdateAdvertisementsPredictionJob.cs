@@ -11,7 +11,8 @@ namespace Laraue.Apps.RealEstate.WorkerHost.Jobs;
 public class UpdateAdvertisementsPredictionJob(
     IAverageRatingCalculator averageRatingCalculator,
     IAdvertisementComputedFieldsCalculator computedFieldsCalculator,
-    UpdateAdvertisementsPredictionJob.IRepository repository)
+    UpdateAdvertisementsPredictionJob.IRepository repository,
+    ILogger<UpdateAdvertisementsPredictionJob> logger)
     : BaseJob
 {
     private const int BatchSize = 100;
@@ -36,6 +37,8 @@ public class UpdateAdvertisementsPredictionJob(
                 var computedFields = computedFieldsCalculator.ComputeFields(computedFieldsData);
                 await repository.UpdateRatingAsync(image.Id, rating, computedFields, stoppingToken);
             }
+            
+            logger.LogInformation("Prediction updated for the batch of {Count} advertisements", nextImages.Count);
         }
         
         return _jobInterval;

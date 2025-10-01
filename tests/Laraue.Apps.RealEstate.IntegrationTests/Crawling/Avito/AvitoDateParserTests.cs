@@ -18,15 +18,20 @@ public class AvitoDateParserTests
     [Theory]
     [InlineData("10 августа 13:46", 10, 08, 13, 46)]
     [InlineData("28 дней назад", 2, 12, 0, 0)]
+    [InlineData("3 июня 17:13", 3, 6, 17, 13)]
+    [InlineData("28 мая 18:01", 28, 5, 18, 1)]
+    [InlineData("11 августа 13:04", 11, 8, 13, 4)]
     [InlineData("3 дня назад", 27, 12, 0, 0)]
     [InlineData("1 день назад", 29, 12, 0, 0)]
     [InlineData("Несколько секунд назад", 30, 12, 22, 50)]
+    [InlineData("Вчера", 29, 12, 00, 00)]
     [InlineData("1 минуту назад", 30, 12, 22, 49)]
     [InlineData("2 минуты назад", 30, 12, 22, 48)]
     [InlineData("5 минут назад", 30, 12, 22, 45)]
     [InlineData("1 час назад", 30, 12, 21, 00)]
     [InlineData("2 часа назад", 30, 12, 20, 00)]
     [InlineData("5 часов назад", 30, 12, 17, 00)]
+    [InlineData("1 неделю назад", 23, 12, 00, 00)]
     public void Extract_ShouldBeMadeCorrectly(string source, int day, int month, int hour, int minute)
     {
         var result = AvitoDateParser.Parse(source, _dateTimeProvider.Object);

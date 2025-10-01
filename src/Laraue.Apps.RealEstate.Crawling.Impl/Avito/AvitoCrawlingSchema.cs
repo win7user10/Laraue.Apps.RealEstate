@@ -13,6 +13,15 @@ namespace Laraue.Apps.RealEstate.Crawling.Impl.Avito;
 
 public sealed class AvitoCrawlingSchema : CompiledDocumentSchema<IElementHandle, HtmlSelector, CrawlingResult>, IAvitoCrawlingSchema
 {
+    private static readonly Dictionary<string, string> MetroMap = new()
+    {
+        ["Площадь А. Невского I"] = "Площадь Александра Невского",
+        ["Площадь А. Невского II"] = "Площадь Александра Невского",
+        ["Технологический ин-т I"] = "Технологический институт",
+        ["Технологический ин-т II"] = "Технологический институт",
+        ["Чёрная речка"] = "Черная речка",
+        ["Звёздная"] = "Звездная",
+    };
     public AvitoCrawlingSchema(IDateTimeProvider dateTimeProvider, ILogger<AvitoCrawlingSchema> logger)
         : base(GetSchema(dateTimeProvider, logger))
     {
@@ -21,11 +30,12 @@ public sealed class AvitoCrawlingSchema : CompiledDocumentSchema<IElementHandle,
     private static BindObjectExpression<IElementHandle, HtmlSelector> GetSchema(IDateTimeProvider dateTimeProvider, ILogger logger)
     {
         return new PuppeterSharpSchemaBuilder<CrawlingResult>()
-            .HasArrayProperty(x => x.Advertisements, "div.items-items-kAJAg > div[data-marker=item]", pageBuilder =>
+            .HasArrayProperty(x => x.Advertisements, "#bx_serp-item-list > div[data-marker=item]", pageBuilder =>
             {
                 pageBuilder.HasProperty(
                     x => x.Id,
-                    "data-item-id");
+                    builder => builder
+                        .GetInnerTextFromAttribute("data-item-id"));
                 pageBuilder.HasProperty(
                     x => x.Link,
                     builder => builder
@@ -33,47 +43,29 @@ public sealed class AvitoCrawlingSchema : CompiledDocumentSchema<IElementHandle,
                         .GetInnerTextFromAttribute("href"));
                 pageBuilder.HasProperty(
                     x => x.ShortDescription,
-                    ".iva-item-descriptionStep-C0ty1");
-                pageBuilder.BindManually((element, binder) => binder
-                    .BindPropertyAsync(x => x.Id, element.GetAttributeValueAsync("data-item-id")));
+                    builder => builder
+                        .UseSelector("meta[itemprop=description]")
+                        .GetInnerTextFromAttribute("content"));
                 pageBuilder.HasProperty(
                     x => x.TotalPrice,
                     builder => builder
                         .UseSelector("meta[itemprop=price]")
                         .GetInnerTextFromAttribute("content"));
                 pageBuilder.HasProperty(
-                    x => x.SquareMeterPrice,
-                    builder => builder.UseSelector("a"));
-                pageBuilder.HasProperty(
                     x => x.UpdatedAt,
                     builder => builder
-                        .UseSelector(".iva-item-dateInfoStep-_acjp")
+                        .UseSelector(".iva-item-dateInfoStep-AoWrh")
                         .Map(s => AvitoDateParser.Parse(s, dateTimeProvider)));
-                pageBuilder.BindManually(async (element, binder) =>
-                {
-                    var slider = await element.QuerySelectorAsync("a.iva-item-sliderLink-uLz1v");
-                    await slider.HoverAsync();
-                    try
-                    {
-                        await element.WaitForSelectorAsync(
-                            "ul > li:nth-child(2)",
-                            new WaitForSelectorOptions
-                            {
-                                Timeout = 500,
-                            });
-                    }
-                    catch (WaitTaskTimeoutException)
-                    {
-                    }
 
-                    var images = await slider.QuerySelectorAllAsync("img");
-                    var imagesLinks = await Task.WhenAll(images.Select(x => x.GetAttributeValueAsync("src")));
-                    binder.BindProperty(x => x.ImageLinks, imagesLinks);
-                });
+                pageBuilder.HasArrayProperty(
+                    x => x.ImageLinks,
+                    "li.photo-slider-list-item-r2YDC",
+                    element => element.GetAttributeValueAsync("data-marker")
+                        .AwaitAndModify(v => v?.Replace("slider-image/image-", string.Empty)));
                 
                 pageBuilder.BindManually(async (element, modelBinder) =>
                 {
-                    var titleElement = await element.QuerySelectorAsync("h3");
+                    var titleElement = await element.QuerySelectorAsync("h2");
                     
                     var title = await titleElement.GetInnerTextAsync();
 
@@ -93,6 +85,11 @@ public sealed class AvitoCrawlingSchema : CompiledDocumentSchema<IElementHandle,
                         modelBinder.BindProperty(x => x.TotalFloorsNumber, extractResult.TotalFloors);
                     }
                     
+                    if (extractResult.Square is not null)
+                    {
+                        modelBinder.BindProperty(x => x.Square, extractResult.Square.Value);
+                    }
+                    
                     logger.LogInformation(
                         "Adv {Id}, data bind result: {Result}",
                         modelBinder.GetProperty(x => x.Id),
@@ -101,14 +98,14 @@ public sealed class AvitoCrawlingSchema : CompiledDocumentSchema<IElementHandle,
 
                 pageBuilder.BindManually(async (element, modelBinder) =>
                 {
-                    var geoInfo = await element.QuerySelectorAsync(".geo-root-zPwRk p:nth-child(2)");
+                    var geoInfo = await element.QuerySelectorAsync(".geo-root-BBVai p:nth-child(2)");
                     
                     if (geoInfo is null)
                     {
                         return;
                     }
 
-                    var nameElement = await geoInfo.QuerySelectorAsync("span:nth-child(2)");
+                    var nameElement = await geoInfo.QuerySelectorAsync("a");
                     var name = await nameElement.GetInnerTextAsync();
 
                     if (name is null)
@@ -116,29 +113,20 @@ public sealed class AvitoCrawlingSchema : CompiledDocumentSchema<IElementHandle,
                         return;
                     }
 
+                    if (MetroMap.TryGetValue(name, out var mappedName))
+                    {
+                        name = mappedName;
+                    }
+                    
                     var transportStop = new TransportStop { Name = name };
                     var transportStops = new[] { transportStop };
                     
-                    var timeElement = await geoInfo.QuerySelectorAsync("span:nth-child(3)");
+                    var timeElement = await geoInfo.QuerySelectorAsync("span:nth-child(2)");
                     if (timeElement is null)
                     {
                         modelBinder.BindProperty(x => x.TransportStops, transportStops);
                         return;
                     }
-
-                    var svgElement = await timeElement.QuerySelectorAsync("svg");
-                    if (svgElement is null)
-                    {
-                        modelBinder.BindProperty(x => x.TransportStops, transportStops);
-                        return;
-                    }
-
-                    var svgName = await svgElement.GetAttributeValueAsync("name");
-                    var distanceType = svgName switch
-                    {
-                        "walking-route" => DistanceType.Foot,
-                        _ => DistanceType.Car
-                    };
                     
                     var timeString = await timeElement.GetInnerTextAsync();
                     var time = AvitoTimeParser.Parse(timeString);
@@ -146,7 +134,7 @@ public sealed class AvitoCrawlingSchema : CompiledDocumentSchema<IElementHandle,
                     {
                         transportStops[0] = transportStop with
                         {
-                            DistanceType = distanceType,
+                            DistanceType = DistanceType.Foot,
                             Minutes = time.Value
                         };
                     }

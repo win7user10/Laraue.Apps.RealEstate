@@ -32,6 +32,7 @@ public abstract class TestWithDatabase
     {
         DbContext.Advertisements.Delete();
         DbContext.CrawlingSessions.Delete();
+        DbContext.Images.Delete();
     }
     
     private void SeedDb()

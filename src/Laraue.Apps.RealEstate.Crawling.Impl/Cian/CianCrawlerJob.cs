@@ -20,5 +20,5 @@ public sealed class CianCrawlerJob : BaseRealEstateCrawlerJob
     }
 
     protected override string AdvertisementsAddress
-        => "https://spb.cian.ru/cat.php?deal_type=sale&engine_version=2&offer_type=flat&p={0}&region=2&sort=creation_date_desc";
+        => "https://spb.cian.ru/cat.php?deal_type=sale&engine_version=2&object_type%5B0%5D=1&offer_type=flat&region=2&sort=creation_date_desc&p={0}";
 }

@@ -20,5 +20,5 @@ public sealed class AvitoCrawlerJob : BaseRealEstateCrawlerJob
     }
 
     protected override string AdvertisementsAddress
-        => "https://www.avito.ru/sankt-peterburg/kvartiry/prodam-ASgBAgICAUSSA8YQ?cd=1&p={0}&s=104";
+        => "https://www.avito.ru/sankt-peterburg/kvartiry/prodam/vtorichka-ASgBAgICAkSSA8YQ5geMUg?cd=1&context=H4sIAAAAAAAA_wEjANz_YToxOntzOjg6ImZyb21QYWdlIjtzOjc6ImNhdGFsb2ciO312FITcIwAAAA&f=ASgBAQICAkSSA8YQ5geMUgFAkL4NJJSuNZauNQ&localPriority=0&s=104&p={0}";
 }

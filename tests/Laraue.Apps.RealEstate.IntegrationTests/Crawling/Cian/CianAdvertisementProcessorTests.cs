@@ -5,8 +5,11 @@ using Laraue.Apps.RealEstate.Crawling.Impl.Cian;
 using Laraue.Apps.RealEstate.Db.Models;
 using Laraue.Apps.RealEstate.Prediction.Abstractions;
 using Laraue.Apps.RealEstate.Prediction.Impl;
+using Laraue.Core.DateTime.Services.Abstractions;
+using Laraue.Core.DateTime.Services.Impl;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
 using Advertisement = Laraue.Apps.RealEstate.Crawling.Abstractions.Contracts.Advertisement;
@@ -17,14 +20,13 @@ namespace Laraue.Apps.RealEstate.IntegrationTests.Crawling.Cian;
 public class CianAdvertisementProcessorTests : TestWithDatabase
 {
     private readonly CianAdvertisementProcessor _processor;
-    private readonly Mock<IRemoteImagesPredictor> _remoteImagesPredictor = new ();
 
     public CianAdvertisementProcessorTests()
     {
         var sp = ServiceCollection.AddSingleton<CianAdvertisementProcessor>()
-            .AddSingleton(_remoteImagesPredictor.Object)
             .AddSingleton<IAverageRatingCalculator, AverageRatingCalculator>()
-            .AddSingleton<IAdvertisementComputedFieldsCalculator, AdvertisementComputedFieldsCalculator>()
+            .AddSingleton<IDateTimeProvider, DateTimeProvider>()
+            .AddSingleton(new Mock<ILogger<CianAdvertisementProcessor>>().Object)
             .BuildServiceProvider();
 
         _processor = sp.GetRequiredService<CianAdvertisementProcessor>();
@@ -39,31 +41,24 @@ public class CianAdvertisementProcessorTests : TestWithDatabase
             {
                 Id = "1",
                 FloorNumber = 2,
-                ImageLinks = new [] { "link1", "link2" },
+                ImageLinks = ["https://link1", "https://link2"],
                 RoomsCount = 2,
                 ShortDescription = "sh",
                 TotalPrice = 10_000_000,
-                SquareMeterPrice = 975_600,
-                TransportStops = new TransportStop[]
-                {
-                     new ()
+                TransportStops =
+                [
+                    new ()
                      {
                          Minutes = 10,
                          DistanceType = DistanceType.Foot,
                          Name = "Лесная"
                      }
-                },
+                ],
                 UpdatedAt = new DateTime(2020, 01, 01, 0, 0, 0, DateTimeKind.Utc),
                 TotalFloorsNumber = 9,
+                Square = 30,
             }
         };
-
-        _remoteImagesPredictor.Setup(x => x.PredictAsync(It.IsAny<IEnumerable<string>>(), default))
-            .ReturnsAsync(new Dictionary<string, PredictionResult>
-            {
-                ["link1"] = new () { RenovationRating = 0.15 },
-                ["link2"] = new () { RenovationRating = 0.15 },
-            });
         
         await _processor.ProcessAsync(advertisements);
 
@@ -96,8 +91,8 @@ public class CianAdvertisementProcessorTests : TestWithDatabase
             ShortDescription = "abc",
             LinkedImages = new List<AdvertisementImage>()
             {
-                new() { Image = new () { RenovationRating = 0.54, Url = "link1" } },
-                new() { Image = new () { RenovationRating = 0.52, Url = "link2" } },
+                new() { Image = new () { RenovationRating = 0.54, Url = "https://link1" } },
+                new() { Image = new () { RenovationRating = 0.52, Url = "https://link2" } },
             },
             TransportStops = new List<AdvertisementTransportStop>()
             {
@@ -106,15 +101,15 @@ public class CianAdvertisementProcessorTests : TestWithDatabase
         });
 
         await DbContext.SaveChangesAsync();
+        DbContext.ChangeTracker.Clear();
         
         var advertisements = new Advertisement[]
         {
             new ()
             {
                 Id = "12",
-                SquareMeterPrice = 975_600,
                 FloorNumber = 2,
-                ImageLinks = new [] { "link2", "link3" },
+                ImageLinks = new [] { "https://link2", "https://link3" },
                 RoomsCount = 2,
                 ShortDescription = "sh",
                 TotalPrice = 10_000_000,
@@ -129,21 +124,17 @@ public class CianAdvertisementProcessorTests : TestWithDatabase
                 ],
                 UpdatedAt = new DateTime(2023, 01, 01, 0, 0, 0, DateTimeKind.Utc),
                 TotalFloorsNumber = 9,
+                Square = 30
             }
         };
-
-        _remoteImagesPredictor.Setup(x => x.PredictAsync(It.IsAny<IEnumerable<string>>(), default))
-            .ReturnsAsync(new Dictionary<string, PredictionResult>
-            {
-                ["link2"] = new () { RenovationRating = 0.17 },
-                ["link3"] = new () { RenovationRating = 0.15 },
-            });
         
         await _processor.ProcessAsync(advertisements);
 
+        DbContext.ChangeTracker.Clear();
         var advertisement = Assert.Single(
             DbContext.Advertisements
-                .Include(x => x.TransportStops));
+                .Include(x => x.TransportStops)
+                .Include(x => x.LinkedImages));
         
         Assert.Equal("12", advertisement.SourceId);
         Assert.Equal(AdvertisementSource.Cian, advertisement.SourceType);

@@ -41,6 +41,7 @@ public sealed class AdvertisementsController : ControllerBase
                SortBy = request.Filter.SortBy,
                MinSquare = request.Filter.MinSquare,
                RoomsCount = request.Filter.RoomsCount,
+               Source = request.Filter.Source,
             },
             Pagination = new PaginationData
             {

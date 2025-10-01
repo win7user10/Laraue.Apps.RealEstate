@@ -62,7 +62,7 @@ public abstract class BaseCrawlingSchemaParser : ICrawlingSchemaParser
         
         try
         {
-            result = await _page.GoToAsync(link);
+            result = await _page.GoToAsync(link, WaitUntilNavigation.DOMContentLoaded);
 
             var timeToSleep = random.Next(
                 _options.MinTimeoutBeforeSwitchToNextPage,

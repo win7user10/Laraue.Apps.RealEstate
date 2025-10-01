@@ -22,11 +22,6 @@ public sealed class Advertisement : ICrawlingModel
     /// Advertisement total price.
     /// </summary>
     public long TotalPrice { get; init; }
-    
-    /// <summary>
-    /// Square meter price.
-    /// </summary>
-    public long SquareMeterPrice { get; init; }
 
     /// <summary>
     /// Rooms count or null if was not found.
@@ -36,7 +31,7 @@ public sealed class Advertisement : ICrawlingModel
     /// <summary>
     /// The apartments square, m2.
     /// </summary>
-    public long Square => SquareMeterPrice == 0 ? 0 : TotalPrice / SquareMeterPrice;
+    public decimal Square { get; init; }
 
     /// <summary>
     /// The floor number.

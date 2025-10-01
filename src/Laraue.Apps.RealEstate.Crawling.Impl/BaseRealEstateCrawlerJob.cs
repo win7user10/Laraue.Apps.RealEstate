@@ -69,6 +69,7 @@ public abstract class BaseRealEstateCrawlerJob : BaseCrawlerJob<CrawlingResult, 
         state.JobData.LastPage = 1;
 
         var previousMaxTime = await _dbContext.Advertisements
+            .Where(a => a.SourceType == _processor.Source)
             .Select(x => x.UpdatedAt)
             .DefaultIfEmpty()
             .MaxAsync(cancellationToken);
@@ -93,14 +94,7 @@ public abstract class BaseRealEstateCrawlerJob : BaseCrawlerJob<CrawlingResult, 
                 .ToList(),
         });
 
-        try
-        {
-            await _dbContext.SaveChangesAsync(cancellationToken);
-        }
-        catch (Exception)
-        {
-            // TODO - handle only constraint exceptions here
-        }
+        await _dbContext.SaveChangesAsync(cancellationToken);
         
         _logger.LogInformation(
             "Total amount of updated advs for the session: {Count}",
@@ -129,11 +123,15 @@ public abstract class BaseRealEstateCrawlerJob : BaseCrawlerJob<CrawlingResult, 
                 () => Task.Delay(TimeSpan.FromMinutes(10), cancellationToken));
         }
         
+        // The system iterates from the new to the old advs. When adv with date that already parsed found, the session
+        // should be finished.
         if (model.Advertisements.Min(x => x.UpdatedAt) < state.JobData.MinUpdatedAt)
         {
             throw new SessionInterruptedException("Already parsed advertisements found");
         }
 
+        // If the system found advs that is too old (based on options), the session should be finished also.
+        // It prevents endless parsing while first run.
         if (!AreAllAdvertisementsActual(model.Advertisements))
         {
             throw new SessionInterruptedException("Too old advertisements found");
@@ -145,8 +143,10 @@ public abstract class BaseRealEstateCrawlerJob : BaseCrawlerJob<CrawlingResult, 
     
     private bool AreAllAdvertisementsActual(IEnumerable<Advertisement> advertisements)
     {
-        var latestAdvertisementDate = advertisements.Max(x => x.UpdatedAt);
+        var latestAdvertisementDate = advertisements.Max(x => x.UpdatedAt); // 2 days before | 1 day before -> 1 day before
         
+        // now - 10 min before = - 10 min
+        // -10 min <= 15 day -> true
         return _dateTimeProvider.UtcNow - latestAdvertisementDate
                <= _options.MaxAdvertisementDateOffset;
     }

@@ -82,7 +82,6 @@ services
     .AddBackgroundJob<UpdateAdvertisementsPredictionJob, EmptyJobData>(
         "UpdateAdvertisementsPredictionJob");
 
-
 services.AddControllers();
 
 // Build the app
