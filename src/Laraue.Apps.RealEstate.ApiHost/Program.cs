@@ -3,12 +3,15 @@ using Laraue.Apps.RealEstate.Crawling.Abstractions.Crawler.TransportStops;
 using Laraue.Apps.RealEstate.Db;
 using Laraue.Apps.RealEstate.Db.Storage;
 using Microsoft.EntityFrameworkCore;
+using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var services = builder.Services;
 
 services.AddControllers();
+services.AddEndpointsApiExplorer();
+services.AddOpenApi();
 
 services.AddDbContext<AdvertisementsDbContext>(s =>
     s.UseNpgsql(builder.Configuration.GetConnectionString("Postgre"))
@@ -21,6 +24,15 @@ services.AddSingleton<IMetroStationsStorage, MetroStationsStorage>();
 var app = builder.Build();
 
 app.MapControllers();
+app.MapOpenApi();
+app.MapScalarApiReference(options =>
+{
+    options
+        .WithTitle("Advertisements API")
+        .WithTheme(ScalarTheme.Purple)
+        .WithDefaultHttpClient(ScalarTarget.JavaScript, ScalarClient.Axios);
+});
+
 var origins = builder
     .Configuration
     .GetRequiredSection("Cors:Hosts")
