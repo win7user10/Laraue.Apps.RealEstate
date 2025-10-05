@@ -25,7 +25,7 @@ var app = builder.Build();
 
 app.MapControllers();
 app.MapOpenApi();
-app.MapScalarApiReference(options =>
+app.MapScalarApiReference("/api/scalar", options =>
 {
     options
         .WithTitle("Advertisements API")
