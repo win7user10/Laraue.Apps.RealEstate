@@ -24,14 +24,18 @@ services.AddSingleton<IMetroStationsStorage, MetroStationsStorage>();
 var app = builder.Build();
 
 app.MapControllers();
-app.MapOpenApi();
-app.MapScalarApiReference("/api/scalar", options =>
+
+if (app.Environment.IsDevelopment())
 {
-    options
-        .WithTitle("Advertisements API")
-        .WithTheme(ScalarTheme.Purple)
-        .WithDefaultHttpClient(ScalarTarget.JavaScript, ScalarClient.Axios);
-});
+    app.MapOpenApi();
+    app.MapScalarApiReference(options =>
+    {
+        options
+            .WithTitle("Advertisements API")
+            .WithTheme(ScalarTheme.Purple)
+            .WithDefaultHttpClient(ScalarTarget.JavaScript, ScalarClient.Axios);
+    });
+}
 
 var origins = builder
     .Configuration
