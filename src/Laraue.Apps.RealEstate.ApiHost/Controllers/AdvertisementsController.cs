@@ -23,7 +23,7 @@ public sealed class AdvertisementsController : ControllerBase
       return _storage.GetAdvertisementsAsync(
          new AdvertisementsRequest
          {
-            Filter = new Filter()
+            Filter = new Filter
             {
                MaxDate = request.Filter.MaxDate,
                MinDate = request.Filter.MinDate,
@@ -42,6 +42,7 @@ public sealed class AdvertisementsController : ControllerBase
                MinSquare = request.Filter.MinSquare,
                RoomsCount = request.Filter.RoomsCount,
                Source = request.Filter.Source,
+               SearchString = request.Filter.SearchString,
             },
             Pagination = new PaginationData
             {

@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Concurrent;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -31,7 +32,7 @@ public class OllamaPredictor(HttpClient client, ILogger<OllamaPredictor> logger)
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
     };
 
-    private Dictionary<Type, FormatGenerator.OllamaSchemaProperty?> _schemas = new ();
+    private readonly ConcurrentDictionary<Type, FormatGenerator.OllamaSchemaProperty?> _schemas = new ();
     
     public Task<TModel> PredictAsync<TModel>(string model, string prompt, string base64EncodedImage, CancellationToken ct = default)
         where TModel : class
@@ -52,16 +53,18 @@ public class OllamaPredictor(HttpClient client, ILogger<OllamaPredictor> logger)
         CancellationToken ct = default)
         where TModel : class
     {
-        if (!_schemas.TryGetValue(typeof(TModel), out var schema))
+        // semaphore
+        var schema = _schemas.GetOrAdd(typeof(TModel), type =>
         {
-            schema = FormatGenerator.GetSchema(typeof(TModel));
+            var schema = FormatGenerator.GetSchema(type);
+            
             logger.LogInformation(
                 "Ollama schema of type {Type} is {Schema}",
                 typeof(TModel),
                 JsonSerializer.Serialize(schema, _options));
-            
-            _schemas.Add(typeof(TModel), schema);
-        }
+
+            return schema;
+        });
 
         var request = new Dictionary<string, object>()
         {

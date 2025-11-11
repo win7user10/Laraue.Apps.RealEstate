@@ -45,4 +45,5 @@ public class Filter
     public int? DistanceInMinutes { get; init; }
     
     public AdvertisementSource? Source { get; init; }
+    public string? SearchString { get; init; }
 }

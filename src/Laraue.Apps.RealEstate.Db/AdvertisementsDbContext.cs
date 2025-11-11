@@ -61,6 +61,8 @@ public sealed class AdvertisementsDbContext : DbContext, IJobsDbContext, IInterc
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.HasPostgresExtension("pg_trgm");
+        
         modelBuilder.Entity<Image>()
             .HasIndex(x => x.Url)
             .IsUnique();
@@ -78,20 +80,19 @@ public sealed class AdvertisementsDbContext : DbContext, IJobsDbContext, IInterc
         modelBuilder.Entity<JobStateEntity>()
             .HasKey(x => x.JobName);
 
-        modelBuilder.Entity<Advertisement>()
-            .HasIndex(x => x.SourceId);
-        
-        modelBuilder.Entity<Advertisement>()
-            .HasIndex(x => x.UpdatedAt);
-        
-        modelBuilder.Entity<Advertisement>()
-            .HasIndex(x => x.Square);
-        
-        modelBuilder.Entity<Advertisement>()
-            .HasIndex(x => x.RoomsCount);
-        
-        modelBuilder.Entity<Advertisement>()
-            .HasIndex(x => x.FloorNumber);
+        modelBuilder.Entity<Advertisement>(entity =>
+        {
+            entity.HasIndex(x => x.SourceId);
+            entity.HasIndex(x => x.UpdatedAt);
+            entity.HasIndex(x => x.Square);
+            entity.HasIndex(x => x.RoomsCount);
+            entity.HasIndex(x => x.FloorNumber);
+            
+            entity
+                .HasIndex(x => x.ShortDescription)
+                .HasMethod("gin")
+                .HasOperators("gin_trgm_ops");
+        });
         
         modelBuilder.Entity<CrawlingSessionAdvertisement>()
             .HasKey(x => new { x.AdvertisementId, x.CrawlingSessionId });

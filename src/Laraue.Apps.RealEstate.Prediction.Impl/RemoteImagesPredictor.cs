@@ -1,4 +1,5 @@
-﻿using Laraue.Apps.RealEstate.Prediction.Abstractions;
+﻿using System.Collections.Concurrent;
+using Laraue.Apps.RealEstate.Prediction.Abstractions;
 using Microsoft.Extensions.Logging;
 using SkiaSharp;
 
@@ -24,61 +25,70 @@ public sealed class RemoteImagesPredictor : IRemoteImagesPredictor
         IEnumerable<string> urls,
         CancellationToken ct = default)
     {
-        var imagePredictions = new Dictionary<string, PredictionResult>();
+        var imagePredictions = new ConcurrentDictionary<string, PredictionResult>();
         
         var urlsArray = urls.ToArray();
 
-        foreach (var url in urlsArray)
+        var options = new ParallelOptions { MaxDegreeOfParallelism = 2, CancellationToken = ct };
+        await Parallel.ForEachAsync(urlsArray, options, async (url, innerCt) =>
         {
-            ct.ThrowIfCancellationRequested();
-            
-            var urlToPredict = url;
-            _logger.LogDebug("Start loading image [{Url}]", urlToPredict);
+            innerCt.ThrowIfCancellationRequested();
 
-            try
-            {
-                var bytes = await _client.GetByteArrayAsync(urlToPredict, ct);
+            _logger.LogInformation("Start loading image [{Url}]", url);
 
-                // var bytes = ResizeImage(stream, 500, 400);
+            var result = await PredictAsync(url, innerCt);
+            imagePredictions.TryAdd(url, result);
 
-                _logger.LogInformation("Image Size is [{Size}] bytes", bytes.Length);
-
-                var base64String = Convert.ToBase64String(bytes);
-
-                _logger.LogDebug("Start prediction for image [{Url}]", urlToPredict);
-
-                var result = await _predictor.PredictAsync(base64String, ct);
-
-                _logger.LogDebug(
-                    "Prediction finished. Result is [{Result}]",
-                    result);
-
-                imagePredictions.Add(urlToPredict, new PredictionResult
-                {
-                    RenovationRating = result.RenovationRating,
-                    Description = result.Description,
-                    Tags = result.Tags
-                });
-
-                _logger.LogInformation("Completed [{Current}/{Total}]", imagePredictions.Count, urlsArray.Length);
-            }
-            catch (Exception e)
-            {
-                imagePredictions.Add(urlToPredict, new PredictionResult
-                {
-                    ErrorWhileRequesting = true
-                });
-                
-                _logger.LogWarning(
-                    e,
-                    "Fail [{CurrentNumber}/{Total}]. Url '{UrlToPredict}' is not loaded",
-                    imagePredictions.Count,
-                    urlsArray.Length,
-                    urlToPredict);
-            }
-        }
+            _logger.LogInformation("Completed [{Current}/{Total}]", imagePredictions.Count, urlsArray.Length);
+        });
 
         return imagePredictions;
+    }
+
+    private async Task<PredictionResult> PredictAsync(
+        string urlToPredict,
+        CancellationToken ct)
+    {
+        try
+        {
+            var bytes = await _client.GetByteArrayAsync(urlToPredict, ct);
+
+            // var bytes = ResizeImage(stream, 500, 400);
+
+            _logger.LogInformation("Image Size is [{Size}] bytes", bytes.Length);
+
+            var base64String = Convert.ToBase64String(bytes);
+
+            _logger.LogDebug("Start prediction for image [{Url}]", urlToPredict);
+
+            var result = await _predictor.PredictAsync(base64String, ct);
+
+            _logger.LogDebug(
+                "Prediction finished. Result is [{Result}]",
+                result);
+
+            var renovationRating = result.RenovationRating;
+            
+            // Sometimes model hallucinates and setas a score for unrelated image.
+            if (result.Tags.Any(x => x.Contains("exterior", StringComparison.InvariantCultureIgnoreCase)))
+            {
+                renovationRating = 0;
+            }
+
+            return new PredictionResult
+            {
+                RenovationRating = renovationRating,
+                Description = result.Description,
+                Tags = result.Tags
+            };
+        }
+        catch (Exception)
+        {
+            return new PredictionResult
+            {
+                ErrorWhileRequesting = true
+            };
+        }
     }
 
     private byte[] ResizeImage(Stream imageBytes, int targetWidth, int targetHeight)

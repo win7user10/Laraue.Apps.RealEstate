@@ -48,4 +48,6 @@ public class Filter
     public IList<int>? RoomsCount { get; init; }
     
     public AdvertisementSource? Source { get; init; }
+    
+    public string? SearchString { get; init; } 
 }

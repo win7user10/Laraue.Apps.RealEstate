@@ -115,7 +115,12 @@ public sealed class AdvertisementStorage : IAdvertisementStorage
             query = query.Where(x => x.SourceType == filter.Source);
         }
         
-        query = filter.SortBy switch
+        if (!string.IsNullOrEmpty(filter.SearchString))
+        {
+            query = query.Where(x => EF.Functions.TrigramsAreNotWordSimilar(x.ShortDescription!, filter.SearchString));
+        }
+        
+        var orderedQuery = filter.SortBy switch
         {
             AdvertisementsSort.UpdatedAt => query.OrderBy(x => x.UpdatedAt, filter.SortOrderBy),
             AdvertisementsSort.SquareMeterPrice => query.OrderBy(x => x.SquareMeterPrice, filter.SortOrderBy),
@@ -128,7 +133,9 @@ public sealed class AdvertisementStorage : IAdvertisementStorage
             _ => throw new Exception(),
         };
         
-        return await query.Select(x => new AdvertisementDto
+        orderedQuery = orderedQuery.ThenBy(x => x.UpdatedAt);
+        
+        return await orderedQuery.Select(x => new AdvertisementDto
         {
             TotalFloorsNumber = x.TotalFloorsNumber,
             Link = x.SourceType.GetAdvertisementUrl(x.Link),

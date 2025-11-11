@@ -28,7 +28,7 @@ public class EstimateImagesRenovationJob(
             
             var nextUrls = await repository.GetNextUnpredictedUrls(BatchSize, stoppingToken);
             
-            logger.LogInformation("Get {ActualCount}/{Count} urls for prediction", BatchSize, nextUrls.Count);
+            logger.LogInformation("Get {ActualCount}/{Count} urls for prediction", nextUrls.Count, BatchSize);
 
             if (nextUrls.Count == 0)
             {
