@@ -171,12 +171,12 @@ public abstract class BaseAdvertisementProcessor<TExternalIdentifier> : IAdverti
             
             if (!existsAdvertisements.TryGetValue(parsedPage.Id, out var advertisement))
             {
-                // Fill the fields should be setup only on first insert.
-                dbAdvertisement.FirstTimeCrawledAt = _dateTimeProvider.UtcNow;
-                
                 _dbContext.Add(dbAdvertisement);
                 
                 FillAdvertisement(dbAdvertisement, parsedPage);
+                
+                // Fill the fields should be setup only on first insert.
+                dbAdvertisement.FirstTimeCrawledAt = dbAdvertisement.CrawledAt;
             }
             else
             {
