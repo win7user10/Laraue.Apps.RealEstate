@@ -35,10 +35,6 @@ public class RemoteImagesPredictorTests
     public async Task PredictTest(string url, double minRate, double maxRate)
     {
         var result = await _predictor.PredictAsync([url]);
-        
-        var pair = Assert.Single(result);
-        
-        Assert.Equal(url, pair.Key);
 
         var isFailed = false;
         var failMessageBuilder = new StringBuilder();
@@ -49,19 +45,18 @@ public class RemoteImagesPredictorTests
             failMessageBuilder.AppendLine(reason);
         }
         
-        if (minRate > pair.Value.RenovationRating)
-            AddFailReason($"Excepted rating > {minRate}, got: {pair.Value.RenovationRating}");
+        if (minRate > result.RenovationRating)
+            AddFailReason($"Excepted rating > {minRate}, got: {result.RenovationRating}");
         
-        if (maxRate < pair.Value.RenovationRating)
-            AddFailReason($"Excepted rating < {maxRate}, got: {pair.Value.RenovationRating}");
+        if (maxRate < result.RenovationRating)
+            AddFailReason($"Excepted rating < {maxRate}, got: {result.RenovationRating}");
 
         if (isFailed)
         {
-            failMessageBuilder.AppendLine($"Original tags: {string.Join(',', pair.Value.Tags)}");
-            failMessageBuilder.AppendLine($"Original description: {pair.Value.Description}");
+            failMessageBuilder.AppendLine($"Advantages: {string.Join(',', result.Advantages)}");
+            failMessageBuilder.AppendLine($"Problems: {string.Join(',', result.Problems)}");
         }
         
         Assert.False(isFailed, failMessageBuilder.ToString());
-        _testOutputHelper.WriteLine(pair.Value.ToString());
     }
 }

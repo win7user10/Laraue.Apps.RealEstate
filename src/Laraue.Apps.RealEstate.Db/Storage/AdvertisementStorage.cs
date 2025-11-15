@@ -146,9 +146,11 @@ public sealed class AdvertisementStorage : IAdvertisementStorage
             RoomsCount = x.RoomsCount,
             SourceId = x.SourceId,
             SourceType = x.SourceType,
-            RenovationRating = Math.Round(x.RenovationRating.GetValueOrDefault(), 2),
+            RenovationRating = x.RenovationRating.GetValueOrDefault(),
             Ideality = Math.Round(x.Ideality, 2),
             ShortDescription = x.ShortDescription,
+            Advantages = x.Advantages,
+            Problems = x.Problems,
             MetroStations = x.TransportStops
                 .Select(y => new AdvertisementMetroStationDto
                 {
@@ -160,13 +162,13 @@ public sealed class AdvertisementStorage : IAdvertisementStorage
                 }),
             RealSquareMeterPrice = Math.Round(x.SquareMeterPredictedPrice, 2),
             UpdatedAt = x.UpdatedAt,
+            FirstTimeCrawledAt = x.FirstTimeCrawledAt,
+            CrawledAt = x.CrawledAt,
             Images = x.LinkedImages
                 .Select(y => new AdvertisementImageDto
                 {
                     Url = y.Image.Url,
                     Description = y.Image.Description,
-                    RenovationRating = y.Image.RenovationRating,
-                    Tags = y.Image.Tags,
                 })
         }).ShortPaginateEFAsync(request);
     }

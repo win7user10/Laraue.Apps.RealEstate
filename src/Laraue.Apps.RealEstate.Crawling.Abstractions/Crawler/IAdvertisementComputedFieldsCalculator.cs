@@ -14,7 +14,7 @@ public record struct ComputedFields(
 public sealed record AdvertisementData(
     decimal Square,
     decimal TotalPrice,
-    double? RenovationRating,
+    int? RenovationRating,
     int FloorNumber,
     int TotalFloorsNumber,
     IEnumerable<TransportStopData> TransportStops);

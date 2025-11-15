@@ -24,7 +24,6 @@ public class CianAdvertisementProcessorTests : TestWithDatabase
     public CianAdvertisementProcessorTests()
     {
         var sp = ServiceCollection.AddSingleton<CianAdvertisementProcessor>()
-            .AddSingleton<IAverageRatingCalculator, AverageRatingCalculator>()
             .AddSingleton<IDateTimeProvider, DateTimeProvider>()
             .AddSingleton(new Mock<ILogger<CianAdvertisementProcessor>>().Object)
             .BuildServiceProvider();
@@ -91,8 +90,8 @@ public class CianAdvertisementProcessorTests : TestWithDatabase
             ShortDescription = "abc",
             LinkedImages = new List<AdvertisementImage>()
             {
-                new() { Image = new () { RenovationRating = 0.54, Url = "https://link1" } },
-                new() { Image = new () { RenovationRating = 0.52, Url = "https://link2" } },
+                new() { Image = new () { Url = "https://link1" } },
+                new() { Image = new () { Url = "https://link2" } },
             },
             TransportStops = new List<AdvertisementTransportStop>()
             {

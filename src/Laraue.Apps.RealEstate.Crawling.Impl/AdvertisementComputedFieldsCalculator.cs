@@ -33,7 +33,7 @@ public sealed class AdvertisementComputedFieldsCalculator : IAdvertisementComput
 
         const double metroIsNotNearFine = 1.0;
 
-        var fine = GetRenovationRatingFineCoef(advertisementData.RenovationRating)
+        var fine = GetRenovationRatingFineCoef(advertisementData.RenovationRating.GetValueOrDefault())
             + GetFloorNumberFineCoef(
                 advertisementData.FloorNumber,
                 advertisementData.TotalFloorsNumber)
@@ -42,14 +42,15 @@ public sealed class AdvertisementComputedFieldsCalculator : IAdvertisementComput
         return fine;
     }
     
-    private static double GetRenovationRatingFineCoef(double? renovationRating)
+    private static double GetRenovationRatingFineCoef(int renovationRating)
     {
-        if (renovationRating is null)
+        // When no renovation made fine is better that then it is var bad.
+        if (renovationRating == 0)
         {
-            return 0.4;
+            return 0.3;
         }
         
-        return (1 - renovationRating.Value);
+        return 1 - renovationRating / (double)10;
     }
     
     private static double GetFloorNumberFineCoef(int floorNumber, int totalFloorsNumber)

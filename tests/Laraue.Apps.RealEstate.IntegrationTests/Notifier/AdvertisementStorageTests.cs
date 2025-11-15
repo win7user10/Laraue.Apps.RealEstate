@@ -23,7 +23,7 @@ public sealed class AdvertisementStorageTests : TestWithDatabase
             RoomsCount = 2,
             Square = 30,
             TotalFloorsNumber = 5,
-            RenovationRating = 0.54,
+            RenovationRating = 5,
             TransportStops = new List<AdvertisementTransportStop>
             {
                 new () { DistanceType = DistanceType.Foot, DistanceInMinutes = 6, TransportStopId = 3 },
@@ -40,7 +40,7 @@ public sealed class AdvertisementStorageTests : TestWithDatabase
             RoomsCount = 2,
             Square = 35,
             TotalFloorsNumber = 5,
-            RenovationRating = 0.61,
+            RenovationRating = 6,
             TransportStops = new List<AdvertisementTransportStop>
             {
                 new () { DistanceType = DistanceType.Foot, DistanceInMinutes = 12, TransportStopId = 3 },

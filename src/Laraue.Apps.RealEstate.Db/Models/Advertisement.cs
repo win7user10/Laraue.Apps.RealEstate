@@ -32,12 +32,34 @@ public sealed class Advertisement
         private set {}
     }
 
+    /// <summary>
+    /// Date from the advertisement, when it was updated on the site.
+    /// </summary>
     public DateTime UpdatedAt { get; set; }
     
+    /// <summary>
+    /// Date when advertisement updated by crawler last time.
+    /// </summary>
     public DateTime CrawledAt { get; set; }
+    
+    /// <summary>
+    /// Date when advertisement was inserted into the service database first time.
+    /// </summary>
+    public DateTime FirstTimeCrawledAt { get; set; }
+    
+    /// <summary>
+    /// When the prediction process is finished.
+    /// </summary>
     public DateTime? PredictedAt { get; set; }
+    
+    /// <summary>
+    /// When the item is ready to get via API.
+    /// </summary>
+    public DateTime? ReadyAt { get; set; }
 
-    public double? RenovationRating { get; set; }
+    public int? RenovationRating { get; set; }
+    public string[] Advantages { get; set; } = [];
+    public string[] Problems { get; set; } = [];
 
     public decimal SquareMeterPredictedPrice { get; set; }
 

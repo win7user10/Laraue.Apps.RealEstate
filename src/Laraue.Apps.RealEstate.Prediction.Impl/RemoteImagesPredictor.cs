@@ -21,98 +21,92 @@ public sealed class RemoteImagesPredictor : IRemoteImagesPredictor
         _client = client;
     }
     
-    public async Task<IDictionary<string, PredictionResult>> PredictAsync(
+    public async Task<PredictionResult> PredictAsync(
         IEnumerable<string> urls,
         CancellationToken ct = default)
     {
-        var imagePredictions = new ConcurrentDictionary<string, PredictionResult>();
-        
-        var urlsArray = urls.ToArray();
+        var images = new List<byte[]>();
 
-        var options = new ParallelOptions { MaxDegreeOfParallelism = 2, CancellationToken = ct };
-        await Parallel.ForEachAsync(urlsArray, options, async (url, innerCt) =>
+        foreach (var url in urls)
         {
-            innerCt.ThrowIfCancellationRequested();
-
-            _logger.LogInformation("Start loading image [{Url}]", url);
-
-            var result = await PredictAsync(url, innerCt);
-            imagePredictions.TryAdd(url, result);
-
-            _logger.LogInformation("Completed [{Current}/{Total}]", imagePredictions.Count, urlsArray.Length);
-        });
-
-        return imagePredictions;
-    }
-
-    private async Task<PredictionResult> PredictAsync(
-        string urlToPredict,
-        CancellationToken ct)
-    {
-        try
-        {
-            var bytes = await _client.GetByteArrayAsync(urlToPredict, ct);
-
-            // var bytes = ResizeImage(stream, 500, 400);
-
-            _logger.LogInformation("Image Size is [{Size}] bytes", bytes.Length);
-
-            var base64String = Convert.ToBase64String(bytes);
-
-            _logger.LogDebug("Start prediction for image [{Url}]", urlToPredict);
-
-            var result = await _predictor.PredictAsync(base64String, ct);
-
-            _logger.LogDebug(
-                "Prediction finished. Result is [{Result}]",
-                result);
-
-            var renovationRating = result.RenovationRating;
-            
-            // Sometimes model hallucinates and setas a score for unrelated image.
-            if (result.Tags.Any(x => x.Contains("exterior", StringComparison.InvariantCultureIgnoreCase)))
+            try
             {
-                renovationRating = 0;
+                images.Add(await _client.GetByteArrayAsync(url, ct));
             }
-
-            return new PredictionResult
+            catch (Exception)
             {
-                RenovationRating = renovationRating,
-                Description = result.Description,
-                Tags = result.Tags
-            };
+                _logger.LogDebug("Failed loading [{Url}]", url);
+            }
         }
-        catch (Exception)
+
+        // It is not enough images too ranking
+        if (images.Count < 3)
         {
             return new PredictionResult
             {
-                ErrorWhileRequesting = true
+                RenovationRating = 0
             };
         }
+        
+        // Take only 15 images ro prevent too big tasks. Use batching with images merging here?
+        var mergedImage = MergeImages(images.Take(15));
+        _logger.LogInformation("Merged image size is {Size} MB", mergedImage.Length / 1024 / 1024);
+        var base64String = Convert.ToBase64String(mergedImage);
+
+        var predictionResult = await _predictor.PredictAsync(base64String, ct);
+        return new PredictionResult
+        {
+            Advantages = predictionResult.Advantages,
+            Problems = predictionResult.Problems,
+            RenovationRating = predictionResult.RenovationRating,
+        };
     }
 
-    private byte[] ResizeImage(Stream imageBytes, int targetWidth, int targetHeight)
+    public static byte[] MergeImages(IEnumerable<byte[]> images)
     {
-        using var originalBitmap = SKBitmap.Decode(imageBytes);
-        
-        var ratioX = (float)targetWidth / originalBitmap.Width;
-        var ratioY = (float)targetHeight / originalBitmap.Height;
-        var ratio = Math.Min(ratioX, ratioY);
+        var bitmaps = images.Select(SKBitmap.Decode);
 
-        var newWidth = (int)(originalBitmap.Width * ratio);
-        var newHeight = (int)(originalBitmap.Height * ratio);
+        var merged = MergeImagesWithBorders(bitmaps);
         
-        using var resizedBitmap = new SKBitmap(newWidth, newHeight);
+        using var data = merged.Encode(SKEncodedImageFormat.Png, 100);
+        return data.ToArray();
+    }
+    
+    private static SKImage MergeImagesWithBorders(
+        IEnumerable<SKBitmap> images,
+        int borderWidth = 2,
+        SKColor borderColor = default)
+    {
+        if (borderColor == default) borderColor = SKColors.Black;
+    
+        var imageList = images.ToList();
+    
+        // Calculate total dimensions
+        var totalWidth = imageList.Sum(img => img.Width) + (imageList.Count - 1) * borderWidth;
+        var maxHeight = imageList.Max(img => img.Height);
+    
+        // Create canvas
+        using var surface = SKSurface.Create(new SKImageInfo(totalWidth, maxHeight));
+        var canvas = surface.Canvas;
+        canvas.Clear(SKColors.White);
+    
+        // Draw images with borders
+        var currentX = 0;
+        foreach (var image in imageList)
+        {
+            // Draw image
+            canvas.DrawBitmap(image, new SKPoint(currentX, 0));
         
-        using var canvas = new SKCanvas(resizedBitmap);
-        canvas.Clear();
-        using var paint = new SKPaint { FilterQuality = SKFilterQuality.High };
-        canvas.DrawBitmap(originalBitmap, new SKRect(0, 0, newWidth, newHeight), paint);
+            // Draw border (right side only for all but last image)
+            if (currentX > 0)
+            {
+                using var paint = new SKPaint { Color = borderColor, StrokeWidth = borderWidth };
+                canvas.DrawLine(currentX, 0, currentX, maxHeight, paint);
+            }
         
-        using var outputStream = new MemoryStream();
-        resizedBitmap.Encode(outputStream, SKEncodedImageFormat.Jpeg, 30);
-        
-        outputStream.Seek(0, SeekOrigin.Begin);
-        return outputStream.ToArray();
+            currentX += image.Width + borderWidth;
+        }
+    
+        return surface.Snapshot();
     }
 }

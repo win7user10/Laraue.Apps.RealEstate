@@ -67,9 +67,6 @@ public sealed class AdvertisementsDbContext : DbContext, IJobsDbContext, IInterc
             .HasIndex(x => x.Url)
             .IsUnique();
         
-        modelBuilder.Entity<Image>()
-            .HasIndex(x => x.PredictedAt);
-        
         modelBuilder.Entity<AdvertisementImage>()
             .HasKey(x => new { x.AdvertisementId, x.ImageId });
 
@@ -87,6 +84,8 @@ public sealed class AdvertisementsDbContext : DbContext, IJobsDbContext, IInterc
             entity.HasIndex(x => x.Square);
             entity.HasIndex(x => x.RoomsCount);
             entity.HasIndex(x => x.FloorNumber);
+            entity.HasIndex(x => x.PredictedAt);
+            entity.HasIndex(x => x.ReadyAt);
             
             entity
                 .HasIndex(x => x.ShortDescription)

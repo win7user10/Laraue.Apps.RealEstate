@@ -2,7 +2,7 @@
 
 public interface IRemoteImagesPredictor
 {
-    Task<IDictionary<string, PredictionResult>> PredictAsync(
+    Task<PredictionResult> PredictAsync(
         IEnumerable<string> urls,
         CancellationToken ct = default);
 }

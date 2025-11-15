@@ -2,9 +2,7 @@
 
 public record PredictionResult
 {
-    public bool IsPictureRelevant => RenovationRating != 0;
-    public double RenovationRating { get; init; }
-    public string? Description { get; init; }
-    public string[] Tags { get; init; } = [];
-    public bool ErrorWhileRequesting { get; init; }
+    public int RenovationRating { get; init; }
+    public string[] Advantages { get; init; } = [];
+    public string[] Problems { get; init; } = [];
 }

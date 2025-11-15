@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Laraue.Apps.RealEstate.Db;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Laraue.Apps.RealEstate.Db.Migrations
 {
     [DbContext(typeof(AdvertisementsDbContext))]
-    partial class AdvertisimentsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251115121740_UpdateApiToSupportNewFrontendRenovationView")]
+    partial class UpdateApiToSupportNewFrontendRenovationView
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -33,9 +36,18 @@ namespace Laraue.Apps.RealEstate.Db.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
+                    b.PrimitiveCollection<string[]>("Advantages")
+                        .IsRequired()
+                        .HasColumnType("text[]")
+                        .HasColumnName("advantages");
+
                     b.Property<DateTime>("CrawledAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("crawled_at");
+
+                    b.Property<DateTime>("FirstTimeCrawledAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("first_time_crawled_at");
 
                     b.Property<int?>("FlatType")
                         .HasColumnType("integer")
@@ -58,8 +70,17 @@ namespace Laraue.Apps.RealEstate.Db.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("predicted_at");
 
-                    b.Property<double?>("RenovationRating")
-                        .HasColumnType("double precision")
+                    b.PrimitiveCollection<string[]>("Problems")
+                        .IsRequired()
+                        .HasColumnType("text[]")
+                        .HasColumnName("problems");
+
+                    b.Property<DateTime?>("ReadyAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("ready_at");
+
+                    b.Property<int?>("RenovationRating")
+                        .HasColumnType("integer")
                         .HasColumnName("renovation_rating");
 
                     b.Property<int>("RoomsCount")
@@ -112,6 +133,12 @@ namespace Laraue.Apps.RealEstate.Db.Migrations
 
                     b.HasIndex("FloorNumber")
                         .HasDatabaseName("ix_advertisements_floor_number");
+
+                    b.HasIndex("PredictedAt")
+                        .HasDatabaseName("ix_advertisements_predicted_at");
+
+                    b.HasIndex("ReadyAt")
+                        .HasDatabaseName("ix_advertisements_ready_at");
 
                     b.HasIndex("RoomsCount")
                         .HasDatabaseName("ix_advertisements_rooms_count");
@@ -250,19 +277,6 @@ namespace Laraue.Apps.RealEstate.Db.Migrations
                         .HasColumnType("text")
                         .HasColumnName("description");
 
-                    b.Property<DateTime?>("PredictedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("predicted_at");
-
-                    b.Property<double>("RenovationRating")
-                        .HasColumnType("double precision")
-                        .HasColumnName("renovation_rating");
-
-                    b.PrimitiveCollection<string[]>("Tags")
-                        .IsRequired()
-                        .HasColumnType("text[]")
-                        .HasColumnName("tags");
-
                     b.Property<string>("Url")
                         .IsRequired()
                         .HasColumnType("text")
@@ -270,9 +284,6 @@ namespace Laraue.Apps.RealEstate.Db.Migrations
 
                     b.HasKey("Id")
                         .HasName("pk_images");
-
-                    b.HasIndex("PredictedAt")
-                        .HasDatabaseName("ix_images_predicted_at");
 
                     b.HasIndex("Url")
                         .IsUnique()

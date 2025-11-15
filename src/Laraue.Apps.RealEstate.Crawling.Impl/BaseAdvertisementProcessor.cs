@@ -171,6 +171,9 @@ public abstract class BaseAdvertisementProcessor<TExternalIdentifier> : IAdverti
             
             if (!existsAdvertisements.TryGetValue(parsedPage.Id, out var advertisement))
             {
+                // Fill the fields should be setup only on first insert.
+                dbAdvertisement.FirstTimeCrawledAt = _dateTimeProvider.UtcNow;
+                
                 _dbContext.Add(dbAdvertisement);
                 
                 FillAdvertisement(dbAdvertisement, parsedPage);
@@ -182,7 +185,10 @@ public abstract class BaseAdvertisementProcessor<TExternalIdentifier> : IAdverti
                     continue;
                 }
                 
+                // Fill the fields shouldn't be changed.
                 dbAdvertisement.Id = advertisement.Id;
+                dbAdvertisement.FirstTimeCrawledAt = advertisement.FirstTimeCrawledAt;
+                
                 _dbContext.Attach(dbAdvertisement);
                 FillAdvertisement(dbAdvertisement, parsedPage);
             }
@@ -221,6 +227,7 @@ public abstract class BaseAdvertisementProcessor<TExternalIdentifier> : IAdverti
         model.CrawledAt = _dateTimeProvider.UtcNow;
         model.FlatType = parsedAdvertisement.FlatType;
         model.PredictedAt = null;
+        model.ReadyAt = null;
     }
 
     private bool TryGetPublicStopByName(
@@ -272,6 +279,7 @@ public abstract class BaseAdvertisementProcessor<TExternalIdentifier> : IAdverti
                 Id = x.Id,
                 SourceId = x.SourceId,
                 UpdatedAt = x.UpdatedAt,
+                FirstTimeCrawledAt = x.FirstTimeCrawledAt,
             })
             .ToDictionaryAsyncEF(x => x.SourceId, ct);
     }
@@ -315,6 +323,7 @@ public abstract class BaseAdvertisementProcessor<TExternalIdentifier> : IAdverti
         public required long Id { get; set; }
         public required string SourceId { get; set; }
         public required DateTime UpdatedAt { get; set; }
+        public required DateTime FirstTimeCrawledAt { get; set; }
     }
 
     public class ImageLinkDto

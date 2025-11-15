@@ -4,8 +4,6 @@ using Laraue.Apps.RealEstate.Crawling.Abstractions.Crawler.TransportStops;
 using Laraue.Apps.RealEstate.Crawling.Impl;
 using Laraue.Apps.RealEstate.Db;
 using Laraue.Apps.RealEstate.Db.Storage;
-using Laraue.Apps.RealEstate.Prediction.Abstractions;
-using Laraue.Apps.RealEstate.Prediction.Impl;
 using Laraue.Apps.RealEstate.Telegram;
 using Laraue.Apps.RealEstate.WorkerHost;
 using Laraue.Apps.RealEstate.WorkerHost.Jobs;
@@ -50,10 +48,6 @@ services.AddSingleton<IAdvertisementComputedFieldsCalculator, AdvertisementCompu
 services.AddSingleton<IPageParser, PageParser>();
 
 services.AddLinq2Db();
-
-// Configure crawling services
-services
-    .AddSingleton<IAverageRatingCalculator, AverageRatingCalculator>();
 
 // Configure crawlers
 services.AddCianCrawler(builder.Configuration);
