@@ -7,5 +7,4 @@ public sealed record Image
     /// Image address.
     /// </summary>
     public string Url { get; init; } = default!;
-    public string? Description { get; set; }
 }

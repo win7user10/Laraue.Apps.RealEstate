@@ -20,7 +20,7 @@ public sealed class AdvertisementStorage : IAdvertisementStorage
         AdvertisementsRequest request)
     {
         var query = _dbContext.Advertisements
-            .Where(x => x.ReadyAt != null && x.RenovationRating != 0);
+            .Where(x => x.ReadyAt != null && x.RenovationRating > 0);
         
         var filter = request.Filter;
         
@@ -168,7 +168,6 @@ public sealed class AdvertisementStorage : IAdvertisementStorage
                 .Select(y => new AdvertisementImageDto
                 {
                     Url = y.Image.Url,
-                    Description = y.Image.Description,
                 })
         }).ShortPaginateEFAsync(request);
     }
