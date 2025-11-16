@@ -7,4 +7,9 @@ public sealed record Image
     /// Image address.
     /// </summary>
     public string Url { get; init; } = default!;
+    
+    /// <summary>
+    /// Last 200 response of the link.
+    /// </summary>
+    public DateTime LastAvailableAt { get; init; } = default!;
 }

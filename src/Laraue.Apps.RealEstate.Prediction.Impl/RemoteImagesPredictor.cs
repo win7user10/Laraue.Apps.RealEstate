@@ -40,7 +40,7 @@ public sealed class RemoteImagesPredictor : IRemoteImagesPredictor
         }
 
         // It is not enough images too ranking
-        if (images.Count < 3)
+        if (images.Count == 0)
         {
             return new PredictionResult
             {
@@ -48,8 +48,7 @@ public sealed class RemoteImagesPredictor : IRemoteImagesPredictor
             };
         }
         
-        // Take only 15 images ro prevent too big tasks. Use batching with images merging here?
-        var mergedImage = MergeImages(images.Take(15));
+        var mergedImage = MergeImages(images);
         _logger.LogInformation("Merged image size is {Size} MB", mergedImage.Length / 1024 / 1024);
         var base64String = Convert.ToBase64String(mergedImage);
 
@@ -62,7 +61,7 @@ public sealed class RemoteImagesPredictor : IRemoteImagesPredictor
         };
     }
 
-    public static byte[] MergeImages(IEnumerable<byte[]> images)
+    private static byte[] MergeImages(IEnumerable<byte[]> images)
     {
         var bitmaps = images.Select(SKBitmap.Decode);
 

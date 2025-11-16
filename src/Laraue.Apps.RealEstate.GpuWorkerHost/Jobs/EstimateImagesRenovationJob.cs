@@ -37,9 +37,15 @@ public class EstimateImagesRenovationJob(
                 dataToPredict.ImageUrls,
                 stoppingToken);
             
-            await repository.UpdatePrediction(dataToPredict.Id, prediction, stoppingToken);
+            logger.LogInformation(
+                "id:{Id} is predicted for {Time}. Rating: ({Rating}), Advantages count: ({AdvCount}), Problems count: ({ProblemsCount}))",
+                dataToPredict.Id,
+                sw.Elapsed,
+                prediction.RenovationRating,
+                prediction.Advantages.Length,
+                prediction.Problems.Length);
             
-            logger.LogInformation("id:{Id} is predicted for {Time}", dataToPredict.Id, sw.Elapsed);
+            await repository.UpdatePrediction(dataToPredict.Id, prediction, stoppingToken);
         }
         
         return WaitUntilNextFire;

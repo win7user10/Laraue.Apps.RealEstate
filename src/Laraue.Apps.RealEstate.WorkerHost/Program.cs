@@ -75,6 +75,10 @@ services
 services
     .AddBackgroundJob<UpdateAdvertisementsPredictionJob, EmptyJobData>(
         "UpdateAdvertisementsPredictionJob");
+services
+    .AddBackgroundJob<CleanUnavailableLinksJob, EmptyJobData>(
+        "CleanUnavailableLinksJob");
+services.AddHttpClient<CleanUnavailableLinksJob>();
 
 services.AddControllers();
 

@@ -139,7 +139,7 @@ public abstract class BaseAdvertisementProcessor<TExternalIdentifier> : IAdverti
                     _dbContext.AdvertisementImages.Add(new AdvertisementImage
                     {
                         ImageId = imageId,
-                        AdvertisementId = advertisement.Key
+                        AdvertisementId = advertisement.Key,
                     });
                 }
             }
@@ -349,8 +349,10 @@ public abstract class BaseAdvertisementProcessor<TExternalIdentifier> : IAdverti
         var notExistUrls = allAdvertisementImagesUrls
             .Except(existUrls.Keys);
 
+        var lastDate = _dateTimeProvider.UtcNow;
+        
         var newImages = notExistUrls
-            .Select(notExistUrl => new Image { Url = notExistUrl })
+            .Select(notExistUrl => new Image { Url = notExistUrl, LastAvailableAt = lastDate })
             .ToList();
 
         _dbContext.Images.AddRange(newImages);
