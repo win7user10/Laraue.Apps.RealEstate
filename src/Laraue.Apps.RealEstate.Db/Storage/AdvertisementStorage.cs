@@ -20,7 +20,9 @@ public sealed class AdvertisementStorage : IAdvertisementStorage
         AdvertisementsRequest request)
     {
         var query = _dbContext.Advertisements
-            .Where(x => x.ReadyAt != null && x.RenovationRating > 0);
+            .Where(x => x.ReadyAt != null)
+            .Where(x => x.RenovationRating > 0)
+            .Where(x => x.DeletedAt == null);
         
         var filter = request.Filter;
         

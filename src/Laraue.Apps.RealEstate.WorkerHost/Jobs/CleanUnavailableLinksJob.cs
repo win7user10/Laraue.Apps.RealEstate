@@ -1,4 +1,6 @@
-﻿using Laraue.Apps.RealEstate.Db;
+﻿using System.Collections.Concurrent;
+using System.Diagnostics;
+using Laraue.Apps.RealEstate.Db;
 using Laraue.Core.DateTime.Services.Abstractions;
 using Laraue.Core.Extensions.Hosting;
 using LinqToDB.EntityFrameworkCore;
@@ -15,17 +17,23 @@ public class CleanUnavailableLinksJob(
 {
     private readonly TimeSpan _timeToRecheckAdvertisement = TimeSpan.FromDays(7);
     private readonly TimeSpan _timeBetweenJobsRun = TimeSpan.FromMinutes(5);
-    private const int BathSize = 50;
+    private const int MaxParallelism = 6;
+    private const int BatchSize = 150;
 
     public override async Task<TimeSpan> ExecuteAsync(
         JobState<EmptyJobData> jobState,
         CancellationToken stoppingToken = default)
     {
+        var sw = new Stopwatch();
+        
         while (!stoppingToken.IsCancellationRequested)
         {
+            sw.Restart();
+            
             var imagesToCheck = await dbContext.Images
                 .Where(i => i.LastAvailableAt < dateTimeProvider.UtcNow - _timeToRecheckAdvertisement)
-                .Take(BathSize)
+                .OrderBy(i => i.Id)
+                .Take(BatchSize)
                 .Select(x => new
                 {
                     x.Id,
@@ -38,24 +46,42 @@ public class CleanUnavailableLinksJob(
                 return _timeBetweenJobsRun;
             }
 
-            var failed = new HashSet<long>();
-            
-            foreach (var image in imagesToCheck)
-            {
-                try
+            var failed = new ConcurrentBag<long>();
+            var hasError = false;
+
+            await Parallel.ForEachAsync(imagesToCheck,
+                new ParallelOptions { CancellationToken = stoppingToken, MaxDegreeOfParallelism = MaxParallelism },
+                async (image, ct) =>
                 {
-                    var response = await client.GetAsync(image.Url, stoppingToken);
-                    logger.LogInformation("Planing to remove image '{Url}' from DB", image.Url);
-                    if (!response.IsSuccessStatusCode)
+                    if (hasError)
                     {
-                        failed.Add(image.Id);
+                        return;
                     }
-                }
-                catch (Exception e)
-                {
-                    logger.LogError(e, "Job takes the error, continue after restart");
-                    return TimeSpan.FromMinutes(5);
-                }
+                    
+                    try
+                    {
+                        if (!Uri.TryCreate(image.Url, UriKind.Absolute, out var imageUri))
+                        {
+                            failed.Add(image.Id);
+                            return;
+                        }
+                        
+                        var response = await client.GetAsync(imageUri, ct);
+                        if (!response.IsSuccessStatusCode)
+                        {
+                            failed.Add(image.Id);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        logger.LogError(e, $"Job takes the error requesting '{image.Url}', continue after restart excepted");
+                        hasError = true;
+                    }
+                });
+
+            if (hasError)
+            {
+                return TimeSpan.FromMinutes(5);
             }
 
             var removedCount = await dbContext.Images
@@ -73,9 +99,10 @@ public class CleanUnavailableLinksJob(
                     stoppingToken);
             
             logger.LogInformation(
-                "Clean images cycle finished, updated ({UpdatedCount}), deleted: ({DeletedCount})",
+                "Clean images cycle finished, updated ({UpdatedCount}), deleted: ({DeletedCount}) for {Time}",
                 updatedCount,
-                removedCount);
+                removedCount,
+                sw.Elapsed);
         }
 
         return _timeBetweenJobsRun;

@@ -80,6 +80,10 @@ services
         "CleanUnavailableLinksJob");
 services.AddHttpClient<CleanUnavailableLinksJob>();
 
+services
+    .AddBackgroundJob<ArchiveAdvertisementsWithoutImagesJob, EmptyJobData>(
+        "ArchiveAdvertisementsWithoutImagesJob");
+
 services.AddControllers();
 
 // Build the app

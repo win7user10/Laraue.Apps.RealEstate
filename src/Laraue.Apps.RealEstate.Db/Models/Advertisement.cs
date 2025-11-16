@@ -56,6 +56,11 @@ public sealed class Advertisement
     /// When the item is ready to get via API.
     /// </summary>
     public DateTime? ReadyAt { get; set; }
+    
+    /// <summary>
+    /// When the advertisement was marked as deleted.
+    /// </summary>
+    public DateTime? DeletedAt { get; set; }
 
     public int? RenovationRating { get; set; }
     public string[] Advantages { get; set; } = [];
