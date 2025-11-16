@@ -63,9 +63,11 @@ public sealed class AdvertisementsDbContext : DbContext, IJobsDbContext, IInterc
     {
         modelBuilder.HasPostgresExtension("pg_trgm");
         
-        modelBuilder.Entity<Image>()
-            .HasIndex(x => x.Url)
-            .IsUnique();
+        modelBuilder.Entity<Image>(entity =>
+        {
+            entity.HasIndex(x => x.Url).IsUnique();
+            entity.HasIndex(x => x.LastAvailableAt);
+        });
         
         modelBuilder.Entity<AdvertisementImage>()
             .HasKey(x => new { x.AdvertisementId, x.ImageId });
