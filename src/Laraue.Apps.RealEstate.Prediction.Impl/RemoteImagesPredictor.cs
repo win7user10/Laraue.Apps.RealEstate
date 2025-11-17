@@ -61,7 +61,7 @@ public sealed class RemoteImagesPredictor : IRemoteImagesPredictor
         };
     }
 
-    private static byte[] MergeImages(IEnumerable<byte[]> images)
+    public static byte[] MergeImages(IEnumerable<byte[]> images)
     {
         var bitmaps = images.Select(SKBitmap.Decode);
 

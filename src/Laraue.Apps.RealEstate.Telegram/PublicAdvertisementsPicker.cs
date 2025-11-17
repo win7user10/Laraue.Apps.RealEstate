@@ -48,7 +48,7 @@ public sealed class PublicAdvertisementsPicker : IPublicAdvertisementsPicker
             {
                 MaxDate = maxDate,
                 MinDate = minValue,
-                MinRenovationRating = 0.65,
+                MinRenovationRating = 7,
                 SortBy = AdvertisementsSort.RealSquareMeterPrice,
                 SortOrderBy = SortOrder.Ascending,
                 MinPrice = 5_000_000,

@@ -16,18 +16,22 @@ public class Filter
     
     public DateTime? MaxDate { get; init; }
     
+    [Range(0, 100_000_000_000)]
     public decimal? MinPrice { get; init; }
     
+    [Range(0, 100_000_000_000)]
     public decimal? MaxPrice { get; init; }
 
-    [Range(0, 1)]
-    public double? MinRenovationRating { get; init; }
+    [Range(0, 10)]
+    public int? MinRenovationRating { get; init; }
     
-    [Range(0, 1)]
-    public double? MaxRenovationRating { get; init; }
+    [Range(0, 10)]
+    public int? MaxRenovationRating { get; init; }
     
+    [Range(0, 10_000_000)]
     public decimal? MinPerSquareMeterPrice { get; init; }
     
+    [Range(0, 10_000_000)]
     public decimal? MaxPerSquareMeterPrice { get; init; }
     
     [Range(0, 30000)]

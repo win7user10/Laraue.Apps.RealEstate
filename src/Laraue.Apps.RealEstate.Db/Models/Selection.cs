@@ -21,9 +21,9 @@ public sealed record Selection
     
     public decimal? MaxPrice { get; set; }
 
-    public double? MinRenovationRating { get; set; }
+    public int? MinRenovationRating { get; set; }
     
-    public double? MaxRenovationRating { get; set; }
+    public int? MaxRenovationRating { get; set; }
     
     public decimal? MinPerSquareMeterPrice { get; set; }
     

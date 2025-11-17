@@ -13,6 +13,7 @@ public class AvitoTitleExtractorTests
     [InlineData("Апартаменты-студия, 34 м², 5/12 эт.", null, 34, 5, 12, FlatType.Apartments)]
     [InlineData("6-к. квартира, 212 м², 6/6 эт.", 6, 212, 6, 6, FlatType.Flat)]
     [InlineData("Доля в 1-к. квартире, 45 м², 2/4 эт.", 1, 45, 2, 4, FlatType.Flat)]
+    [InlineData("3-к. квартира, 77,7 м², 1/5 эт.", 3, 77.7, 1, 5, FlatType.Flat)]
     public void Extract_ShouldBeMadeCorrectly(
         string source,
         int? roomsNumber,

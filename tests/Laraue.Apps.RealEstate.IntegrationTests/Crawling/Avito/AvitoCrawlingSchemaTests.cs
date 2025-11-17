@@ -39,7 +39,7 @@ public sealed class AvitoCrawlingSchemaTests : IAsyncLifetime
     [Fact]
     public async Task SmokeAsync()
     {
-        var response = await _page!.GoToAsync("https://www.avito.ru/sankt-peterburg/kvartiry/prodam-ASgBAgICAUSSA8YQ?cd=1&context=H4sIAAAAAAAA_wEjANz_YToxOntzOjg6ImZyb21QYWdlIjtzOjc6ImNhdGFsb2ciO312FITcIwAAAA&localPriority=0&s=104", WaitUntilNavigation.DOMContentLoaded);
+        var response = await _page!.GoToAsync("https://www.avito.ru/sankt-peterburg/kvartiry/prodam/vtorichka-ASgBAgICAkSSA8YQ5geMUg?cd=1&context=H4sIAAAAAAAA_wEjANz_YToxOntzOjg6ImZyb21QYWdlIjtzOjc6ImNhdGFsb2ciO312FITcIwAAAA&f=ASgBAQICAkSSA8YQ5geMUgFAkL4NJJSuNZauNQ&localPriority=0&s=104", WaitUntilNavigation.DOMContentLoaded);
 
         if (response.Status > HttpStatusCode.Redirect)
         {

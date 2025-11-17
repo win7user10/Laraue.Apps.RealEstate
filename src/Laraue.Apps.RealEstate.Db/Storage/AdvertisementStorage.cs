@@ -48,7 +48,7 @@ public sealed class AdvertisementStorage : IAdvertisementStorage
 
         if (filter.MinPrice is not null)
         {
-            query = query.Where(x => x.TotalPrice > filter.MinPrice);
+            query = query.Where(x => x.TotalPrice >= filter.MinPrice);
         }
         
         if (filter.MaxPrice is not null)
@@ -58,12 +58,12 @@ public sealed class AdvertisementStorage : IAdvertisementStorage
         
         if (filter.MaxRenovationRating is not null)
         {
-            query = query.Where(x => x.RenovationRating < filter.MaxRenovationRating);
+            query = query.Where(x => x.RenovationRating <= filter.MaxRenovationRating);
         }
         
         if (filter.MinRenovationRating is not null)
         {
-            query = query.Where(x => x.RenovationRating > filter.MinRenovationRating);
+            query = query.Where(x => x.RenovationRating >= filter.MinRenovationRating);
         }
         
         if (filter.MetroIds?.Any() ?? false)

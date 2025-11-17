@@ -18,9 +18,9 @@ public class Filter
     
     public decimal? MaxPrice { get; init; }
 
-    public double? MinRenovationRating { get; init; }
+    public int? MinRenovationRating { get; init; }
     
-    public double? MaxRenovationRating { get; init; }
+    public int? MaxRenovationRating { get; init; }
     
     public decimal? MinPerSquareMeterPrice { get; init; }
     

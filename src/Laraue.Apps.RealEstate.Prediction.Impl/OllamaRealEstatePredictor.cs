@@ -26,6 +26,7 @@ Approximate ranges for the advertisement:
 Important Notes:
 Don't consider images that doesn't contain information's that helps to calculating rating.
 The apartments in rough finish should return 0.
+One problem or advantage length should be no more than 100 symbols.
 
 Return as JSON.
 ";
