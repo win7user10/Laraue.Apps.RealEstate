@@ -98,6 +98,27 @@ public sealed class AvitoCrawlingSchema : CompiledDocumentSchema<IElementHandle,
 
                 pageBuilder.BindManually(async (element, modelBinder) =>
                 {
+                    var geoInfos = await element.QuerySelectorAllAsync(".geo-root-BBVai p:nth-child(1) a");
+                    if (geoInfos.Length != 2)
+                    {
+                        return;
+                    }
+
+                    var result = new List<string>();
+                    foreach (var geoInfo in geoInfos)
+                    {
+                        result.Add(await geoInfo.GetInnerTextAsync() ?? string.Empty);
+                    }
+                    
+                    modelBinder.BindProperty(x => x.FlatAddress, new FlatAddress
+                    {
+                        Street = result.First(),
+                        HouseNumber = result.Last(),
+                    });
+                });
+
+                pageBuilder.BindManually(async (element, modelBinder) =>
+                {
                     var geoInfo = await element.QuerySelectorAsync(".geo-root-BBVai p:nth-child(2)");
                     
                     if (geoInfo is null)
@@ -141,8 +162,6 @@ public sealed class AvitoCrawlingSchema : CompiledDocumentSchema<IElementHandle,
                     
                     modelBinder.BindProperty(x => x.TransportStops, transportStops);
                 });
-
-                pageBuilder.ExecuteAsync(_ => Task.Delay(500));
             })
             .Build()
             .BindingExpression;

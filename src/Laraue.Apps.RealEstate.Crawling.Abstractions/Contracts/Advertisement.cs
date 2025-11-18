@@ -64,4 +64,9 @@ public sealed class Advertisement : ICrawlingModel
     public FlatType FlatType { get; init; }
 
     public TransportStop[]? TransportStops { get; init; }
+
+    /// <summary>
+    /// The flat address.
+    /// </summary>
+    public FlatAddress? FlatAddress { get; init; }
 }

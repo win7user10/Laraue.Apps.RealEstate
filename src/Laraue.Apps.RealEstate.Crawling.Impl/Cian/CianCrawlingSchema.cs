@@ -91,6 +91,29 @@ public sealed class CianCrawlingSchema : CompiledDocumentSchema<IElementHandle, 
 
                 pageBuilder.BindManually(async (element, modelBinder) =>
                 {
+                    var addressDomElements = await element.QuerySelectorAllAsync("a[data-name=GeoLabel]");
+                    var addressElements = new List<string>();
+                    
+                    foreach (var addressDomElement in addressDomElements)
+                    {
+                        addressElements.Add(await addressDomElement.GetInnerTextAsync() ?? string.Empty);
+                    }
+
+                    if (addressElements.Count < 2)
+                    {
+                        return;
+                    }
+
+                    var lastElements = addressElements.TakeLast(2).ToArray();
+                    modelBinder.BindProperty(x => x.FlatAddress, new FlatAddress
+                    {
+                        Street = lastElements.First(),
+                        HouseNumber = lastElements.Last()
+                    });
+                });
+
+                pageBuilder.BindManually(async (element, modelBinder) =>
+                {
                     var name = await element.QuerySelectorAsync("div[data-name=SpecialGeo] a")
                         .AwaitAndModify(x => x.GetInnerTextAsync());
                     

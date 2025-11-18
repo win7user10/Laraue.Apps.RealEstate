@@ -1,9 +1,8 @@
 ﻿using Laraue.Apps.RealEstate.Crawling.Impl.Avito;
 using Laraue.Core.DateTime.Services.Abstractions;
 using Moq;
-using Xunit;
 
-namespace Laraue.Apps.RealEstate.IntegrationTests.Crawling.Avito;
+namespace Laraue.Apps.RealEstate.UnitTests.Avito;
 
 public class AvitoDateParserTests
 {

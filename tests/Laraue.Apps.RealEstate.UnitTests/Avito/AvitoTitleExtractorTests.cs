@@ -1,8 +1,7 @@
 ﻿using Laraue.Apps.RealEstate.Crawling.Abstractions.Crawler;
 using Laraue.Apps.RealEstate.Crawling.Impl.Avito;
-using Xunit;
 
-namespace Laraue.Apps.RealEstate.IntegrationTests.Crawling.Avito;
+namespace Laraue.Apps.RealEstate.UnitTests.Avito;
 
 public class AvitoTitleExtractorTests
 {

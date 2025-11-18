@@ -1,8 +1,7 @@
 ﻿using Laraue.Apps.RealEstate.Crawling.Abstractions.Crawler;
 using Laraue.Apps.RealEstate.Crawling.Impl.Cian;
-using Xunit;
 
-namespace Laraue.Apps.RealEstate.IntegrationTests.Crawling.Cian;
+namespace Laraue.Apps.RealEstate.UnitTests.Cian;
 
 public class CianTitleExtractorTests
 {

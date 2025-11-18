@@ -1,10 +1,6 @@
 ﻿using Laraue.Apps.RealEstate.Abstractions;
-using Laraue.Apps.RealEstate.Crawling.Abstractions.Crawler;
-using Laraue.Apps.RealEstate.Crawling.Impl;
 using Laraue.Apps.RealEstate.Crawling.Impl.Cian;
 using Laraue.Apps.RealEstate.Db.Models;
-using Laraue.Apps.RealEstate.Prediction.Abstractions;
-using Laraue.Apps.RealEstate.Prediction.Impl;
 using Laraue.Core.DateTime.Services.Abstractions;
 using Laraue.Core.DateTime.Services.Impl;
 using Microsoft.EntityFrameworkCore;
@@ -13,7 +9,6 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
 using Advertisement = Laraue.Apps.RealEstate.Crawling.Abstractions.Contracts.Advertisement;
-using TransportStop = Laraue.Apps.RealEstate.Crawling.Abstractions.Contracts.TransportStop;
 
 namespace Laraue.Apps.RealEstate.IntegrationTests.Crawling.Cian;
 

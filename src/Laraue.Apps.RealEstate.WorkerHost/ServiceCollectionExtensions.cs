@@ -16,7 +16,7 @@ public static class ServiceCollectionExtensions
         services.Configure<CianCrawlerServiceOptions>(configuration.GetRequiredSection("Crawlers:Cian"));
 
         services
-            .AddSingleton<ICianCrawlingSchema, CianCrawlingSchema>()
+            .AddSingleton<ICianCrawlingSchema, Crawling.Impl.Cian.CianCrawlingSchema>()
             .AddSingleton<ICianCrawlingSchemaParser, CianCrawlingSchemaParser>()
             .AddScoped<ICianAdvertisementProcessor, CianAdvertisementProcessor>()
             .AddCrawlingService<CianCrawlerJob, CrawlingResult, string, State>("CianCrawler");

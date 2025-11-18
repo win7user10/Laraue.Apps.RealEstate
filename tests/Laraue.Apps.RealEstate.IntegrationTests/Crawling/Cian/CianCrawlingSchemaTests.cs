@@ -45,6 +45,10 @@ public sealed class CianCrawlingSchemaTests : IAsyncLifetime
         var result = await _parser.RunAsync(schema, await _page.QuerySelectorAsync("body"));
         
         Assert.True(result!.Advertisements.Length > 5);
+        Assert.All(result.Advertisements, x =>
+        {
+            Assert.NotNull(x.UpdatedAt);
+        });
     }
 
     public async Task DisposeAsync()
