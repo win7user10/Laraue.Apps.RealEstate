@@ -1,11 +1,13 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Laraue.Apps.RealEstate.Abstractions;
+using Laraue.Apps.RealEstate.Crawling.Abstractions.Contracts;
 using Laraue.Apps.RealEstate.Crawling.Abstractions.Crawler;
 using Laraue.Apps.RealEstate.Crawling.Abstractions.Crawler.TransportStops;
 using Laraue.Apps.RealEstate.Db;
 using Laraue.Apps.RealEstate.Db.Models;
 using Laraue.Core.DataAccess.EFCore.Extensions;
 using Laraue.Core.DateTime.Services.Abstractions;
+using LinqToDB;
 using LinqToDB.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -24,6 +26,8 @@ public abstract class BaseAdvertisementProcessor<TExternalIdentifier> : IAdverti
 
     private IDictionary<string, MetroStationData>? _externalPublicStopsIds;
     private IDictionary<long, MetroStationData>? _systemPublicStopsIds;
+
+    private readonly long CityId = 1; // Hardcode for Saint-Petersburg
 
     protected BaseAdvertisementProcessor(
         AdvertisementSource source,
@@ -47,6 +51,8 @@ public abstract class BaseAdvertisementProcessor<TExternalIdentifier> : IAdverti
         
         var updatedAdvertisements = await UpdateAdvertisementsAsync(advertisements, ct);
 
+        await UpdateAddressesAsync(updatedAdvertisements, ct);
+        
         await UpdateImageLinksAsync(updatedAdvertisements, ct);
         
         await UpdateTransportStopsAsync(updatedAdvertisements, ct);
@@ -55,6 +61,156 @@ public abstract class BaseAdvertisementProcessor<TExternalIdentifier> : IAdverti
 
         return updatedAdvertisements.Keys.ToHashSet();
     }
+
+    private record LocalFlatAddress
+    {
+        public required string Street { get; init; }
+        public required string HouseNumber { get; init; }
+    }
+
+    private static LocalFlatAddress ToLocalFlatAddress(FlatAddress flatAddress)
+    {
+        return new LocalFlatAddress
+        {
+            Street = AddressNormalizer.NormalizeStreet(flatAddress.Street),
+            HouseNumber = AddressNormalizer.NormalizeHouseNumber(flatAddress.HouseNumber),
+        };
+    }
+    
+    private async Task UpdateAddressesAsync(
+        IDictionary<long, Advertisement> advertisements,
+        CancellationToken ct = default)
+    {
+        var allAddresses = advertisements.Values
+            .Where(x => x.FlatAddress != null)
+            .Select(x => ToLocalFlatAddress(x.FlatAddress!))
+            .ToHashSet();
+
+        var allStreets = allAddresses
+            .Select(x => x.Street)
+            .ToArray();
+
+        var existsInDbStreets = await _dbContext.Streets
+            .Where(s => allStreets.Contains(s.Name))
+            .Select(s => new { s.Id, s.Name })
+            .ToDictionaryAsyncEF(c => c.Name, c => c.Id, ct);
+
+        var streetsToInsertIntoDb = allStreets
+            .Except(existsInDbStreets.Keys)
+            .Select(x => new Street { CityId = CityId, Name = x })
+            .ToArray();
+
+        if (streetsToInsertIntoDb.Length > 0)
+        {
+            await _dbContext.GetTable<Street>()
+                .Merge()
+                .Using(streetsToInsertIntoDb)
+                .On((x, y) => x.Name == y.Name)
+                .InsertWhenNotMatched()
+                .MergeAsync(ct);
+            
+            var newStreets = await _dbContext.Streets
+                .Where(s => streetsToInsertIntoDb.Select(x => x.Name).Contains(s.Name))
+                .Select(s => new { s.Id, s.Name })
+                .ToArrayAsyncEF(ct);
+
+            foreach (var newStreet in newStreets)
+            {
+                existsInDbStreets.Add(newStreet.Name, newStreet.Id);
+            }
+            
+            _logger.LogInformation("Inserted new streets '{Streets}'", string.Join(",", newStreets.Select(s => s.Name)));
+        }
+        
+        var existsInDbHouses = await GetHouses(allAddresses, ct);
+        
+        var housesToInsertIntoDb = allAddresses
+            .Where(x => !existsInDbHouses.ContainsKey(x))
+            .ToHashSet();
+
+        if (housesToInsertIntoDb.Count > 0)
+        {
+            var entities = housesToInsertIntoDb
+                .Select(x => new House
+                {
+                    Number = x.HouseNumber,
+                    NumberNormalized = AddressNormalizer.SplitHouseNumber(x.HouseNumber),
+                    StreetId = existsInDbStreets[x.Street]
+                })
+                .ToArray();
+            
+            await _dbContext.GetTable<House>()
+                .Merge()
+                .Using(entities)
+                .On((x, y) => x.StreetId == y.StreetId && x.Number == y.Number)
+                .InsertWhenNotMatched()
+                .MergeAsync(ct);
+            
+            var inserted = await GetHouses(housesToInsertIntoDb, ct);
+            foreach (var insertedHouse in inserted)
+            {
+                existsInDbHouses.Add(insertedHouse.Key, insertedHouse.Value);
+            }
+            
+            _logger.LogInformation(
+                "Inserted new houses '{Streets}'",
+                string.Join(",", inserted.Select(s => $"{s.Key.Street} {s.Key.HouseNumber}")));
+        }
+
+        foreach (var advertisement in advertisements)
+        {
+            if (advertisement.Value.FlatAddress == null)
+            {
+                continue;
+            }
+
+            var localFlatAddress = ToLocalFlatAddress(advertisement.Value.FlatAddress);
+            if (!existsInDbHouses.TryGetValue(localFlatAddress, out var houseId))
+            {
+                continue;
+            }
+
+            _logger.LogInformation("Set houseId='{AddressId}' for adv='{AdvId}'", houseId, advertisement.Key);
+            
+            await _dbContext.Advertisements
+                .Where(a => a.Id == advertisement.Key)
+                .ExecuteUpdateAsync(update => update
+                        .SetProperty(p => p.HouseId, houseId),
+                    ct);
+        }
+    }
+
+
+    private async Task<Dictionary<LocalFlatAddress, long>> GetHouses(HashSet<LocalFlatAddress> houses, CancellationToken ct)
+    {
+        if (houses.Count == 0)
+        {
+            return new Dictionary<LocalFlatAddress, long>();
+        }
+        
+        IQueryable<QueryableHouse>? query = null;
+        foreach (var house in houses)
+        {
+            var innerQuery = _dbContext.Houses
+                .Where(h => h.Number == house.HouseNumber)
+                .Where(h => h.Street.Name == house.Street)
+                .Select(x => new QueryableHouse(x.Street.Name, x.Number, x.Id));
+            
+            query = query is null ? innerQuery : query.Concat(innerQuery);
+        }
+
+        return await query!
+            .ToDictionaryAsyncLinqToDB(
+                x => new LocalFlatAddress
+                {
+                    Street = x.StreetName,
+                    HouseNumber = x.HouseNumber,
+                },
+                x => x.HouseId,
+                ct);
+    }
+
+    private record QueryableHouse(string StreetName, string HouseNumber, long HouseId);
 
     private async Task UpdateTransportStopsAsync(
         IDictionary<long, Advertisement> advertisements,

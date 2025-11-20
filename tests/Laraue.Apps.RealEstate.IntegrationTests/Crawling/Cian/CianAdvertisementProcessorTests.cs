@@ -1,4 +1,5 @@
 ﻿using Laraue.Apps.RealEstate.Abstractions;
+using Laraue.Apps.RealEstate.Crawling.Abstractions.Contracts;
 using Laraue.Apps.RealEstate.Crawling.Impl.Cian;
 using Laraue.Apps.RealEstate.Db.Models;
 using Laraue.Core.DateTime.Services.Abstractions;
@@ -51,11 +52,17 @@ public class CianAdvertisementProcessorTests : TestWithDatabase
                 UpdatedAt = new DateTime(2020, 01, 01, 0, 0, 0, DateTimeKind.Utc),
                 TotalFloorsNumber = 9,
                 Square = 30,
+                FlatAddress = new FlatAddress
+                {
+                    Street = "Невский Проспект",
+                    HouseNumber = "12"
+                }
             }
         };
         
         await _processor.ProcessAsync(advertisements);
-
+        DbContext.ChangeTracker.Clear();
+        
         var advertisement = Assert.Single(
             DbContext.Advertisements
                 .Include(x => x.TransportStops));
@@ -67,6 +74,14 @@ public class CianAdvertisementProcessorTests : TestWithDatabase
         Assert.Equal(DistanceType.Foot, transportStop.DistanceType);
         Assert.Equal(10, transportStop.DistanceInMinutes);
         Assert.Equal(6, transportStop.TransportStopId);
+        
+        var street = Assert.Single(DbContext.Streets);
+        Assert.Equal("Невский Проспект", street.Name);
+        
+        var house = Assert.Single(DbContext.Houses);
+        Assert.Equal("12", house.Number);
+        Assert.Equal(street.Id, house.StreetId);
+        Assert.Equal(house.Id, advertisement.HouseId);
     }
     
     [Fact]
@@ -91,7 +106,7 @@ public class CianAdvertisementProcessorTests : TestWithDatabase
             TransportStops = new List<AdvertisementTransportStop>()
             {
                 new () { DistanceType = DistanceType.Foot, DistanceInMinutes = 6, TransportStopId = 3 }
-            },
+            }
         });
 
         await DbContext.SaveChangesAsync();

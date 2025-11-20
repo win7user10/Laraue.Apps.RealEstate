@@ -17,8 +17,6 @@ public sealed class AdvertisementsDbContext : DbContext, IJobsDbContext, IInterc
     {
     }
 
-    #region AdverisementsDb
-
     public DbSet<Advertisement> Advertisements { get; init; }
     
     public DbSet<AdvertisementTransportStop> AdvertisementTransportStops { get; init; }
@@ -29,24 +27,16 @@ public sealed class AdvertisementsDbContext : DbContext, IJobsDbContext, IInterc
     public DbSet<TransportStop> TransportStops { get; init; }
     
     public DbSet<JobStateEntity> JobStates { get; set; }
-
-    #endregion
     
-    #region CrawlerDb
+    public DbSet<City> Cities { get; set; }
+    public DbSet<Street> Streets { get; set; }
+    public DbSet<House> Houses { get; set; }
     public DbSet<CrawlingSession> CrawlingSessions { get; init; }
     
     public DbSet<CrawlingSessionAdvertisement> CrawlingSessionAdvertisements { get; init; }
-
-    #endregion
-    
-    
-    #region UserDb
-    
     public DbSet<Selection> Selections { get; init; }
     public DbSet<User> Users { get; init; }
     public DbSet<InterceptorStateModel<Guid>> InterceptorState { get; set; }
-    
-    #endregion
     
     protected override void ConfigureConventions(
         ModelConfigurationBuilder configurationBuilder)
@@ -119,6 +109,25 @@ public sealed class AdvertisementsDbContext : DbContext, IJobsDbContext, IInterc
                     Priority = metroStation.Priority,
                 });
         }
+
+        modelBuilder.Entity<City>(builder =>
+        {
+            builder.HasData(new City
+            {
+                Id = 1,
+                Name = "Санкт-Петербург"
+            });
+        });
+        
+        modelBuilder.Entity<Street>(builder =>
+        {
+            builder.HasIndex(x => new { x.CityId, x.Name }).IsUnique();
+        });
+        
+        modelBuilder.Entity<House>(builder =>
+        {
+            builder.HasIndex(x => new { x.StreetId, x.Number }).IsUnique();
+        });
     }
 
     private sealed record CianMetroStation

@@ -4,6 +4,8 @@ namespace Laraue.Apps.RealEstate.Db.Models;
 
 public class House
 {
+    public long Id { get; init; }
+    
     public long StreetId { get; init; }
 
     public Street Street { get; init; } = null!;
@@ -11,11 +13,11 @@ public class House
     /// <summary>
     /// Contain the dull house number string, can be 183-185Ак2А, for example.
     /// </summary>
-    [MaxLength(200)]
-    public required string Address { get; init; }
+    [MaxLength(100)]
+    public required string Number { get; init; }
     
     /// <summary>
     /// Normalized house number to make it searchable, e.g., [183, 184, 185Ак2А]
     /// </summary>
-    public required string[] AddressSegmentsNormalized { get; init; }
+    public required string[] NumberNormalized { get; init; }
 }

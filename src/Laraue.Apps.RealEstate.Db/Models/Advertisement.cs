@@ -71,6 +71,9 @@ public sealed class Advertisement
     public double Ideality { get; set; }
 
     public FlatType? FlatType { get; set; }
+    
+    public long? HouseId { get; set; }
+    public House? House { get; set; }
 
     public ICollection<AdvertisementTransportStop> TransportStops { get; init; } = new List<AdvertisementTransportStop>();
     
