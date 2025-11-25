@@ -2,6 +2,8 @@
 
 public sealed record AdvertisementDto
 {
+    public required long Id { get; init; }
+    
     public required string SourceId { get; init; } = default!;
     
     public required AdvertisementSource SourceType { get; init; }

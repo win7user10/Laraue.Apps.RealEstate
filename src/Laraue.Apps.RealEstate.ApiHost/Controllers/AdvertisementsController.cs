@@ -62,4 +62,14 @@ public sealed class AdvertisementsController : ControllerBase
             MinDate = request.MinDate
          });
    }
+
+   [HttpGet("{id:long}")]
+   public Task<AdvertisementDto?> GetAdvertisementByIdAsync([FromRoute] long id)
+   {
+      return _storage.GetAdvertisementByIdAsync(
+         new AdvertisementByIdRequest
+         {
+            Id = id
+         });
+   }
 }

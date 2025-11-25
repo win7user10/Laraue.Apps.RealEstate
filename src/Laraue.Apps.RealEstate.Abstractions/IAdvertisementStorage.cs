@@ -11,6 +11,14 @@ public interface IAdvertisementStorage
     /// <returns></returns>
     Task<IShortPaginatedResult<AdvertisementDto>> GetAdvertisementsAsync(
         AdvertisementsRequest request);
+    
+    /// <summary>
+    /// Get a single advertisement by the specified criteria.
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns></returns>
+    Task<AdvertisementDto?> GetAdvertisementByIdAsync(
+        AdvertisementByIdRequest request);
 
     /// <summary>
     /// Get common chart with data for the each day in the passed date range.

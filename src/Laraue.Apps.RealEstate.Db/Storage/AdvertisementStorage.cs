@@ -7,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Laraue.Apps.RealEstate.Db.Storage;
 
+using System.Linq.Expressions;
+
 public sealed class AdvertisementStorage : IAdvertisementStorage
 {
     private readonly AdvertisementsDbContext _dbContext;
@@ -15,6 +17,44 @@ public sealed class AdvertisementStorage : IAdvertisementStorage
     {
         _dbContext = dbContext;
     }
+    
+    private static readonly Expression<Func<Advertisement, AdvertisementDto>> AdvertisementProjection =
+        x => new AdvertisementDto
+        {
+            Id = x.Id,
+            TotalFloorsNumber = x.TotalFloorsNumber,
+            Link = x.SourceType.GetAdvertisementUrl(x.Link),
+            FloorNumber = x.FloorNumber,
+            TotalPrice = x.TotalPrice,
+            SquareMeterPrice = Math.Round(x.SquareMeterPrice, 2),
+            Square = Math.Round(x.Square, 1),
+            RoomsCount = x.RoomsCount,
+            SourceId = x.SourceId,
+            SourceType = x.SourceType,
+            RenovationRating = x.RenovationRating.GetValueOrDefault(),
+            Ideality = Math.Round(x.Ideality, 2),
+            ShortDescription = x.ShortDescription,
+            Advantages = x.Advantages,
+            Problems = x.Problems,
+            MetroStations = x.TransportStops
+                .Select(y => new AdvertisementMetroStationDto
+                {
+                    Name = y.TransportStop!.Name,
+                    DistanceType = y.DistanceType,
+                    DistanceInMinutes = y.DistanceInMinutes,
+                    Color = y.TransportStop.Color,
+                    Id = y.Id
+                }),
+            RealSquareMeterPrice = Math.Round(x.SquareMeterPredictedPrice, 2),
+            UpdatedAt = x.UpdatedAt,
+            FirstTimeCrawledAt = x.FirstTimeCrawledAt,
+            CrawledAt = x.CrawledAt,
+            Images = x.LinkedImages
+                .Select(y => new AdvertisementImageDto
+                {
+                    Url = y.Image.Url,
+                })
+        };
 
     public async Task<IShortPaginatedResult<AdvertisementDto>> GetAdvertisementsAsync(
         AdvertisementsRequest request)
@@ -137,41 +177,19 @@ public sealed class AdvertisementStorage : IAdvertisementStorage
         
         orderedQuery = orderedQuery.ThenBy(x => x.UpdatedAt);
         
-        return await orderedQuery.Select(x => new AdvertisementDto
-        {
-            TotalFloorsNumber = x.TotalFloorsNumber,
-            Link = x.SourceType.GetAdvertisementUrl(x.Link),
-            FloorNumber = x.FloorNumber,
-            TotalPrice = x.TotalPrice,
-            SquareMeterPrice = Math.Round(x.SquareMeterPrice, 2),
-            Square = Math.Round(x.Square, 1),
-            RoomsCount = x.RoomsCount,
-            SourceId = x.SourceId,
-            SourceType = x.SourceType,
-            RenovationRating = x.RenovationRating.GetValueOrDefault(),
-            Ideality = Math.Round(x.Ideality, 2),
-            ShortDescription = x.ShortDescription,
-            Advantages = x.Advantages,
-            Problems = x.Problems,
-            MetroStations = x.TransportStops
-                .Select(y => new AdvertisementMetroStationDto
-                {
-                    Name = y.TransportStop!.Name,
-                    DistanceType = y.DistanceType,
-                    DistanceInMinutes = y.DistanceInMinutes,
-                    Color = y.TransportStop.Color,
-                    Id = y.Id
-                }),
-            RealSquareMeterPrice = Math.Round(x.SquareMeterPredictedPrice, 2),
-            UpdatedAt = x.UpdatedAt,
-            FirstTimeCrawledAt = x.FirstTimeCrawledAt,
-            CrawledAt = x.CrawledAt,
-            Images = x.LinkedImages
-                .Select(y => new AdvertisementImageDto
-                {
-                    Url = y.Image.Url,
-                })
-        }).ShortPaginateEFAsync(request);
+        return await orderedQuery
+            .Select(AdvertisementProjection)
+            .ShortPaginateEFAsync(request);
+    }
+    
+    public async Task<AdvertisementDto?> GetAdvertisementByIdAsync(
+        AdvertisementByIdRequest request)
+    {
+        return await _dbContext.Advertisements
+            .AsNoTracking()
+            .Where(x => x.Id == request.Id)
+            .Select(AdvertisementProjection)
+            .SingleOrDefaultAsync();
     }
 
     public async Task<IList<MainChartDayItemDto>> GetMainChartAsync(RangeChartRequest request)
