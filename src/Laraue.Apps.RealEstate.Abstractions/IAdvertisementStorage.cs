@@ -7,10 +7,10 @@ public interface IAdvertisementStorage
     /// <summary>
     /// Get top advertisements for the passed criteria.
     /// </summary>
-    /// <param name="request"></param>
     /// <returns></returns>
     Task<IShortPaginatedResult<AdvertisementDto>> GetAdvertisementsAsync(
-        AdvertisementsRequest request);
+        AdvertisementsRequest request,
+        CancellationToken cancellationToken = default);
     
     /// <summary>
     /// Get a single advertisement by the specified criteria.

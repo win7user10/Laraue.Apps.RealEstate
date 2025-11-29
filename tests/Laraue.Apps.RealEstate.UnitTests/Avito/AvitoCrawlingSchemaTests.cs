@@ -1,5 +1,4 @@
 ﻿using Laraue.Apps.RealEstate.Crawling.Impl.Avito;
-using Laraue.Apps.RealEstate.Crawling.Impl.Cian;
 using Laraue.Core.DateTime.Services.Abstractions;
 using Laraue.Crawling.Dynamic.PuppeterSharp;
 using Microsoft.Extensions.Logging;

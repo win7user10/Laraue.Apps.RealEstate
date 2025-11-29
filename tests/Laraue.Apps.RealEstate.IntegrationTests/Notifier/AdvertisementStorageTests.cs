@@ -12,7 +12,7 @@ public sealed class AdvertisementStorageTests : TestWithDatabase
 
     public AdvertisementStorageTests()
     {
-        _storage = new AdvertisementStorage(DbContext);
+        _storage = new AdvertisementStorage(DbContext, new HousesStorage(DbContext));
         
         DbContext.Advertisements.Add(new Db.Models.Advertisement
         {

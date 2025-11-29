@@ -17,6 +17,7 @@ services.AddDbContext<AdvertisementsDbContext>(s =>
     s.UseNpgsql(builder.Configuration.GetConnectionString("Postgre"))
         .UseSnakeCaseNamingConvention());
 
+services.AddScoped<IHousesStorage, HousesStorage>();
 services.AddScoped<IAdvertisementStorage, AdvertisementStorage>();
 services.AddSingleton<IMetroStationsStorage, MetroStationsStorage>();
 

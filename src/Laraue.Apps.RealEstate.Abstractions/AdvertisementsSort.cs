@@ -7,7 +7,5 @@ public enum AdvertisementsSort
     Square,
     TotalPrice,
     RenovationRating,
-    RealSquareMeterPrice,
     RoomsCount,
-    Ideality,
 }

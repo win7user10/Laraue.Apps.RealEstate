@@ -42,6 +42,7 @@ services.AddDbContext<AdvertisementsDbContext>(s =>
 
 services.AddScoped<IJobsDbContext>(sp => sp.GetRequiredService<AdvertisementsDbContext>());
 services.AddScoped<IMetroStationsStorage, MetroStationsStorage>();
+services.AddScoped<IHousesStorage, HousesStorage>();
 services.AddScoped<UpdateAdvertisementsPredictionJob.IRepository, UpdateAdvertisementsPredictionJob.Repository>();
 services.AddSingleton<IMemoryCache>(new MemoryCache(new MemoryCacheOptions()));
 services.AddSingleton<IAdvertisementComputedFieldsCalculator, AdvertisementComputedFieldsCalculator>();

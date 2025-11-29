@@ -26,7 +26,7 @@ services.AddHttpClient<IRemoteImagesPredictor, RemoteImagesPredictor>();
 services.AddHttpClient<IOllamaPredictor, OllamaPredictor>(x =>
 {
     x.BaseAddress = new Uri("http://localhost:11434/");
-    x.Timeout = TimeSpan.FromSeconds(30);
+    x.Timeout = TimeSpan.FromSeconds(600);
 });
 
 services.AddScoped<EstimateImagesRenovationJob.IRepository, EstimateImagesRenovationJob.Repository>();

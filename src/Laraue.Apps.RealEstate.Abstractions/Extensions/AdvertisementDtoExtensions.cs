@@ -32,8 +32,7 @@ public static class AdvertisementDtoExtensions
         result.AppendLine($"Цена за кв.м: {advertisement.SquareMeterPrice.ToHumanReadableCurrencyString()}");
         result.AppendLine($"Площадь: {advertisement.Square} кв.м");
         result.AppendLine($"Этаж: {advertisement.FloorNumber}/{advertisement.TotalFloorsNumber}");
-        result.AppendLine($"Оценка ремонта: {advertisement.RenovationRating:P0}");
-        result.AppendLine($"Идеальность: {(advertisement.RealSquareMeterPrice == 0 ? 1 : advertisement.SquareMeterPrice / advertisement.RealSquareMeterPrice):P0}");
+        result.AppendLine($"Оценка ремонта: {advertisement.RenovationRating}/10");
         result.AppendLine($"Обновлено: {advertisement.UpdatedAt:G}");
         
         result.AppendLine("Метро:");

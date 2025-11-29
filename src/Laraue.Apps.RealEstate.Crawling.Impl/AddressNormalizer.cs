@@ -1,4 +1,6 @@
-﻿namespace Laraue.Apps.RealEstate.Crawling.Impl;
+﻿using System.Text;
+
+namespace Laraue.Apps.RealEstate.Crawling.Impl;
 
 public static class AddressNormalizer
 {
@@ -7,10 +9,35 @@ public static class AddressNormalizer
         return houseNumber.Trim().ToLower();
     }
     
-    public static string[] SplitHouseNumber(string houseNumber)
+    public static string[] NormalizeForSearch(string houseNumber)
     {
         var houseParts = houseNumber.Split('-');
-        return houseParts.Select(p => p.Trim().ToLower()).ToArray();
+        return houseParts.Select(NormalizeSingleNumberForSearch).ToArray();
+    }
+
+    private static string NormalizeSingleNumberForSearch(string number)
+    {
+        number = NormalizeHouseNumber(number);
+        
+        if (number.Length < 1 || !char.IsDigit(number[0]))
+        {
+            return number;
+        }
+
+        var result = new StringBuilder();
+        foreach (var character in number)
+        {
+            if (char.IsDigit(character))
+            {
+                result.Append(character);
+            }
+            else
+            {
+                break;
+            }
+        }
+        
+        return result.ToString();
     }
 
     private static readonly Dictionary<string, string> Replacements = new()

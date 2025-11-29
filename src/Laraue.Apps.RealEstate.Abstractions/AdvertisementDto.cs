@@ -22,11 +22,7 @@ public sealed record AdvertisementDto
     
     public required decimal SquareMeterPrice { get; init; }
     
-    public required decimal RealSquareMeterPrice { get; init; }
-    
     public required int? RenovationRating { get; init; }
-
-    public required double? Ideality { get; init; }
 
     public required DateTime UpdatedAt { get; init; }
     public required DateTime CrawledAt { get; init; }
@@ -34,6 +30,10 @@ public sealed record AdvertisementDto
     public required string? ShortDescription { get; init; }
     public required string[] Advantages { get; init; }
     public required string[] Problems { get; init; }
+    public required long? HouseId { get; init; }
+    public required string? HouseNumber { get; init; }
+    public required string? Address { get; init; }
+    public decimal? PredictedMarketPrice { get; set; }
 
     public required IEnumerable<AdvertisementMetroStationDto> MetroStations { get; init; }
     public required IEnumerable<AdvertisementImageDto> Images { get; init; }

@@ -66,8 +66,10 @@ public sealed class Advertisement
     public string[] Advantages { get; set; } = [];
     public string[] Problems { get; set; } = [];
 
+    [Obsolete]
     public decimal SquareMeterPredictedPrice { get; set; }
 
+    [Obsolete]
     public double Ideality { get; set; }
 
     public FlatType? FlatType { get; set; }

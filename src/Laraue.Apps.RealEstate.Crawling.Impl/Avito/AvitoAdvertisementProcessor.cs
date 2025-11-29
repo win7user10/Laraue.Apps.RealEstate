@@ -2,6 +2,7 @@
 using Laraue.Apps.RealEstate.Crawling.Abstractions.Crawler.Avito;
 using Laraue.Apps.RealEstate.Crawling.Abstractions.Crawler.TransportStops;
 using Laraue.Apps.RealEstate.Db;
+using Laraue.Apps.RealEstate.Db.Storage;
 using Laraue.Core.DateTime.Services.Abstractions;
 using Microsoft.Extensions.Logging;
 
@@ -13,13 +14,15 @@ public sealed class AvitoAdvertisementProcessor : BaseAdvertisementProcessor<lon
         AdvertisementsDbContext dbContext,
         IMetroStationsStorage metroStationsStorage,
         IDateTimeProvider dateTimeProvider,
-        ILogger<AvitoAdvertisementProcessor> logger)
+        ILogger<AvitoAdvertisementProcessor> logger,
+        IHousesStorage housesStorage)
         : base(
             AdvertisementSource.Avito,
             dbContext,
             metroStationsStorage,
             dateTimeProvider,
-            logger)
+            logger,
+            housesStorage)
     {
     }
 

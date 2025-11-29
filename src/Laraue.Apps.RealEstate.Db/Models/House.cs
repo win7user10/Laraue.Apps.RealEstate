@@ -17,7 +17,7 @@ public class House
     public required string Number { get; init; }
     
     /// <summary>
-    /// Normalized house number to make it searchable, e.g., [183, 184, 185Ак2А]
+    /// Normalized house number to make it searchable, e.g., [183, 184, 185]
     /// </summary>
-    public required string[] NumberNormalized { get; init; }
+    public required string[] NumberNormalized { get; set; }
 }

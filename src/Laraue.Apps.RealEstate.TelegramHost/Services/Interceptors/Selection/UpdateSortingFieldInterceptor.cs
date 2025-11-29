@@ -12,14 +12,12 @@ public class UpdateSortingFieldInterceptor : BaseInterceptor<AdvertisementsSort>
 {
     private static readonly Dictionary<AdvertisementsSort, string> SortingNames = new()
     {
-        [AdvertisementsSort.Ideality] = "Идеальность",
         [AdvertisementsSort.Square] = "Площадь",
         [AdvertisementsSort.RenovationRating] = "Оценка ремонта",
         [AdvertisementsSort.RoomsCount] = "Количество комнат",
         [AdvertisementsSort.UpdatedAt] = "Дата обновления",
         [AdvertisementsSort.TotalPrice] = "Цена",
         [AdvertisementsSort.SquareMeterPrice] = "Цена за м2",
-        [AdvertisementsSort.RealSquareMeterPrice] = "Справедливая цена за м2",
     };
 
     public UpdateSortingFieldInterceptor(

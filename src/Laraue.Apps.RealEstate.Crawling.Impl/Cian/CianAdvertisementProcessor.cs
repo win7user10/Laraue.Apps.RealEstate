@@ -2,6 +2,7 @@
 using Laraue.Apps.RealEstate.Crawling.Abstractions.Crawler.Cian;
 using Laraue.Apps.RealEstate.Crawling.Abstractions.Crawler.TransportStops;
 using Laraue.Apps.RealEstate.Db;
+using Laraue.Apps.RealEstate.Db.Storage;
 using Laraue.Core.DateTime.Services.Abstractions;
 using Microsoft.Extensions.Logging;
 
@@ -13,13 +14,15 @@ public sealed class CianAdvertisementProcessor : BaseAdvertisementProcessor<int>
         AdvertisementsDbContext dbContext,
         IMetroStationsStorage metroStationsStorage,
         IDateTimeProvider dateTimeProvider,
-        ILogger<CianAdvertisementProcessor> logger)
+        ILogger<CianAdvertisementProcessor> logger,
+        IHousesStorage housesStorage)
         : base(
             AdvertisementSource.Cian,
             dbContext,
             metroStationsStorage,
             dateTimeProvider,
-            logger)
+            logger,
+            housesStorage)
     {
     }
 

@@ -5,6 +5,7 @@ using Laraue.Apps.RealEstate.Crawling.Abstractions.Crawler;
 using Laraue.Apps.RealEstate.Crawling.Abstractions.Crawler.TransportStops;
 using Laraue.Apps.RealEstate.Db;
 using Laraue.Apps.RealEstate.Db.Models;
+using Laraue.Apps.RealEstate.Db.Storage;
 using Laraue.Core.DataAccess.EFCore.Extensions;
 using Laraue.Core.DateTime.Services.Abstractions;
 using LinqToDB;
@@ -22,6 +23,7 @@ public abstract class BaseAdvertisementProcessor<TExternalIdentifier> : IAdverti
     private readonly AdvertisementsDbContext _dbContext;
     private readonly IMetroStationsStorage _metroStationsStorage;
     private readonly IDateTimeProvider _dateTimeProvider;
+    private readonly IHousesStorage _housesStorage;
     private readonly ILogger<BaseAdvertisementProcessor<TExternalIdentifier>> _logger;
 
     private IDictionary<string, MetroStationData>? _externalPublicStopsIds;
@@ -34,13 +36,15 @@ public abstract class BaseAdvertisementProcessor<TExternalIdentifier> : IAdverti
         AdvertisementsDbContext dbContext,
         IMetroStationsStorage metroStationsStorage,
         IDateTimeProvider dateTimeProvider,
-        ILogger<BaseAdvertisementProcessor<TExternalIdentifier>> logger)
+        ILogger<BaseAdvertisementProcessor<TExternalIdentifier>> logger,
+        IHousesStorage housesStorage)
     {
         Source = source;
         _dbContext = dbContext;
         _metroStationsStorage = metroStationsStorage;
         _dateTimeProvider = dateTimeProvider;
         _logger = logger;
+        _housesStorage = housesStorage;
     }
     
     public async Task<HashSet<long>> ProcessAsync(
@@ -51,7 +55,7 @@ public abstract class BaseAdvertisementProcessor<TExternalIdentifier> : IAdverti
         
         var updatedAdvertisements = await UpdateAdvertisementsAsync(advertisements, ct);
 
-        await UpdateAddressesAsync(updatedAdvertisements, ct);
+        await UpdateAddressesAsync(updatedAdvertisements, ct); // with locking
         
         await UpdateImageLinksAsync(updatedAdvertisements, ct);
         
@@ -62,15 +66,9 @@ public abstract class BaseAdvertisementProcessor<TExternalIdentifier> : IAdverti
         return updatedAdvertisements.Keys.ToHashSet();
     }
 
-    private record LocalFlatAddress
+    private static SearchableByStreetNameFlatAddress ToLocalFlatAddress(FlatAddress flatAddress)
     {
-        public required string Street { get; init; }
-        public required string HouseNumber { get; init; }
-    }
-
-    private static LocalFlatAddress ToLocalFlatAddress(FlatAddress flatAddress)
-    {
-        return new LocalFlatAddress
+        return new SearchableByStreetNameFlatAddress
         {
             Street = AddressNormalizer.NormalizeStreet(flatAddress.Street),
             HouseNumber = AddressNormalizer.NormalizeHouseNumber(flatAddress.HouseNumber),
@@ -81,6 +79,9 @@ public abstract class BaseAdvertisementProcessor<TExternalIdentifier> : IAdverti
         IDictionary<long, Advertisement> advertisements,
         CancellationToken ct = default)
     {
+        await _dbContext.ShareLockAsync<Street>(ct);
+        await _dbContext.ShareLockAsync<House>(ct);
+        
         var allAddresses = advertisements.Values
             .Where(x => x.FlatAddress != null)
             .Select(x => ToLocalFlatAddress(x.FlatAddress!))
@@ -88,7 +89,7 @@ public abstract class BaseAdvertisementProcessor<TExternalIdentifier> : IAdverti
 
         var allStreets = allAddresses
             .Select(x => x.Street)
-            .ToArray();
+            .ToHashSet();
 
         var existsInDbStreets = await _dbContext.Streets
             .Where(s => allStreets.Contains(s.Name))
@@ -105,7 +106,7 @@ public abstract class BaseAdvertisementProcessor<TExternalIdentifier> : IAdverti
             await _dbContext.GetTable<Street>()
                 .Merge()
                 .Using(streetsToInsertIntoDb)
-                .On((x, y) => x.Name == y.Name)
+                .On((x, y) => x.Name == y.Name && x.CityId == y.CityId)
                 .InsertWhenNotMatched()
                 .MergeAsync(ct);
             
@@ -122,7 +123,7 @@ public abstract class BaseAdvertisementProcessor<TExternalIdentifier> : IAdverti
             _logger.LogInformation("Inserted new streets '{Streets}'", string.Join(",", newStreets.Select(s => s.Name)));
         }
         
-        var existsInDbHouses = await GetHouses(allAddresses, ct);
+        var existsInDbHouses = await _housesStorage.GetHouses(allAddresses, ct);
         
         var housesToInsertIntoDb = allAddresses
             .Where(x => !existsInDbHouses.ContainsKey(x))
@@ -134,7 +135,7 @@ public abstract class BaseAdvertisementProcessor<TExternalIdentifier> : IAdverti
                 .Select(x => new House
                 {
                     Number = x.HouseNumber,
-                    NumberNormalized = AddressNormalizer.SplitHouseNumber(x.HouseNumber),
+                    NumberNormalized = AddressNormalizer.NormalizeForSearch(x.HouseNumber),
                     StreetId = existsInDbStreets[x.Street]
                 })
                 .ToArray();
@@ -146,7 +147,7 @@ public abstract class BaseAdvertisementProcessor<TExternalIdentifier> : IAdverti
                 .InsertWhenNotMatched()
                 .MergeAsync(ct);
             
-            var inserted = await GetHouses(housesToInsertIntoDb, ct);
+            var inserted = await _housesStorage.GetHouses(housesToInsertIntoDb, ct);
             foreach (var insertedHouse in inserted)
             {
                 existsInDbHouses.Add(insertedHouse.Key, insertedHouse.Value);
@@ -179,38 +180,6 @@ public abstract class BaseAdvertisementProcessor<TExternalIdentifier> : IAdverti
                     ct);
         }
     }
-
-
-    private async Task<Dictionary<LocalFlatAddress, long>> GetHouses(HashSet<LocalFlatAddress> houses, CancellationToken ct)
-    {
-        if (houses.Count == 0)
-        {
-            return new Dictionary<LocalFlatAddress, long>();
-        }
-        
-        IQueryable<QueryableHouse>? query = null;
-        foreach (var house in houses)
-        {
-            var innerQuery = _dbContext.Houses
-                .Where(h => h.Number == house.HouseNumber)
-                .Where(h => h.Street.Name == house.Street)
-                .Select(x => new QueryableHouse(x.Street.Name, x.Number, x.Id));
-            
-            query = query is null ? innerQuery : query.Concat(innerQuery);
-        }
-
-        return await query!
-            .ToDictionaryAsyncLinqToDB(
-                x => new LocalFlatAddress
-                {
-                    Street = x.StreetName,
-                    HouseNumber = x.HouseNumber,
-                },
-                x => x.HouseId,
-                ct);
-    }
-
-    private record QueryableHouse(string StreetName, string HouseNumber, long HouseId);
 
     private async Task UpdateTransportStopsAsync(
         IDictionary<long, Advertisement> advertisements,

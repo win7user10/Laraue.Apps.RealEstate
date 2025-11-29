@@ -18,7 +18,7 @@ public sealed class AdvertisementsPickerTests : TestWithDatabase
         _picker = new PublicAdvertisementsPicker(
             DbContext,
             _dateTimeProviderMock.Object,
-            new AdvertisementStorage(DbContext));
+            new AdvertisementStorage(DbContext, new HousesStorage(DbContext)));
     }
 
     [Fact]

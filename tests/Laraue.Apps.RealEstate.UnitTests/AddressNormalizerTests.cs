@@ -15,9 +15,11 @@ public class AddressNormalizerTests
     
     [Theory]
     [InlineData("123-125", "123,125")]
+    [InlineData("125бВ", "125")]
+    [InlineData("Новая улица", "новая улица")]
     public void SplitHouseNumber_Always_Success(string actual, string excepted)
     {
-        var normalized = AddressNormalizer.SplitHouseNumber(actual);
+        var normalized = AddressNormalizer.NormalizeForSearch(actual);
         
         var exceptedArray = excepted.Split(',');
         

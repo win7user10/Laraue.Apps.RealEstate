@@ -1,5 +1,4 @@
-﻿using System.Collections.Concurrent;
-using Laraue.Apps.RealEstate.Prediction.Abstractions;
+﻿using Laraue.Apps.RealEstate.Prediction.Abstractions;
 using Microsoft.Extensions.Logging;
 using SkiaSharp;
 
@@ -53,12 +52,14 @@ public sealed class RemoteImagesPredictor : IRemoteImagesPredictor
         var base64String = Convert.ToBase64String(mergedImage);
 
         var predictionResult = await _predictor.PredictAsync(base64String, ct);
-        return new PredictionResult
+        var result = new PredictionResult
         {
-            Advantages = predictionResult.Advantages,
-            Problems = predictionResult.Problems,
-            RenovationRating = predictionResult.RenovationRating,
+            Advantages = predictionResult.Features.Where(x => x.IsPositive).Select(x => x.Description).ToArray(),
+            Problems = predictionResult.Features.Where(x => !x.IsPositive).Select(x => x.Description).ToArray(),
+            RenovationRating = predictionResult.HasNoRenovation ? 0 : (int)Math.Ceiling(predictionResult.RenovationRating)
         };
+        
+        return result;
     }
 
     public static byte[] MergeImages(IEnumerable<byte[]> images)

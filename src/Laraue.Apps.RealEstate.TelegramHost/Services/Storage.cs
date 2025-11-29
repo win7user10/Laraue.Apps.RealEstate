@@ -68,8 +68,8 @@ public class Storage : IStorage
             UserId = userId,
             PerPage = 2,
             NotificationInterval = new TimeSpan(12, 0, 0),
-            SortBy = AdvertisementsSort.RealSquareMeterPrice,
-            SortOrderBy = SortOrder.Ascending
+            SortBy = AdvertisementsSort.UpdatedAt,
+            SortOrderBy = SortOrder.Descending
         });
 
         await _context.SaveChangesAsync(ct);

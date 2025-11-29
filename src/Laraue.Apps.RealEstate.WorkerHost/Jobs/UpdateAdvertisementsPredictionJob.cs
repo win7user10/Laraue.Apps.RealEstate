@@ -1,6 +1,5 @@
 ﻿using Laraue.Apps.RealEstate.Crawling.Abstractions.Crawler;
 using Laraue.Apps.RealEstate.Db;
-using Laraue.Apps.RealEstate.Prediction.Abstractions;
 using Laraue.Core.DateTime.Services.Abstractions;
 using Laraue.Core.Extensions.Hosting;
 using LinqToDB.EntityFrameworkCore;
@@ -86,8 +85,6 @@ public class UpdateAdvertisementsPredictionJob(
             return dbContext.Advertisements
                 .Where(a => a.Id == advertisementId)
                 .ExecuteUpdateAsync(upd => upd
-                    .SetProperty(a => a.SquareMeterPredictedPrice, computedFields.SquareMeterPredictedPrice)
-                    .SetProperty(a => a.Ideality, computedFields.Ideality)
                     .SetProperty(a => a.ReadyAt, dateTimeProvider.UtcNow), cancellationToken);
         }
     }
