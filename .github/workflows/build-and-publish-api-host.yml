@@ -28,6 +28,7 @@ jobs:
       run: dotnet build src/Laraue.Apps.RealEstate.ApiHost --no-restore -c Release
     
     - name: Upload
+      if: github.ref == 'refs/heads/master'
       uses: marcodallasanta/ssh-scp-deploy@v1.2.0
       with:
        host: ${{ secrets.SSH_HOST }} # "example.com"
