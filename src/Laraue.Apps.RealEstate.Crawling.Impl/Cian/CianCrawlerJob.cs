@@ -6,19 +6,25 @@ using Microsoft.Extensions.Options;
 
 namespace Laraue.Apps.RealEstate.Crawling.Impl.Cian;
 
-public sealed class CianCrawlerJob : BaseRealEstateCrawlerJob
+[JobGroup("CianCrawlerJob")]
+public class CianCrawlerJob : BaseRealEstateCrawlerJob
 {
-    public CianCrawlerJob(
+    protected CianCrawlerJob(
         ILogger<CianCrawlerJob> logger,
         IOptions<CianCrawlerServiceOptions> options,
         IDateTimeProvider dateTimeProvider,
         AdvertisementsDbContext dbContext,
         ICianAdvertisementProcessor processor,
-        ICianCrawlingSchemaParser parser)
+        ICianCrawlingSchemaParser parser,
+        long cityId,
+        string advertisementsAddress)
             : base(logger, options, dateTimeProvider, dbContext, processor, parser)
     {
+        CityId = cityId;
+        AdvertisementsAddress = advertisementsAddress;
     }
 
-    protected override string AdvertisementsAddress
-        => "https://spb.cian.ru/cat.php?deal_type=sale&engine_version=2&object_type%5B0%5D=1&offer_type=flat&region=2&sort=creation_date_desc&p={0}";
+    protected override string AdvertisementsAddress { get; }
+
+    protected override long CityId { get; }
 }

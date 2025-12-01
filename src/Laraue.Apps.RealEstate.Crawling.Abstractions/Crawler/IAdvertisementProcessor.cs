@@ -13,10 +13,9 @@ public interface IAdvertisementProcessor
     /// <summary>
     /// Process advertisements.
     /// </summary>
-    /// <param name="advertisements"></param>
-    /// <param name="ct"></param>
     /// <returns>Identifiers of the passed advs that have been saved or updated.</returns>
     Task<HashSet<long>> ProcessAsync(
         Advertisement[] advertisements,
+        long cityId,
         CancellationToken ct = default);
 }

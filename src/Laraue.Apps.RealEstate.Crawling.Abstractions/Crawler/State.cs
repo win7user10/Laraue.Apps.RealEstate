@@ -2,6 +2,8 @@
 
 public record State
 {
+    public long LastCityId { get; set; }
+    
     public int LastPage { get; set; }
     
     public DateTime? StartedAt { get; set; }
