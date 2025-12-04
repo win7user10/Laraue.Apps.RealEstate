@@ -10,6 +10,7 @@
     <PackageReference Include="Laraue.Core.DateTime" Version="$(LaraueCoreDateTimeVersion)" />
     <PackageReference Include="Laraue.Crawling.Crawler.EfCore" Version="$(LaraueCrawlingVersion)" />
     <PackageReference Include="Polly" Version="$(PollyVersion)" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="$(EfCoreVersion)" />
   </ItemGroup>
 
 </Project>

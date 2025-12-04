@@ -25,7 +25,8 @@
     <LaraueCoreDateTimeVersion>[10.0.0, 11)</LaraueCoreDateTimeVersion>
     <LaraueCoreTestingVersion>[10.0.0, 11)</LaraueCoreTestingVersion>
     <LaraueCrawlingVersion>[0.10.0, 1.0.0)</LaraueCrawlingVersion>
-    <EfCoreVersion>[9.0.0, 10)</EfCoreVersion>
+    <EfCoreVersion>9.0.9</EfCoreVersion>
+    <NpgsqlEfCoreVersion>[9.0.0, 10)</NpgsqlEfCoreVersion>
     <EfCoreNamingConventionsVersion>[9.0.0, 10)</EfCoreNamingConventionsVersion>
     <PollyVersion>[8.6.5, 9)</PollyVersion>
     <ScalarVersion>[2.11.0, 3)</ScalarVersion>
