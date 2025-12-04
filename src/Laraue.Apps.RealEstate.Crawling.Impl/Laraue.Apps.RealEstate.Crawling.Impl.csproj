@@ -7,7 +7,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Laraue.Core.DateTime" Version="$(LaraueCoreVersion)" />
+    <PackageReference Include="Laraue.Core.DateTime" Version="$(LaraueCoreDateTimeVersion)" />
     <PackageReference Include="Laraue.Crawling.Crawler.EfCore" Version="$(LaraueCrawlingVersion)" />
     <PackageReference Include="Polly" Version="$(PollyVersion)" />
   </ItemGroup>

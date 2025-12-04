@@ -1,14 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <PackageReference Include="Laraue.Core.Extensions.Hosting.EfCore" Version="$(LaraueCoreVersion)" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="$(MicrosoftPackagesVersion)">
+    <PackageReference Include="Laraue.Core.Extensions.Hosting.EfCore" Version="$(LaraueHostingVersion)" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="$(EfCoreVersion)">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Laraue.Core.DataAccess.Linq2DB" Version="$(LaraueCoreVersion)" />
+    <PackageReference Include="Laraue.Core.DataAccess.Linq2DB" Version="$(LaraueCoreDataAccessVersion)" />
     <PackageReference Include="linq2db.EntityFrameworkCore" Version="$(Linq2DbEfCoreVersion)" />
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="$(NpgsqlEntityFrameworkCoreVersion)" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="$(EfCoreVersion)" />
     <PackageReference Include="EFCore.NamingConventions" Version="$(EfCoreNamingConventionsVersion)" />
     <PackageReference Include="Laraue.Telegram.NET.Authentication" Version="$(LaraueTelegramVersion)" />
     <PackageReference Include="Laraue.Telegram.NET.Interceptors.EFCore" Version="$(LaraueTelegramVersion)" />
