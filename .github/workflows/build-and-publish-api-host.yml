@@ -30,7 +30,6 @@ jobs:
     - name: Upload
       if: github.ref == 'refs/heads/main'
       uses: marcodallasanta/ssh-scp-deploy@v1.2.0
-      if: github.ref == 'refs/heads/master'
       with:
        host: ${{ secrets.SSH_HOST }} # "example.com"
        port: ${{ secrets.SSH_PORT }} # 22
