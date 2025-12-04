@@ -67,9 +67,7 @@ services.AddScoped<IAdvertisementStorage, AdvertisementStorage>();
         
 services.AddScoped<IPublicAdvertisementsPicker, PublicAdvertisementsPicker>();
 
-services
-    .AddBackgroundJob<SendPublicAdvertisementsJob, SendPublicAdvertisementsJobContext>(
-        "SendPublicAdvertisementsJob");
+services.AddBackgroundJob<SendPublicAdvertisementsJob, SendPublicAdvertisementsJobContext>("SendPublicAdvertisementsJob");
 services
     .AddBackgroundJob<SendSelectionsAdvertisementsJob, EmptyJobData>(
         "SendSelectionsAdvertisementsJob");

@@ -1,15 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="Laraue.Crawling.Dynamic.PuppeterSharp" Version="0.5.0" />
-    <PackageReference Include="Laraue.Crawling.Crawler" Version="0.5.0" />
-    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.9" />
+    <PackageReference Include="Laraue.Crawling.Dynamic.PuppeterSharp" Version="$(LaraueCrawlingVersion)" />
+    <PackageReference Include="Laraue.Crawling.Crawler" Version="$(LaraueCrawlingVersion)" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="$(MicrosoftPackagesVersion)" />
   </ItemGroup>
 
   <ItemGroup>

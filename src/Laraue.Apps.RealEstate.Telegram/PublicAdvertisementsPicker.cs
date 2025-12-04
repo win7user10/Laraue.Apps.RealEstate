@@ -2,7 +2,7 @@
 using Laraue.Apps.RealEstate.Db;
 using Laraue.Core.DataAccess.Contracts;
 using Laraue.Core.DateTime.Services.Abstractions;
-using LinqToDB;
+using LinqToDB.EntityFrameworkCore;
 
 namespace Laraue.Apps.RealEstate.Telegram;
 
@@ -31,14 +31,14 @@ public sealed class PublicAdvertisementsPicker : IPublicAdvertisementsPicker
         {
             var previousSession = await _dbContext.CrawlingSessions
                 .Where(x => x.Id == previousSessionId)
-                .FirstAsync(cancellationToken);
+                .FirstAsyncEF(cancellationToken);
 
             minValue = previousSession.FinishedAt;
         }
         
         var lastSession = await _dbContext.CrawlingSessions
             .OrderByDescending(x => x.FinishedAt)
-            .FirstOrDefaultAsync(cancellationToken);
+            .FirstOrDefaultAsyncEF(cancellationToken);
 
         var maxDate = lastSession?.FinishedAt ?? _dateTimeProvider.UtcNow;
         

@@ -2,6 +2,7 @@
 using Laraue.Apps.RealEstate.Crawling.Abstractions.Contracts;
 using Laraue.Apps.RealEstate.Crawling.Impl.Cian;
 using Laraue.Apps.RealEstate.Db.Models;
+using Laraue.Apps.RealEstate.Db.Storage;
 using Laraue.Core.DateTime.Services.Abstractions;
 using Laraue.Core.DateTime.Services.Impl;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +22,7 @@ public class CianAdvertisementProcessorTests : TestWithDatabase
     {
         var sp = ServiceCollection.AddSingleton<CianAdvertisementProcessor>()
             .AddSingleton<IDateTimeProvider, DateTimeProvider>()
+            .AddScoped<IHousesStorage, HousesStorage>()
             .AddSingleton(new Mock<ILogger<CianAdvertisementProcessor>>().Object)
             .BuildServiceProvider();
 
