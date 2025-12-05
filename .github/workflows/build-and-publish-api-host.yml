@@ -19,7 +19,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 9.0.x
+        dotnet-version: 10.0.x
     
     - name: Restore dependencies
       run: dotnet restore src/Laraue.Apps.RealEstate.ApiHost
@@ -28,12 +28,13 @@ jobs:
       run: dotnet build src/Laraue.Apps.RealEstate.ApiHost --no-restore -c Release
     
     - name: Upload
+      if: github.ref == 'refs/heads/main'
       uses: marcodallasanta/ssh-scp-deploy@v1.2.0
       with:
        host: ${{ secrets.SSH_HOST }} # "example.com"
        port: ${{ secrets.SSH_PORT }} # 22
        user: ${{ secrets.SSH_USER }} # "user"
        password: ${{ secrets.SSH_PASSWORD }} # "password"
-       local: src/Laraue.Apps.RealEstate.ApiHost/bin/Release/net9.0/*
+       local: src/Laraue.Apps.RealEstate.ApiHost/bin/Release/net10.0/*
        remote: "/home/laraue/real-estate-api-host"
        post_upload: echo "Uploaded successfully"

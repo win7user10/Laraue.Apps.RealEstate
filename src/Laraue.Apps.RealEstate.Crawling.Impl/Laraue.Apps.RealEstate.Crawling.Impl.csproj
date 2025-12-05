@@ -1,11 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\Laraue.Apps.RealEstate.Crawling.Abstractions\Laraue.Apps.RealEstate.Crawling.Abstractions.csproj" />
     <ProjectReference Include="..\Laraue.Apps.RealEstate.Db\Laraue.Apps.RealEstate.Db.csproj" />
@@ -13,9 +7,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Laraue.Core.DateTime" Version="9.0.0" />
-    <PackageReference Include="Laraue.Crawling.Crawler.Database" Version="0.1.12" />
-    <PackageReference Include="Polly" Version="8.6.4" />
+    <PackageReference Include="Laraue.Core.DateTime" Version="$(LaraueCoreDateTimeVersion)" />
+    <PackageReference Include="Laraue.Crawling.Crawler.EfCore" Version="$(LaraueCrawlingVersion)" />
+    <PackageReference Include="Polly" Version="$(PollyVersion)" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="$(EfCoreVersion)" />
   </ItemGroup>
 
 </Project>

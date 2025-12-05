@@ -1,22 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="Laraue.Core.Extensions.Hosting.EfCore" Version="9.0.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.9">
+    <PackageReference Include="Laraue.Core.Extensions.Hosting.EfCore" Version="$(LaraueHostingVersion)" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="$(EfCoreVersion)">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Laraue.Core.DataAccess.Linq2DB" Version="9.1.0" />
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
-    <PackageReference Include="EFCore.NamingConventions" Version="9.0.0" />
-    <PackageReference Include="Laraue.Telegram.NET.Authentication" Version="2.6.2" />
-    <PackageReference Include="Laraue.Telegram.NET.Interceptors.EFCore" Version="2.6.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="$(EfCoreVersion)" />
+    <PackageReference Include="Laraue.Core.DataAccess.Linq2DB" Version="$(LaraueCoreDataAccessVersion)" />
+    <PackageReference Include="linq2db.EntityFrameworkCore" Version="$(Linq2DbEfCoreVersion)" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="$(NpgsqlEfCoreVersion)" />
+    <PackageReference Include="EFCore.NamingConventions" Version="$(EfCoreNamingConventionsVersion)" />
+    <PackageReference Include="Laraue.Telegram.NET.Authentication" Version="$(LaraueTelegramVersion)" />
+    <PackageReference Include="Laraue.Telegram.NET.Interceptors.EFCore" Version="$(LaraueTelegramVersion)" />
   </ItemGroup>
 
   <ItemGroup>

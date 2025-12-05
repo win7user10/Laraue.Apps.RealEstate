@@ -4,6 +4,7 @@ using Laraue.Apps.RealEstate.Crawling.Abstractions.Crawler.Avito;
 using Laraue.Apps.RealEstate.Crawling.Abstractions.Crawler.Cian;
 using Laraue.Apps.RealEstate.Crawling.Impl.Avito;
 using Laraue.Apps.RealEstate.Crawling.Impl.Cian;
+using Laraue.Core.Extensions.Hosting.EfCore;
 using Laraue.Crawling.Crawler.EfCore;
 
 namespace Laraue.Apps.RealEstate.WorkerHost;
