@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <ItemGroup>
+        <PackageReference Include="Laraue.Crawling.Crawler.EfCore" Version="$(LaraueCrawlingVersion)" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Laraue.Apps.RealEstate.Crawling.Impl\Laraue.Apps.RealEstate.Crawling.Impl.csproj" />
+        <ProjectReference Include="..\Laraue.Apps.RealEstate.Db\Laraue.Apps.RealEstate.Db.csproj" />
+        <ProjectReference Include="..\Laraue.Apps.RealEstate.Prediction.Impl\Laraue.Apps.RealEstate.Prediction.Impl.csproj" />
+    </ItemGroup>
+
+</Project>

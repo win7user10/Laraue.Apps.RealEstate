@@ -38,6 +38,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laraue.Apps.RealEstate.GpuW
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laraue.Apps.RealEstate.UnitTests", "tests\Laraue.Apps.RealEstate.UnitTests\Laraue.Apps.RealEstate.UnitTests.csproj", "{9E014506-0CE6-45B2-91AC-68A6C3465F7C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laraue.Apps.RealEstate.CrawlingHost", "src\Laraue.Apps.RealEstate.CrawlingHost\Laraue.Apps.RealEstate.CrawlingHost.csproj", "{A41059D8-1F0D-4D5D-AADF-E5C4A802FD11}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -96,6 +98,10 @@ Global
 		{9E014506-0CE6-45B2-91AC-68A6C3465F7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9E014506-0CE6-45B2-91AC-68A6C3465F7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9E014506-0CE6-45B2-91AC-68A6C3465F7C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A41059D8-1F0D-4D5D-AADF-E5C4A802FD11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A41059D8-1F0D-4D5D-AADF-E5C4A802FD11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A41059D8-1F0D-4D5D-AADF-E5C4A802FD11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A41059D8-1F0D-4D5D-AADF-E5C4A802FD11}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{E37EC740-7089-46FB-9E0F-BEEB0F1965A2} = {1567B5D8-BD5E-4A97-B3D6-2972F63288D6}
@@ -111,5 +117,6 @@ Global
 		{AFF041CB-9DD6-424F-85E4-2A7C275FDC7D} = {AC8F37B5-607C-4287-9C63-5F298FCCE041}
 		{EA3AA985-DDDB-4412-8C3F-09D3E5FE3CD6} = {7AC4807E-55B9-4F27-B6D2-0EBA99AEFFD2}
 		{9E014506-0CE6-45B2-91AC-68A6C3465F7C} = {560070C4-6166-49F6-9D4E-0408518AA41F}
+		{A41059D8-1F0D-4D5D-AADF-E5C4A802FD11} = {7AC4807E-55B9-4F27-B6D2-0EBA99AEFFD2}
 	EndGlobalSection
 EndGlobal

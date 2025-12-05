@@ -27,6 +27,8 @@ public class Filter
     public decimal? MaxPerSquareMeterPrice { get; init; }
 
     public decimal? MinSquare { get; init; }
+    
+    public long? CityId { get; init; }
 
     public bool ExcludeFirstFloor { get; init; }
     

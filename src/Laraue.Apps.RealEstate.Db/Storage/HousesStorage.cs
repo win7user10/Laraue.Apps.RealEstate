@@ -6,6 +6,7 @@ namespace Laraue.Apps.RealEstate.Db.Storage;
 public interface IHousesStorage
 {
     Task<Dictionary<SearchableByStreetNameFlatAddress, long>> GetHouses(
+        long cityId,
         IEnumerable<SearchableByStreetNameFlatAddress> houses,
         CancellationToken ct = default);
     
@@ -17,6 +18,7 @@ public interface IHousesStorage
 public class HousesStorage(AdvertisementsDbContext dbContext) : IHousesStorage
 {
     public async Task<Dictionary<SearchableByStreetNameFlatAddress, long>> GetHouses(
+        long cityId,
         IEnumerable<SearchableByStreetNameFlatAddress> houses,
         CancellationToken ct = default)
     {
@@ -33,6 +35,7 @@ public class HousesStorage(AdvertisementsDbContext dbContext) : IHousesStorage
             var innerQuery = dbContext.Houses
                 .Where(h => h.Number == house.HouseNumber)
                 .Where(h => h.Street.Name == house.Street)
+                .Where(h => h.Street.CityId == cityId)
                 .Select(x => new QueryableHouse(x.Street.Name, x.Number, x.Id));
             
             query = query is null ? innerQuery : query.Concat(innerQuery);

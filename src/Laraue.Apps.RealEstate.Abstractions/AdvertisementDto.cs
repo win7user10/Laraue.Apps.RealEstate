@@ -33,6 +33,7 @@ public sealed record AdvertisementDto
     public required long? HouseId { get; init; }
     public required string? HouseNumber { get; init; }
     public required string? Address { get; init; }
+    public required string? CityName { get; init; }
     public decimal? PredictedMarketPrice { get; set; }
 
     public required IEnumerable<AdvertisementMetroStationDto> MetroStations { get; init; }

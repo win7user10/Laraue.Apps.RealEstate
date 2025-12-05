@@ -54,7 +54,7 @@ public abstract class BaseAdvertisementProcessor<TExternalIdentifier> : IAdverti
         
         var updatedAdvertisements = await UpdateAdvertisementsAsync(advertisements, ct);
 
-        await UpdateAddressesAsync(updatedAdvertisements, cityId, ct); // with locking
+        await UpdateAddressesAsync(updatedAdvertisements, cityId, ct);
         
         await UpdateImageLinksAsync(updatedAdvertisements, ct);
         
@@ -93,6 +93,7 @@ public abstract class BaseAdvertisementProcessor<TExternalIdentifier> : IAdverti
 
         var existsInDbStreets = await _dbContext.Streets
             .Where(s => allStreets.Contains(s.Name))
+            .Where(s => s.CityId == cityId)
             .Select(s => new { s.Id, s.Name })
             .ToDictionaryAsyncEF(c => c.Name, c => c.Id, ct);
 
@@ -111,6 +112,7 @@ public abstract class BaseAdvertisementProcessor<TExternalIdentifier> : IAdverti
                 .MergeAsync(ct);
             
             var newStreets = await _dbContext.Streets
+                .Where(s => s.CityId == cityId)
                 .Where(s => streetsToInsertIntoDb.Select(x => x.Name).Contains(s.Name))
                 .Select(s => new { s.Id, s.Name })
                 .ToArrayAsyncEF(ct);
@@ -123,7 +125,7 @@ public abstract class BaseAdvertisementProcessor<TExternalIdentifier> : IAdverti
             _logger.LogInformation("Inserted new streets '{Streets}'", string.Join(",", newStreets.Select(s => s.Name)));
         }
         
-        var existsInDbHouses = await _housesStorage.GetHouses(allAddresses, ct);
+        var existsInDbHouses = await _housesStorage.GetHouses(cityId, allAddresses, ct);
         
         var housesToInsertIntoDb = allAddresses
             .Where(x => !existsInDbHouses.ContainsKey(x))
@@ -147,7 +149,7 @@ public abstract class BaseAdvertisementProcessor<TExternalIdentifier> : IAdverti
                 .InsertWhenNotMatched()
                 .MergeAsync(ct);
             
-            var inserted = await _housesStorage.GetHouses(housesToInsertIntoDb, ct);
+            var inserted = await _housesStorage.GetHouses(cityId, housesToInsertIntoDb, ct);
             foreach (var insertedHouse in inserted)
             {
                 existsInDbHouses.Add(insertedHouse.Key, insertedHouse.Value);

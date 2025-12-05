@@ -24,11 +24,11 @@ public abstract class BaseCrawlerServiceOptions
     /// </summary>
     public int MaxTimeoutBeforeSwitchToNextPage { get; init; }
 
-    public City[] Cities { get; init; } = [];
+    public required City[] Cities { get; init; } = [];
 }
 
 public class City
 {
     public required long CityId { get; init; }
-    public required string Url { get; init; }
+    public required string CrawlingUrl { get; init; }
 }

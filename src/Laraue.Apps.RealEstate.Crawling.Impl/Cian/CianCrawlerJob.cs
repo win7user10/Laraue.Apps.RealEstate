@@ -1,6 +1,7 @@
 ﻿using Laraue.Apps.RealEstate.Crawling.Abstractions.Crawler.Cian;
 using Laraue.Apps.RealEstate.Db;
 using Laraue.Core.DateTime.Services.Abstractions;
+using Laraue.Core.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -9,7 +10,7 @@ namespace Laraue.Apps.RealEstate.Crawling.Impl.Cian;
 [JobGroup("CianCrawlerJob")]
 public class CianCrawlerJob : BaseRealEstateCrawlerJob
 {
-    protected CianCrawlerJob(
+    public CianCrawlerJob(
         ILogger<CianCrawlerJob> logger,
         IOptions<CianCrawlerServiceOptions> options,
         IDateTimeProvider dateTimeProvider,

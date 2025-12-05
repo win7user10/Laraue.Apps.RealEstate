@@ -53,6 +53,7 @@ public sealed class AdvertisementStorage : IAdvertisementStorage
             FirstTimeCrawledAt = x.FirstTimeCrawledAt,
             CrawledAt = x.CrawledAt,
             HouseNumber = x.House!.Number,
+            CityName = x.House!.Street.City.Name,
             HouseId = x.HouseId,
             Address = x.House.Street.Name,
             Images = x.LinkedImages
@@ -91,6 +92,11 @@ public sealed class AdvertisementStorage : IAdvertisementStorage
         if (filter.ExcludeLastFloor)
         {
             query = query.Where(x => x.FloorNumber != x.TotalFloorsNumber);
+        }
+
+        if (filter.CityId is not null)
+        {
+            query = query.Where(x => x.House!.Street.CityId == filter.CityId);
         }
 
         if (filter.MinPrice is not null)

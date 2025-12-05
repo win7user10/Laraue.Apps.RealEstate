@@ -1,11 +1,13 @@
 ﻿using Laraue.Apps.RealEstate.Crawling.Abstractions.Crawler.Avito;
 using Laraue.Apps.RealEstate.Db;
 using Laraue.Core.DateTime.Services.Abstractions;
+using Laraue.Core.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace Laraue.Apps.RealEstate.Crawling.Impl.Avito;
 
+[JobGroup("AvitoCrawlerJob")]
 public sealed class AvitoCrawlerJob : BaseRealEstateCrawlerJob
 {
     public AvitoCrawlerJob(

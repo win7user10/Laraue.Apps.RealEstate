@@ -1,0 +1,6 @@
+@Laraue.Apps.RealEstate.CrawlingHost_HostAddress = http://localhost:5133
+
+GET {{Laraue.Apps.RealEstate.CrawlingHost_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

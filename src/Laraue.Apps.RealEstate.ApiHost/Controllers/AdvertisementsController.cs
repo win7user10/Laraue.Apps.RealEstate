@@ -43,6 +43,7 @@ public sealed class AdvertisementsController : ControllerBase
                RoomsCount = request.Filter.RoomsCount,
                Source = request.Filter.Source,
                SearchString = request.Filter.SearchString,
+               CityId = request.Filter.CityId,
             },
             Pagination = new PaginationData
             {
