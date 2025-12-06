@@ -62,7 +62,7 @@ public class CianAdvertisementProcessorTests : TestWithDatabase
             }
         };
         
-        await _processor.ProcessAsync(advertisements);
+        await _processor.ProcessAsync(advertisements, 1);
         DbContext.ChangeTracker.Clear();
         
         var advertisement = Assert.Single(
@@ -139,7 +139,7 @@ public class CianAdvertisementProcessorTests : TestWithDatabase
             }
         };
         
-        await _processor.ProcessAsync(advertisements);
+        await _processor.ProcessAsync(advertisements, 1);
 
         DbContext.ChangeTracker.Clear();
         var advertisement = Assert.Single(

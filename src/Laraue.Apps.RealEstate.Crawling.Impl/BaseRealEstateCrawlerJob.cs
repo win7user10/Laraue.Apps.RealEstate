@@ -21,6 +21,7 @@ public abstract class BaseRealEstateCrawlerJob : BaseCrawlerJob<CrawlingResult, 
     private readonly ICrawlingSchemaParser _parser;
     private readonly BaseCrawlerServiceOptions _options;
     protected abstract string AdvertisementsAddress { get; }
+    protected abstract long CityId { get; }
 
     protected BaseRealEstateCrawlerJob(
         ILogger<BaseCrawlerJob<CrawlingResult, string, State>> logger,
@@ -108,7 +109,7 @@ public abstract class BaseRealEstateCrawlerJob : BaseCrawlerJob<CrawlingResult, 
         CancellationToken cancellationToken = default)
     {
         var updatedAdvertisementIds = await _processor
-            .ProcessAsync(model.Advertisements, cancellationToken)
+            .ProcessAsync(model.Advertisements, CityId, cancellationToken)
             .ConfigureAwait(false);
             
         foreach (var updatedAdvertisementId in updatedAdvertisementIds)

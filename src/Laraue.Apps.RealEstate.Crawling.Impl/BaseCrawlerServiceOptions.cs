@@ -23,4 +23,12 @@ public abstract class BaseCrawlerServiceOptions
     /// High range of the sleeping timeout while crawling. 
     /// </summary>
     public int MaxTimeoutBeforeSwitchToNextPage { get; init; }
+
+    public required City[] Cities { get; init; } = [];
+}
+
+public class City
+{
+    public required long CityId { get; init; }
+    public required string CrawlingUrl { get; init; }
 }

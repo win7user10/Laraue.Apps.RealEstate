@@ -112,11 +112,22 @@ public sealed class AdvertisementsDbContext : DbContext, IJobsDbContext, IInterc
 
         modelBuilder.Entity<City>(builder =>
         {
-            builder.HasData(new City
-            {
-                Id = 1,
-                Name = "Санкт-Петербург"
-            });
+            builder.HasData(
+                new City
+                {
+                    Id = 1,
+                    Name = "Санкт-Петербург"
+                },
+                new City
+                {
+                    Id = 2,
+                    Name = "Волгоград"
+                },
+                new City
+                {
+                    Id = 3,
+                    Name = "Москва"
+                });
         });
         
         modelBuilder.Entity<Street>(builder =>

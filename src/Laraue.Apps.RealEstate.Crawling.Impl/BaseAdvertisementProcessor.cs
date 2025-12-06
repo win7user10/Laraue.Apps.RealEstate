@@ -29,8 +29,6 @@ public abstract class BaseAdvertisementProcessor<TExternalIdentifier> : IAdverti
     private IDictionary<string, MetroStationData>? _externalPublicStopsIds;
     private IDictionary<long, MetroStationData>? _systemPublicStopsIds;
 
-    private readonly long CityId = 1; // Hardcode for Saint-Petersburg
-
     protected BaseAdvertisementProcessor(
         AdvertisementSource source,
         AdvertisementsDbContext dbContext,
@@ -49,13 +47,14 @@ public abstract class BaseAdvertisementProcessor<TExternalIdentifier> : IAdverti
     
     public async Task<HashSet<long>> ProcessAsync(
         Advertisement[] advertisements,
+        long cityId,
         CancellationToken ct = default)
     {
         await using var transaction = await _dbContext.BeginTransactionIfNotStartedAsync();
         
         var updatedAdvertisements = await UpdateAdvertisementsAsync(advertisements, ct);
 
-        await UpdateAddressesAsync(updatedAdvertisements, ct); // with locking
+        await UpdateAddressesAsync(updatedAdvertisements, cityId, ct);
         
         await UpdateImageLinksAsync(updatedAdvertisements, ct);
         
@@ -77,6 +76,7 @@ public abstract class BaseAdvertisementProcessor<TExternalIdentifier> : IAdverti
     
     private async Task UpdateAddressesAsync(
         IDictionary<long, Advertisement> advertisements,
+        long cityId,
         CancellationToken ct = default)
     {
         await _dbContext.ShareLockAsync<Street>(ct);
@@ -93,12 +93,13 @@ public abstract class BaseAdvertisementProcessor<TExternalIdentifier> : IAdverti
 
         var existsInDbStreets = await _dbContext.Streets
             .Where(s => allStreets.Contains(s.Name))
+            .Where(s => s.CityId == cityId)
             .Select(s => new { s.Id, s.Name })
             .ToDictionaryAsyncEF(c => c.Name, c => c.Id, ct);
 
         var streetsToInsertIntoDb = allStreets
             .Except(existsInDbStreets.Keys)
-            .Select(x => new Street { CityId = CityId, Name = x })
+            .Select(x => new Street { CityId = cityId, Name = x })
             .ToArray();
 
         if (streetsToInsertIntoDb.Length > 0)
@@ -111,6 +112,7 @@ public abstract class BaseAdvertisementProcessor<TExternalIdentifier> : IAdverti
                 .MergeAsync(ct);
             
             var newStreets = await _dbContext.Streets
+                .Where(s => s.CityId == cityId)
                 .Where(s => streetsToInsertIntoDb.Select(x => x.Name).Contains(s.Name))
                 .Select(s => new { s.Id, s.Name })
                 .ToArrayAsyncEF(ct);
@@ -123,7 +125,7 @@ public abstract class BaseAdvertisementProcessor<TExternalIdentifier> : IAdverti
             _logger.LogInformation("Inserted new streets '{Streets}'", string.Join(",", newStreets.Select(s => s.Name)));
         }
         
-        var existsInDbHouses = await _housesStorage.GetHouses(allAddresses, ct);
+        var existsInDbHouses = await _housesStorage.GetHouses(cityId, allAddresses, ct);
         
         var housesToInsertIntoDb = allAddresses
             .Where(x => !existsInDbHouses.ContainsKey(x))
@@ -147,7 +149,7 @@ public abstract class BaseAdvertisementProcessor<TExternalIdentifier> : IAdverti
                 .InsertWhenNotMatched()
                 .MergeAsync(ct);
             
-            var inserted = await _housesStorage.GetHouses(housesToInsertIntoDb, ct);
+            var inserted = await _housesStorage.GetHouses(cityId, housesToInsertIntoDb, ct);
             foreach (var insertedHouse in inserted)
             {
                 existsInDbHouses.Add(insertedHouse.Key, insertedHouse.Value);

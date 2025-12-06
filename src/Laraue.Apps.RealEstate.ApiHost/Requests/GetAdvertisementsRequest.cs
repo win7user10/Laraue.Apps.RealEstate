@@ -41,6 +41,8 @@ public class Filter
     
     public bool ExcludeLastFloor { get; init; }
     
+    public long? CityId { get; init; }
+    
     public byte? MinMetroStationPriority { get; init; }
 
     public AdvertisementsSort SortBy { get; init; }

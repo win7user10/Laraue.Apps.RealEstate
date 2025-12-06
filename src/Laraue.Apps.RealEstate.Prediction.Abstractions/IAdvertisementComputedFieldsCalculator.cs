@@ -1,6 +1,6 @@
 ﻿using Laraue.Apps.RealEstate.Abstractions;
 
-namespace Laraue.Apps.RealEstate.Crawling.Abstractions.Crawler;
+namespace Laraue.Apps.RealEstate.Prediction.Abstractions;
 
 public interface IAdvertisementComputedFieldsCalculator
 {
