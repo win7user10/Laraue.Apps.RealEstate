@@ -54,7 +54,7 @@ public static class ServiceCollectionExtensions
         
         foreach (var city in options.Cities)
         {
-            services.AddCrawlingService<CianCrawlerJob, CrawlingResult, string, State>(
+            services.AddCrawlingService<AvitoCrawlerJob, CrawlingResult, string, State>(
                 $"AvitoCrawler_City_{city.CityId}",
                 city.CityId,
                 city.CrawlingUrl);
