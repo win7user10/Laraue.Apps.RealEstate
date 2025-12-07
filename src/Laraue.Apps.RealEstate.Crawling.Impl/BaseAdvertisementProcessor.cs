@@ -50,19 +50,55 @@ public abstract class BaseAdvertisementProcessor<TExternalIdentifier> : IAdverti
         long cityId,
         CancellationToken ct = default)
     {
+        // Step 1 - update dictionaries
+        var addressesTransaction = await _dbContext.BeginTransactionIfNotStartedAsync();
+        
+        var syncAddressesDictionaryResult = await SyncAddressesDictionaryAsync(advertisements, cityId, ct);
+        
+        await addressesTransaction.CommitAsync(ct);
+        
+        // Step 2 - update advertisements
         await using var transaction = await _dbContext.BeginTransactionIfNotStartedAsync();
         
         var updatedAdvertisements = await UpdateAdvertisementsAsync(advertisements, ct);
-
-        await UpdateAddressesAsync(updatedAdvertisements, cityId, ct);
         
         await UpdateImageLinksAsync(updatedAdvertisements, ct);
+        
+        await UpdateAdvertisementAddressesAsync(updatedAdvertisements, syncAddressesDictionaryResult, ct);
         
         await UpdateTransportStopsAsync(updatedAdvertisements, ct);
         
         await transaction.CommitAsync(ct);
 
         return updatedAdvertisements.Keys.ToHashSet();
+    }
+
+    private async Task UpdateAdvertisementAddressesAsync(
+        Dictionary<long, Advertisement> advertisements,
+        Dictionary<SearchableByStreetNameFlatAddress, long> syncAddressesDictionaryResult,
+        CancellationToken cancellationToken = default)
+    {
+        foreach (var advertisement in advertisements)
+        {
+            if (advertisement.Value.FlatAddress == null)
+            {
+                continue;
+            }
+
+            var localFlatAddress = ToLocalFlatAddress(advertisement.Value.FlatAddress);
+            if (!syncAddressesDictionaryResult.TryGetValue(localFlatAddress, out var houseId))
+            {
+                continue;
+            }
+
+            _logger.LogInformation("Set houseId='{AddressId}' for adv='{AdvId}'", houseId, advertisement.Key);
+            
+            await _dbContext.Advertisements
+                .Where(a => a.Id == advertisement.Key)
+                .ExecuteUpdateAsync(update => update
+                        .SetProperty(p => p.HouseId, houseId),
+                    cancellationToken);
+        }
     }
 
     private static SearchableByStreetNameFlatAddress ToLocalFlatAddress(FlatAddress flatAddress)
@@ -74,15 +110,15 @@ public abstract class BaseAdvertisementProcessor<TExternalIdentifier> : IAdverti
         };
     }
     
-    private async Task UpdateAddressesAsync(
-        IDictionary<long, Advertisement> advertisements,
+    private async Task<Dictionary<SearchableByStreetNameFlatAddress, long>> SyncAddressesDictionaryAsync(
+        Advertisement[] advertisements,
         long cityId,
         CancellationToken ct = default)
     {
         await _dbContext.ShareLockAsync<Street>(ct);
         await _dbContext.ShareLockAsync<House>(ct);
         
-        var allAddresses = advertisements.Values
+        var allAddresses = advertisements
             .Where(x => x.FlatAddress != null)
             .Select(x => ToLocalFlatAddress(x.FlatAddress!))
             .ToHashSet();
@@ -160,27 +196,7 @@ public abstract class BaseAdvertisementProcessor<TExternalIdentifier> : IAdverti
                 string.Join(",", inserted.Select(s => $"{s.Key.Street} {s.Key.HouseNumber}")));
         }
 
-        foreach (var advertisement in advertisements)
-        {
-            if (advertisement.Value.FlatAddress == null)
-            {
-                continue;
-            }
-
-            var localFlatAddress = ToLocalFlatAddress(advertisement.Value.FlatAddress);
-            if (!existsInDbHouses.TryGetValue(localFlatAddress, out var houseId))
-            {
-                continue;
-            }
-
-            _logger.LogInformation("Set houseId='{AddressId}' for adv='{AdvId}'", houseId, advertisement.Key);
-            
-            await _dbContext.Advertisements
-                .Where(a => a.Id == advertisement.Key)
-                .ExecuteUpdateAsync(update => update
-                        .SetProperty(p => p.HouseId, houseId),
-                    ct);
-        }
+        return existsInDbHouses;
     }
 
     private async Task UpdateTransportStopsAsync(

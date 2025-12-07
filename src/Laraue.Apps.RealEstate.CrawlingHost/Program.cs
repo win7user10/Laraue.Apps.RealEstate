@@ -1,5 +1,6 @@
 using Laraue.Apps.RealEstate.Abstractions;
 using Laraue.Apps.RealEstate.Crawling.Abstractions.Crawler.TransportStops;
+using Laraue.Apps.RealEstate.Crawling.Impl;
 using Laraue.Apps.RealEstate.CrawlingHost;
 using Laraue.Apps.RealEstate.Db;
 using Laraue.Apps.RealEstate.Db.Storage;
@@ -41,6 +42,7 @@ services.AddScoped<IHousesStorage, HousesStorage>();
 services.AddSingleton<IMemoryCache>(new MemoryCache(new MemoryCacheOptions()));
 services.AddSingleton<IAdvertisementComputedFieldsCalculator, AdvertisementComputedFieldsCalculator>();
 services.AddSingleton<IPageParser, PageParser>();
+services.AddSingleton<ISessionInterrupter, SessionInterrupter>();
 
 services.AddLinq2Db();
 

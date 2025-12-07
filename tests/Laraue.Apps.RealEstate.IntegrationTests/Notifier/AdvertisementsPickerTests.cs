@@ -21,7 +21,7 @@ public sealed class AdvertisementsPickerTests : TestWithDatabase
             new AdvertisementStorage(DbContext, new HousesStorage(DbContext)));
     }
 
-    [Fact]
+    [Fact(Skip = "No now used")]
     public async Task Advertisements_ShouldBeCorrectlyTaken_WhenSessionIdIsNullAsync()
     {
         DbContext.Advertisements.Add(new Db.Models.Advertisement

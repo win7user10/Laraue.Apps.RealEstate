@@ -30,7 +30,7 @@ public class CianAdvertisementProcessorTests : TestWithDatabase
     }
 
     [Fact]
-    public async Task SaveNewItems_ShouldSaveThemIntoDatabaseAsync()
+    public async Task Process_NewItems_ShouldSaveThemIntoDatabaseAsync()
     {
         var advertisements = new Advertisement[]
         {
@@ -87,7 +87,7 @@ public class CianAdvertisementProcessorTests : TestWithDatabase
     }
     
     [Fact]
-    public async Task SaveEarlySavedItems_ShouldUpdateThemInDatabaseAsync()
+    public async Task Process_EarlySavedItems_ShouldUpdateThemInDatabaseAsync()
     {
         DbContext.Advertisements.Add(new Laraue.Apps.RealEstate.Db.Models.Advertisement
         {
@@ -120,7 +120,7 @@ public class CianAdvertisementProcessorTests : TestWithDatabase
             {
                 Id = "12",
                 FloorNumber = 2,
-                ImageLinks = new [] { "https://link2", "https://link3" },
+                ImageLinks = ["https://link2", "https://link3"],
                 RoomsCount = 2,
                 ShortDescription = "sh",
                 TotalPrice = 10_000_000,

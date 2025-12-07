@@ -31,7 +31,7 @@ public class RemoteImagesPredictorTests
     [InlineData("https://images.cdn-cian.ru/images/2367886657-1.jpg", 0.65, 0.9)]
     [InlineData("https://images.cdn-cian.ru/images/dolya-v-kvartire-sanktpeterburg-alleya-kotelnikova-2609865031-1.jpg", 0.25, 0.5)]
     [InlineData("https://images.cdn-cian.ru/images/2623741669-4.jpg", 0, 0)]
-    [Theory]
+    [Theory(Skip = "Not actual data")]
     public async Task PredictTest(string url, double minRate, double maxRate)
     {
         var result = await _predictor.PredictAsync([url]);

@@ -17,9 +17,10 @@ public sealed class AvitoCrawlerJob : BaseRealEstateCrawlerJob
         AdvertisementsDbContext dbContext,
         IAvitoAdvertisementProcessor processor,
         IAvitoCrawlingSchemaParser parser,
+        ISessionInterrupter sessionInterrupter,
         long cityId,
         string advertisementsAddress)
-            : base(logger, options, dateTimeProvider, dbContext, processor, parser)
+            : base(logger, options, dateTimeProvider, dbContext, processor, parser, sessionInterrupter)
     {
         CityId = cityId;
         AdvertisementsAddress = advertisementsAddress;

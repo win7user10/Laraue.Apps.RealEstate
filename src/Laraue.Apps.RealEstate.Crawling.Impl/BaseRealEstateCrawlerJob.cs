@@ -19,6 +19,7 @@ public abstract class BaseRealEstateCrawlerJob : BaseCrawlerJob<CrawlingResult, 
     private readonly AdvertisementsDbContext _dbContext;
     private readonly IAdvertisementProcessor _processor;
     private readonly ICrawlingSchemaParser _parser;
+    private readonly ISessionInterrupter _sessionInterrupter;
     private readonly BaseCrawlerServiceOptions _options;
     protected abstract string AdvertisementsAddress { get; }
     protected abstract long CityId { get; }
@@ -29,7 +30,8 @@ public abstract class BaseRealEstateCrawlerJob : BaseCrawlerJob<CrawlingResult, 
         IDateTimeProvider dateTimeProvider,
         AdvertisementsDbContext dbContext,
         IAdvertisementProcessor processor,
-        ICrawlingSchemaParser parser)
+        ICrawlingSchemaParser parser,
+        ISessionInterrupter sessionInterrupter)
         : base(logger)
     {
         _logger = logger;
@@ -37,6 +39,7 @@ public abstract class BaseRealEstateCrawlerJob : BaseCrawlerJob<CrawlingResult, 
         _dbContext = dbContext;
         _processor = processor;
         _parser = parser;
+        _sessionInterrupter = sessionInterrupter;
         _options = options.Value;
     }
 
@@ -108,15 +111,7 @@ public abstract class BaseRealEstateCrawlerJob : BaseCrawlerJob<CrawlingResult, 
         JobState<State> state,
         CancellationToken cancellationToken = default)
     {
-        var updatedAdvertisementIds = await _processor
-            .ProcessAsync(model.Advertisements, CityId, cancellationToken)
-            .ConfigureAwait(false);
-            
-        foreach (var updatedAdvertisementId in updatedAdvertisementIds)
-        {
-            state.JobData.UpdatedAdvertisements.Add(updatedAdvertisementId);
-        }
-
+        // Something went wrong. Plan to retry.
         if (!model.Advertisements.Any())
         {
             throw new CrawlerHasBeenDetectedException(
@@ -124,31 +119,22 @@ public abstract class BaseRealEstateCrawlerJob : BaseCrawlerJob<CrawlingResult, 
                 () => Task.Delay(TimeSpan.FromMinutes(10), cancellationToken));
         }
         
-        // The system iterates from the new to the old advs. When adv with date that already parsed found, the session
-        // should be finished.
-        if (model.Advertisements.Min(x => x.UpdatedAt) < state.JobData.MinUpdatedAt)
-        {
-            throw new SessionInterruptedException("Already parsed advertisements found");
-        }
+        var updatedAdvertisementIds = await _processor
+            .ProcessAsync(model.Advertisements, CityId, cancellationToken)
+            .ConfigureAwait(false);
 
-        // If the system found advs that is too old (based on options), the session should be finished also.
-        // It prevents endless parsing while first run.
-        if (!AreAllAdvertisementsActual(model.Advertisements))
+        _sessionInterrupter.ThrowIfRequired(
+            updatedAdvertisementIds,
+            state.JobData.UpdatedAdvertisements,
+            model.Advertisements,
+            _options);
+        
+        foreach (var updatedAdvertisementId in updatedAdvertisementIds)
         {
-            throw new SessionInterruptedException("Too old advertisements found");
+            state.JobData.UpdatedAdvertisements.Add(updatedAdvertisementId);
         }
 
         state.JobData.LastPage++;
         await UpdateStateAsync(state, cancellationToken).ConfigureAwait(false);
-    }
-    
-    private bool AreAllAdvertisementsActual(IEnumerable<Advertisement> advertisements)
-    {
-        var latestAdvertisementDate = advertisements.Max(x => x.UpdatedAt); // 2 days before | 1 day before -> 1 day before
-        
-        // now - 10 min before = - 10 min
-        // -10 min <= 15 day -> true
-        return _dateTimeProvider.UtcNow - latestAdvertisementDate
-               <= _options.MaxAdvertisementDateOffset;
     }
 }
