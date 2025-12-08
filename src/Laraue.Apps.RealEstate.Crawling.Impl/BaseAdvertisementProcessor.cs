@@ -45,7 +45,7 @@ public abstract class BaseAdvertisementProcessor<TExternalIdentifier> : IAdverti
         _housesStorage = housesStorage;
     }
     
-    public async Task<HashSet<long>> ProcessAsync(
+    public async Task<ProcessResult> ProcessAsync(
         Advertisement[] advertisements,
         long cityId,
         CancellationToken ct = default)
@@ -60,17 +60,17 @@ public abstract class BaseAdvertisementProcessor<TExternalIdentifier> : IAdverti
         // Step 2 - update advertisements
         await using var transaction = await _dbContext.BeginTransactionIfNotStartedAsync();
         
-        var updatedAdvertisements = await UpdateAdvertisementsAsync(advertisements, ct);
+        var processResult = await UpdateAdvertisementsAsync(advertisements, ct);
         
-        await UpdateImageLinksAsync(updatedAdvertisements, ct);
+        await UpdateImageLinksAsync(processResult.UpdatedAdvertisements, ct);
         
-        await UpdateAdvertisementAddressesAsync(updatedAdvertisements, syncAddressesDictionaryResult, ct);
+        await UpdateAdvertisementAddressesAsync(processResult.UpdatedAdvertisements, syncAddressesDictionaryResult, ct);
         
-        await UpdateTransportStopsAsync(updatedAdvertisements, ct);
+        await UpdateTransportStopsAsync(processResult.UpdatedAdvertisements, ct);
         
         await transaction.CommitAsync(ct);
 
-        return updatedAdvertisements.Keys.ToHashSet();
+        return processResult;
     }
 
     private async Task UpdateAdvertisementAddressesAsync(
@@ -91,7 +91,7 @@ public abstract class BaseAdvertisementProcessor<TExternalIdentifier> : IAdverti
                 continue;
             }
 
-            _logger.LogInformation("Set houseId='{AddressId}' for adv='{AdvId}'", houseId, advertisement.Key);
+            _logger.LogDebug("Set houseId='{AddressId}' for adv='{AdvId}'", houseId, advertisement.Key);
             
             await _dbContext.Advertisements
                 .Where(a => a.Id == advertisement.Key)
@@ -291,13 +291,16 @@ public abstract class BaseAdvertisementProcessor<TExternalIdentifier> : IAdverti
         await _dbContext.SaveChangesAsync(ct);
     }
     
-    private async Task<Dictionary<long, Advertisement>> UpdateAdvertisementsAsync(
+    private async Task<ProcessResult> UpdateAdvertisementsAsync(
         Advertisement[] advertisements,
         CancellationToken ct = default)
     {
         var existsAdvertisements = await GetExistsAdvertisementsAsync(advertisements, ct);
+        var newItemsCount = 0;
+        var updatedItemsCount = 0;
+        var outdatedItemsIds = new HashSet<long>();
         
-        var updatedAdvertisements = new List<Db.Models.Advertisement>();
+        var processedItems = new List<Db.Models.Advertisement>();
         foreach (var parsedPage in advertisements)
         {
             if (parsedPage.Square == 0
@@ -320,11 +323,15 @@ public abstract class BaseAdvertisementProcessor<TExternalIdentifier> : IAdverti
                 
                 // Fill the fields should be setup only on first insert.
                 dbAdvertisement.FirstTimeCrawledAt = dbAdvertisement.CrawledAt;
+                
+                newItemsCount++;
             }
             else
             {
                 if (advertisement.UpdatedAt >= parsedPage.UpdatedAt)
                 {
+                    outdatedItemsIds.Add(advertisement.Id);
+                    
                     continue;
                 }
                 
@@ -334,22 +341,34 @@ public abstract class BaseAdvertisementProcessor<TExternalIdentifier> : IAdverti
                 
                 _dbContext.Attach(dbAdvertisement);
                 FillAdvertisement(dbAdvertisement, parsedPage);
+
+                updatedItemsCount++;
             }
 
-            updatedAdvertisements.Add(dbAdvertisement);
+            processedItems.Add(dbAdvertisement);
         }
         
-        var updatedCount = await _dbContext.SaveChangesAsync(ct);
+        await _dbContext.SaveChangesAsync(ct);
         
-        _logger.LogInformation("Updated {Count} entities in DB", updatedCount);
+        _logger.LogInformation(
+            "Crawling Result: Inserted ({InsertedCount}), Updated ({UpdatedCount}), Outdated ({OutdatedCount}) items.",
+            newItemsCount,
+            updatedItemsCount,
+            outdatedItemsIds.Count);
 
-        return updatedAdvertisements
+        var processedItemsDictionary = processedItems
             .Join(
                 advertisements,
                 x => x.SourceId,
                 x => x.Id,
                 (model, parsed) => (model, parsed))
             .ToDictionary(x => x.model.Id, x => x.parsed);
+
+        return new ProcessResult
+        {
+            UpdatedAdvertisements = processedItemsDictionary,
+            OutdatedItemsIds = outdatedItemsIds,
+        };
     }
 
     private void FillAdvertisement(

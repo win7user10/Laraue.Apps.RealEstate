@@ -119,17 +119,16 @@ public abstract class BaseRealEstateCrawlerJob : BaseCrawlerJob<CrawlingResult, 
                 () => Task.Delay(TimeSpan.FromMinutes(10), cancellationToken));
         }
         
-        var updatedAdvertisementIds = await _processor
+        var processResult = await _processor
             .ProcessAsync(model.Advertisements, CityId, cancellationToken)
             .ConfigureAwait(false);
 
         _sessionInterrupter.ThrowIfRequired(
-            updatedAdvertisementIds,
+            processResult,
             state.JobData.UpdatedAdvertisements,
-            model.Advertisements,
             _options);
         
-        foreach (var updatedAdvertisementId in updatedAdvertisementIds)
+        foreach (var updatedAdvertisementId in processResult.UpdatedAdvertisements.Keys)
         {
             state.JobData.UpdatedAdvertisements.Add(updatedAdvertisementId);
         }

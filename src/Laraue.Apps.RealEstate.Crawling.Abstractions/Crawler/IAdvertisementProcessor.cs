@@ -14,8 +14,21 @@ public interface IAdvertisementProcessor
     /// Process advertisements.
     /// </summary>
     /// <returns>Identifiers of the passed advs that have been saved or updated.</returns>
-    Task<HashSet<long>> ProcessAsync(
+    Task<ProcessResult> ProcessAsync(
         Advertisement[] advertisements,
         long cityId,
         CancellationToken ct = default);
+}
+
+public record ProcessResult
+{
+    /// <summary>
+    /// Identifiers of the passed advs that have been saved or updated.
+    /// </summary>
+    public required Dictionary<long, Advertisement> UpdatedAdvertisements { get; init; }
+    
+    /// <summary>
+    /// Items that were crawled in older sessions.
+    /// </summary>
+    public required HashSet<long> OutdatedItemsIds { get; init; }
 }

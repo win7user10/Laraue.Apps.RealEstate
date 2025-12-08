@@ -1,4 +1,5 @@
 ﻿using Laraue.Apps.RealEstate.Crawling.Abstractions.Contracts;
+using Laraue.Apps.RealEstate.Crawling.Abstractions.Crawler;
 using Laraue.Core.DateTime.Services.Abstractions;
 using Laraue.Crawling.Crawler;
 
@@ -6,28 +7,33 @@ namespace Laraue.Apps.RealEstate.Crawling.Impl;
 
 public interface ISessionInterrupter
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="processResult"></param>
+    /// <param name="sessionUpdatedAdvertisementIds">Items already crawled in the current session.</param>
+    /// <param name="options"></param>
     void ThrowIfRequired(
-        HashSet<long> currentPageUpdatedAdvertisementIds,
+        ProcessResult processResult,
         HashSet<long> sessionUpdatedAdvertisementIds,
-        Advertisement[] crawledAdvertisements,
         BaseCrawlerServiceOptions options);
 }
 
-public class SessionInterrupter(IDateTimeProvider dateTimeProvider) : ISessionInterrupter
+public class SessionInterrupter(
+    IDateTimeProvider dateTimeProvider) : ISessionInterrupter
 {
     public void ThrowIfRequired(
-        HashSet<long> currentPageUpdatedAdvertisementIds,
+        ProcessResult processResult,
         HashSet<long> sessionUpdatedAdvertisementIds,
-        Advertisement[] crawledAdvertisements,
         BaseCrawlerServiceOptions options)
     {
-        // If some of advs were not updated need to check the reason.
-        if (currentPageUpdatedAdvertisementIds.Count != crawledAdvertisements.Length)
+        // If some correct advs were not updated need to check the reason.
+        if (processResult.OutdatedItemsIds.Count > 0)
         {
             // Need to check adv identifiers. If all adv ids from this session, it just means
             // that crawler was powered off for some time when new advs appeared.
             // Else it means the crawler found items that were stored in previous sessions. 
-            if (!currentPageUpdatedAdvertisementIds.All(sessionUpdatedAdvertisementIds.Contains))
+            if (!processResult.OutdatedItemsIds.All(sessionUpdatedAdvertisementIds.Contains))
             {
                 throw new SessionInterruptedException("Already parsed advertisements found");
             }
@@ -35,7 +41,7 @@ public class SessionInterrupter(IDateTimeProvider dateTimeProvider) : ISessionIn
         
         // If the system found advs that is too old (based on options), the session should be finished.
         // It prevents the whole resource parsing at the first run.
-        if (!AreAllAdvertisementsActual(crawledAdvertisements, options))
+        if (!AreAllAdvertisementsActual(processResult.UpdatedAdvertisements.Values, options))
         {
             throw new SessionInterruptedException("Too old advertisements found");
         }

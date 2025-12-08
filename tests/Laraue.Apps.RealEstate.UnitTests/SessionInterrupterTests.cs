@@ -1,8 +1,10 @@
 ﻿using Laraue.Apps.RealEstate.Crawling.Abstractions.Contracts;
+using Laraue.Apps.RealEstate.Crawling.Abstractions.Crawler;
 using Laraue.Apps.RealEstate.Crawling.Impl;
 using Laraue.Apps.RealEstate.Crawling.Impl.Cian;
 using Laraue.Core.DateTime.Services.Abstractions;
 using Laraue.Crawling.Crawler;
+using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace Laraue.Apps.RealEstate.UnitTests;
@@ -20,37 +22,72 @@ public class SessionInterrupterTests
     public SessionInterrupterTests()
     {
         _dateTimeProvider = new Mock<IDateTimeProvider>();
-        _sessionInterrupter = new SessionInterrupter(_dateTimeProvider.Object);
+        _sessionInterrupter = new SessionInterrupter(
+            _dateTimeProvider.Object);
     }
 
     [Fact]
     public void Session_ShouldBeInterrupted_WhenAdvertisementsFromPreviousSessionsFound()
     {
-        var currentPageUpdatedAdvertisementIds = new HashSet<long> { 3, 4 };
-        var sessionUpdatedAdvertisementIds = new HashSet<long> { 1, 2 };
-        var crawledAdvertisements = Array.Empty<Advertisement>();
+        var currentPageUpdatedAdvertisementIds = new ProcessResult
+        {
+            UpdatedAdvertisements = new Dictionary<long, Advertisement>
+            {
+                [13] = new (),
+                [14] = new (),
+            },
+            OutdatedItemsIds = [12],
+        };
+        var sessionUpdatedAdvertisementIds = new HashSet<long> { 10, 11 };
         
         var ex = Assert.Throws<SessionInterruptedException>(() => _sessionInterrupter.ThrowIfRequired(
             currentPageUpdatedAdvertisementIds, 
             sessionUpdatedAdvertisementIds,
-            crawledAdvertisements,
             _options));
         
         Assert.Equal("Already parsed advertisements found", ex.Message);
+    }
+    
+    [Fact]
+    public void Session_ShouldNotBeInterrupted_WhenAdvertisementsFromThisSessionsFound()
+    {
+        var currentPageUpdatedAdvertisementIds = new ProcessResult
+        {
+            UpdatedAdvertisements = new Dictionary<long, Advertisement>
+            {
+                [13] = new ()
+                {
+                    UpdatedAt = new DateTime(2020, 01, 01)
+                }
+            },
+            OutdatedItemsIds = [12],
+        };
+        var sessionUpdatedAdvertisementIds = new HashSet<long> { 10, 11, 12 };
+        _dateTimeProvider.Setup(x => x.UtcNow)
+            .Returns(new DateTime(2020, 01, 01, 00, 10, 00));
+
+        _sessionInterrupter.ThrowIfRequired(
+            currentPageUpdatedAdvertisementIds,
+            sessionUpdatedAdvertisementIds,
+            _options);
     }
 
     [Fact]
     public void Session_ShouldBeInterrupted_WhenTooOldAdvertisementsFound()
     {
-        var currentPageUpdatedAdvertisementIds = new HashSet<long> { 2 };
-        var sessionUpdatedAdvertisementIds = new HashSet<long> { 1 };
-        var crawledAdvertisements = new []
+        var currentPageUpdatedAdvertisementIds = new ProcessResult
         {
-            new Advertisement
+            UpdatedAdvertisements = new Dictionary<long, Advertisement>
             {
-                UpdatedAt = new DateTime(2020, 01, 01)
-            }
+                [2] = new ()
+                {
+                    UpdatedAt = new DateTime(2020, 01, 01)
+                }
+            },
+            OutdatedItemsIds = [],
         };
+        
+        var sessionUpdatedAdvertisementIds = new HashSet<long>();
         
         _dateTimeProvider.Setup(x => x.UtcNow)
             .Returns(new DateTime(2020, 01, 01, 02, 00, 00));
@@ -58,7 +95,6 @@ public class SessionInterrupterTests
         var ex = Assert.Throws<SessionInterruptedException>(() => _sessionInterrupter.ThrowIfRequired(
             currentPageUpdatedAdvertisementIds, 
             sessionUpdatedAdvertisementIds,
-            crawledAdvertisements,
             _options));
         
         Assert.Equal("Too old advertisements found", ex.Message);
@@ -67,15 +103,18 @@ public class SessionInterrupterTests
     [Fact]
     public void Session_ShouldNotBeInterrupted_WhenNoMatchInterruptionCriteria()
     {
-        var currentPageUpdatedAdvertisementIds = new HashSet<long> { 2 };
-        var sessionUpdatedAdvertisementIds = new HashSet<long> { 1 };
-        var crawledAdvertisements = new []
+        var currentPageUpdatedAdvertisementIds = new ProcessResult
         {
-            new Advertisement
+            UpdatedAdvertisements = new Dictionary<long, Advertisement>
             {
-                UpdatedAt = new DateTime(2020, 01, 01)
-            }
+                [2] = new ()
+                {
+                    UpdatedAt = new DateTime(2020, 01, 01)
+                }
+            },
+            OutdatedItemsIds = [],
         };
+        var sessionUpdatedAdvertisementIds = new HashSet<long>();
         
         _dateTimeProvider.Setup(x => x.UtcNow)
             .Returns(new DateTime(2020, 01, 01, 00, 10, 00));
@@ -83,7 +122,6 @@ public class SessionInterrupterTests
         _sessionInterrupter.ThrowIfRequired(
             currentPageUpdatedAdvertisementIds,
             sessionUpdatedAdvertisementIds,
-            crawledAdvertisements,
             _options);
     }
 }
