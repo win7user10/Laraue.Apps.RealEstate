@@ -4,9 +4,11 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
 using Xunit.Abstractions;
+using Xunit.Categories;
 
 namespace Laraue.Apps.RealEstate.IntegrationTests.Prediction;
 
+[IntegrationTest]
 public class RemoteImagesPredictorTests
 {
     private readonly ITestOutputHelper _testOutputHelper;

@@ -10,10 +10,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
+using Xunit.Categories;
 using Advertisement = Laraue.Apps.RealEstate.Crawling.Contracts.Advertisement;
 
 namespace Laraue.Apps.RealEstate.IntegrationTests.Crawling.Cian;
 
+[IntegrationTest]
 public class CianAdvertisementProcessorTests : TestWithDatabase
 {
     private readonly CianAdvertisementProcessor _processor;

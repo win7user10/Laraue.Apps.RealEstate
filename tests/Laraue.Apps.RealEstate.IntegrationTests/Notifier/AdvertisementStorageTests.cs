@@ -3,9 +3,11 @@ using Laraue.Apps.RealEstate.DataAccess.Models;
 using Laraue.Apps.RealEstate.DataAccess.Storage;
 using Laraue.Core.DataAccess.Contracts;
 using Xunit;
+using Xunit.Categories;
 
 namespace Laraue.Apps.RealEstate.IntegrationTests.Notifier;
 
+[IntegrationTest]
 public sealed class AdvertisementStorageTests : TestWithDatabase
 {
     private readonly AdvertisementStorage _storage;

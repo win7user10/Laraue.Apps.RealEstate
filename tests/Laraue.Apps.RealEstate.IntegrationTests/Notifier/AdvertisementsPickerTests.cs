@@ -5,9 +5,11 @@ using Laraue.Apps.RealEstate.Telegram.AppServices;
 using Laraue.Core.DateTime.Services.Abstractions;
 using Moq;
 using Xunit;
+using Xunit.Categories;
 
 namespace Laraue.Apps.RealEstate.IntegrationTests.Notifier;
 
+[IntegrationTest]
 public sealed class AdvertisementsPickerTests : TestWithDatabase
 {
     private readonly PublicAdvertisementsPicker _picker;

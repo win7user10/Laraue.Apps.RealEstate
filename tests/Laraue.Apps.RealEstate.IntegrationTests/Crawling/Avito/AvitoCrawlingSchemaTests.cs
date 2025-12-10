@@ -7,9 +7,11 @@ using Microsoft.Extensions.Logging;
 using PuppeteerSharp;
 using Xunit;
 using Xunit.Abstractions;
+using Xunit.Categories;
 
 namespace Laraue.Apps.RealEstate.IntegrationTests.Crawling.Avito;
 
+[IntegrationTest]
 public sealed class AvitoCrawlingSchemaTests : IAsyncLifetime
 {
     private readonly ITestOutputHelper _outputHelper;
