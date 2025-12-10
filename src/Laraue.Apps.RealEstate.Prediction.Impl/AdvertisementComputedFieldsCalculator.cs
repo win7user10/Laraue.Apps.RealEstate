@@ -1,4 +1,4 @@
-﻿using Laraue.Apps.RealEstate.Abstractions;
+﻿using Laraue.Apps.RealEstate.Contracts;
 using Laraue.Apps.RealEstate.Prediction.Abstractions;
 
 namespace Laraue.Apps.RealEstate.Prediction.Impl;

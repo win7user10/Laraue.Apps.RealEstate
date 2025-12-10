@@ -1,4 +1,4 @@
-﻿using Laraue.Apps.RealEstate.Telegram;
+﻿using Laraue.Apps.RealEstate.AppServices.Telegram;
 using Laraue.Core.Extensions.Hosting;
 
 namespace Laraue.Apps.RealEstate.WorkerHost.Jobs;

@@ -1,4 +1,4 @@
-﻿using Laraue.Apps.RealEstate.Crawling.Abstractions.Crawler.TransportStops;
+﻿using Laraue.Apps.RealEstate.Crawling.Contracts.Crawler.TransportStops;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Laraue.Apps.RealEstate.ApiHost.Controllers;

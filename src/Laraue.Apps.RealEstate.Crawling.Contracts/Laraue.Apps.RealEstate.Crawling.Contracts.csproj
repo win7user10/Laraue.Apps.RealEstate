@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  
+  <ItemGroup>
+    <PackageReference Include="Laraue.Crawling.Dynamic.PuppeterSharp" Version="$(LaraueCrawlingVersion)" />
+    <PackageReference Include="Laraue.Crawling.Crawler" Version="$(LaraueCrawlingVersion)" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="$(MicrosoftPackagesVersion)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Laraue.Apps.RealEstate.Contracts\Laraue.Apps.RealEstate.Contracts.csproj" />
+  </ItemGroup>
+
+</Project>

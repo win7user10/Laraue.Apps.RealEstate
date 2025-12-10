@@ -1,5 +1,5 @@
-﻿using Laraue.Apps.RealEstate.Crawling.Abstractions.Contracts;
-using Laraue.Apps.RealEstate.Crawling.Abstractions.Crawler;
+﻿using Laraue.Apps.RealEstate.Crawling.Contracts.Contracts;
+using Laraue.Apps.RealEstate.Crawling.Contracts.Crawler;
 using Laraue.Apps.RealEstate.Db;
 using Laraue.Apps.RealEstate.Db.Models;
 using Laraue.Core.DateTime.Services.Abstractions;
@@ -8,7 +8,7 @@ using Laraue.Crawling.Crawler;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Advertisement = Laraue.Apps.RealEstate.Crawling.Abstractions.Contracts.Advertisement;
+using Advertisement = Laraue.Apps.RealEstate.Crawling.Contracts.Contracts.Advertisement;
 
 namespace Laraue.Apps.RealEstate.Crawling.Impl;
 

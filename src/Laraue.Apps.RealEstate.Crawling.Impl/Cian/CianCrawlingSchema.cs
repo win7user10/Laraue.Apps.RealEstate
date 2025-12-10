@@ -1,6 +1,6 @@
-﻿using Laraue.Apps.RealEstate.Abstractions;
-using Laraue.Apps.RealEstate.Crawling.Abstractions.Contracts;
-using Laraue.Apps.RealEstate.Crawling.Abstractions.Crawler.Cian;
+﻿using Laraue.Apps.RealEstate.Contracts;
+using Laraue.Apps.RealEstate.Crawling.Contracts.Contracts;
+using Laraue.Apps.RealEstate.Crawling.Contracts.Crawler.Cian;
 using Laraue.Crawling.Abstractions;
 using Laraue.Crawling.Abstractions.Schema.Binding;
 using Laraue.Crawling.Common.Extensions;

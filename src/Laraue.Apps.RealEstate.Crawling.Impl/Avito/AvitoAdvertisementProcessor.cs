@@ -1,6 +1,6 @@
-﻿using Laraue.Apps.RealEstate.Abstractions;
-using Laraue.Apps.RealEstate.Crawling.Abstractions.Crawler.Avito;
-using Laraue.Apps.RealEstate.Crawling.Abstractions.Crawler.TransportStops;
+﻿using Laraue.Apps.RealEstate.Contracts;
+using Laraue.Apps.RealEstate.Crawling.Contracts.Crawler.Avito;
+using Laraue.Apps.RealEstate.Crawling.Contracts.Crawler.TransportStops;
 using Laraue.Apps.RealEstate.Db;
 using Laraue.Apps.RealEstate.Db.Storage;
 using Laraue.Core.DateTime.Services.Abstractions;

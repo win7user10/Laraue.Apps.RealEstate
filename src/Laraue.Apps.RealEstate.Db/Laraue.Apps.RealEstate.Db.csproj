@@ -16,8 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Laraue.Apps.RealEstate.Abstractions\Laraue.Apps.RealEstate.Abstractions.csproj" />
-    <ProjectReference Include="..\Laraue.Apps.RealEstate.Crawling.Abstractions\Laraue.Apps.RealEstate.Crawling.Abstractions.csproj" />
+    <ProjectReference Include="..\Laraue.Apps.RealEstate.Contracts\Laraue.Apps.RealEstate.Contracts.csproj" />
+    <ProjectReference Include="..\Laraue.Apps.RealEstate.Crawling.Contracts\Laraue.Apps.RealEstate.Crawling.Contracts.csproj" />
   </ItemGroup>
 
   <ItemGroup>

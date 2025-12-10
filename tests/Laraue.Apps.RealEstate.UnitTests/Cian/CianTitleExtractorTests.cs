@@ -1,4 +1,4 @@
-﻿using Laraue.Apps.RealEstate.Crawling.Abstractions.Crawler;
+﻿using Laraue.Apps.RealEstate.Crawling.Contracts.Crawler;
 using Laraue.Apps.RealEstate.Crawling.Impl.Cian;
 
 namespace Laraue.Apps.RealEstate.UnitTests.Cian;

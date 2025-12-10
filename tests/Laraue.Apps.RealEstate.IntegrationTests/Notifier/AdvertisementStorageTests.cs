@@ -1,4 +1,4 @@
-﻿using Laraue.Apps.RealEstate.Abstractions;
+﻿using Laraue.Apps.RealEstate.Contracts;
 using Laraue.Apps.RealEstate.Db.Models;
 using Laraue.Apps.RealEstate.Db.Storage;
 using Laraue.Core.DataAccess.Contracts;

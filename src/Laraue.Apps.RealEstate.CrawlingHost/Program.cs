@@ -1,5 +1,5 @@
-using Laraue.Apps.RealEstate.Abstractions;
-using Laraue.Apps.RealEstate.Crawling.Abstractions.Crawler.TransportStops;
+using Laraue.Apps.RealEstate.Contracts;
+using Laraue.Apps.RealEstate.Crawling.Contracts.Crawler.TransportStops;
 using Laraue.Apps.RealEstate.Crawling.Impl;
 using Laraue.Apps.RealEstate.CrawlingHost;
 using Laraue.Apps.RealEstate.Db;

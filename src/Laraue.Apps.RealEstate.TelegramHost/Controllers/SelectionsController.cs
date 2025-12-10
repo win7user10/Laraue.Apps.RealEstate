@@ -1,5 +1,5 @@
-﻿using Laraue.Apps.RealEstate.Abstractions;
-using Laraue.Apps.RealEstate.Telegram;
+﻿using Laraue.Apps.RealEstate.AppServices.Telegram;
+using Laraue.Apps.RealEstate.Contracts;
 using Laraue.Apps.RealEstate.TelegramHost.Services;
 using Laraue.Apps.RealEstate.TelegramHost.Services.Interceptors.Selection;
 using Laraue.Telegram.NET.Abstractions.Request;

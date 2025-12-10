@@ -1,7 +1,7 @@
-﻿using Laraue.Apps.RealEstate.Abstractions;
+﻿using Laraue.Apps.RealEstate.AppServices.Telegram;
+using Laraue.Apps.RealEstate.Contracts;
 using Laraue.Apps.RealEstate.Db.Models;
 using Laraue.Apps.RealEstate.Db.Storage;
-using Laraue.Apps.RealEstate.Telegram;
 using Laraue.Core.DateTime.Services.Abstractions;
 using Moq;
 using Xunit;

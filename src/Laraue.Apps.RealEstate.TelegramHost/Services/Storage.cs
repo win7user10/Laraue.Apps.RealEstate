@@ -1,5 +1,5 @@
-﻿using Laraue.Apps.RealEstate.Abstractions;
-using Laraue.Apps.RealEstate.Abstractions.Extensions;
+﻿using Laraue.Apps.RealEstate.Contracts;
+using Laraue.Apps.RealEstate.Contracts.Extensions;
 using Laraue.Apps.RealEstate.Db;
 using Laraue.Apps.RealEstate.Db.Models;
 using Microsoft.EntityFrameworkCore;

@@ -1,5 +1,5 @@
 ﻿using System.Linq.Expressions;
-using Laraue.Apps.RealEstate.Abstractions;
+using Laraue.Apps.RealEstate.Contracts;
 
 namespace Laraue.Apps.RealEstate.Db.Storage;
 

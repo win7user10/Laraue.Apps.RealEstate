@@ -1,6 +1,6 @@
 ﻿using System.Net;
-using Laraue.Apps.RealEstate.Crawling.Abstractions.Contracts;
-using Laraue.Apps.RealEstate.Crawling.Abstractions.Crawler;
+using Laraue.Apps.RealEstate.Crawling.Contracts.Contracts;
+using Laraue.Apps.RealEstate.Crawling.Contracts.Crawler;
 using Laraue.Apps.RealEstate.Crawling.Impl.Exceptions;
 using Laraue.Crawling.Crawler;
 using Laraue.Crawling.Dynamic.PuppeterSharp.Abstractions;

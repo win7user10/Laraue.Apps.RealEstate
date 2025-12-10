@@ -1,4 +1,4 @@
-﻿using Laraue.Apps.RealEstate.Crawling.Abstractions.Crawler.Avito;
+﻿using Laraue.Apps.RealEstate.Crawling.Contracts.Crawler.Avito;
 using Laraue.Apps.RealEstate.Db;
 using Laraue.Core.DateTime.Services.Abstractions;
 using Laraue.Core.Extensions.Hosting;

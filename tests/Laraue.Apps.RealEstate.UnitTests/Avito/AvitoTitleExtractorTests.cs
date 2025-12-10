@@ -1,4 +1,4 @@
-﻿using Laraue.Apps.RealEstate.Crawling.Abstractions.Crawler;
+﻿using Laraue.Apps.RealEstate.Crawling.Contracts.Crawler;
 using Laraue.Apps.RealEstate.Crawling.Impl.Avito;
 
 namespace Laraue.Apps.RealEstate.UnitTests.Avito;

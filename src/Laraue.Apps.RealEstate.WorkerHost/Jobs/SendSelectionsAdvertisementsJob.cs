@@ -1,5 +1,5 @@
-﻿using Laraue.Apps.RealEstate.Db;
-using Laraue.Apps.RealEstate.Telegram;
+﻿using Laraue.Apps.RealEstate.AppServices.Telegram;
+using Laraue.Apps.RealEstate.Db;
 using Laraue.Core.DateTime.Services.Abstractions;
 using Laraue.Core.Extensions.Hosting;
 using LinqToDB.EntityFrameworkCore;

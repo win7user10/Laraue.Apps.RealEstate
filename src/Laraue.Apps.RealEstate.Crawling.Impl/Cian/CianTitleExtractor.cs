@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 using System.Text.RegularExpressions;
-using Laraue.Apps.RealEstate.Crawling.Abstractions.Crawler;
+using Laraue.Apps.RealEstate.Crawling.Contracts.Crawler;
 
 namespace Laraue.Apps.RealEstate.Crawling.Impl.Cian;
 

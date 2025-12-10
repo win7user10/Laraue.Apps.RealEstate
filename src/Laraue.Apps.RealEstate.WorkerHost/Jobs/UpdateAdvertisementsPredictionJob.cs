@@ -1,5 +1,4 @@
-﻿using Laraue.Apps.RealEstate.Crawling.Abstractions.Crawler;
-using Laraue.Apps.RealEstate.Db;
+﻿using Laraue.Apps.RealEstate.Db;
 using Laraue.Apps.RealEstate.Prediction.Abstractions;
 using Laraue.Core.DateTime.Services.Abstractions;
 using Laraue.Core.Extensions.Hosting;

@@ -1,4 +1,4 @@
-﻿using Laraue.Apps.RealEstate.Telegram;
+﻿using Laraue.Apps.RealEstate.AppServices.Telegram;
 using Laraue.Apps.RealEstate.TelegramHost.Services;
 using Laraue.Telegram.NET.Core.Extensions;
 using Laraue.Telegram.NET.Core.Routing;

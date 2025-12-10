@@ -1,5 +1,5 @@
-﻿using Laraue.Apps.RealEstate.Abstractions;
-using Laraue.Apps.RealEstate.Crawling.Abstractions.Contracts;
+﻿using Laraue.Apps.RealEstate.Contracts;
+using Laraue.Apps.RealEstate.Crawling.Contracts.Contracts;
 using Laraue.Apps.RealEstate.Crawling.Impl.Cian;
 using Laraue.Apps.RealEstate.Db.Models;
 using Laraue.Apps.RealEstate.Db.Storage;
@@ -10,7 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
-using Advertisement = Laraue.Apps.RealEstate.Crawling.Abstractions.Contracts.Advertisement;
+using Advertisement = Laraue.Apps.RealEstate.Crawling.Contracts.Contracts.Advertisement;
 
 namespace Laraue.Apps.RealEstate.IntegrationTests.Crawling.Cian;
 

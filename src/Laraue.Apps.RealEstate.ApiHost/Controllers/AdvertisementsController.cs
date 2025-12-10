@@ -1,8 +1,8 @@
-﻿using Laraue.Apps.RealEstate.Abstractions;
-using Laraue.Apps.RealEstate.ApiHost.Requests;
+﻿using Laraue.Apps.RealEstate.ApiHost.Requests;
+using Laraue.Apps.RealEstate.Contracts;
 using Laraue.Core.DataAccess.Contracts;
 using Microsoft.AspNetCore.Mvc;
-using Filter = Laraue.Apps.RealEstate.Abstractions.Filter;
+using Filter = Laraue.Apps.RealEstate.Contracts.Filter;
 
 namespace Laraue.Apps.RealEstate.ApiHost.Controllers;
 

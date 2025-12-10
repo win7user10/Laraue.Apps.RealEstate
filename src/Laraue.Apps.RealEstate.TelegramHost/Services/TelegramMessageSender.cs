@@ -1,6 +1,6 @@
 ﻿using System.Text;
-using Laraue.Apps.RealEstate.Abstractions;
-using Laraue.Apps.RealEstate.Abstractions.Extensions;
+using Laraue.Apps.RealEstate.Contracts;
+using Laraue.Apps.RealEstate.Contracts.Extensions;
 using Laraue.Apps.RealEstate.TelegramHost.Services.Interceptors.Selection;
 using Laraue.Telegram.NET.Core.Extensions;
 using Laraue.Telegram.NET.Core.Utils;

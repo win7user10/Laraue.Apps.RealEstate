@@ -1,7 +1,7 @@
-﻿using Laraue.Apps.RealEstate.Crawling.Abstractions.Contracts;
-using Laraue.Apps.RealEstate.Crawling.Abstractions.Crawler;
-using Laraue.Apps.RealEstate.Crawling.Abstractions.Crawler.Avito;
-using Laraue.Apps.RealEstate.Crawling.Abstractions.Crawler.Cian;
+﻿using Laraue.Apps.RealEstate.Crawling.Contracts.Contracts;
+using Laraue.Apps.RealEstate.Crawling.Contracts.Crawler;
+using Laraue.Apps.RealEstate.Crawling.Contracts.Crawler.Avito;
+using Laraue.Apps.RealEstate.Crawling.Contracts.Crawler.Cian;
 using Laraue.Apps.RealEstate.Crawling.Impl.Avito;
 using Laraue.Apps.RealEstate.Crawling.Impl.Cian;
 using Laraue.Crawling.Crawler.EfCore;

@@ -10,7 +10,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laraue.Apps.RealEstate.Pred
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "crawling", "crawling", "{EE1D48F9-4FDE-4CCC-87C3-74224E332682}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laraue.Apps.RealEstate.Crawling.Abstractions", "src\Laraue.Apps.RealEstate.Crawling.Abstractions\Laraue.Apps.RealEstate.Crawling.Abstractions.csproj", "{9C723805-216A-4AC4-9AE5-175A6E7C6765}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laraue.Apps.RealEstate.Crawling.Contracts", "src\Laraue.Apps.RealEstate.Crawling.Contracts\Laraue.Apps.RealEstate.Crawling.Contracts.csproj", "{9C723805-216A-4AC4-9AE5-175A6E7C6765}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "db", "db", "{B91AB723-1F79-42EA-A8D3-FBAABAF58A28}"
 EndProject
@@ -28,17 +28,17 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laraue.Apps.RealEstate.ApiH
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laraue.Apps.RealEstate.TelegramHost", "src\Laraue.Apps.RealEstate.TelegramHost\Laraue.Apps.RealEstate.TelegramHost.csproj", "{928BE7AF-29B4-4A6D-A9CC-904507CC05A4}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "common", "common", "{AC8F37B5-607C-4287-9C63-5F298FCCE041}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laraue.Apps.RealEstate.Contracts", "src\Laraue.Apps.RealEstate.Contracts\Laraue.Apps.RealEstate.Contracts.csproj", "{815D9DB1-0FA9-44AF-8BB5-3E7C3465BBC8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laraue.Apps.RealEstate.Abstractions", "src\Laraue.Apps.RealEstate.Abstractions\Laraue.Apps.RealEstate.Abstractions.csproj", "{815D9DB1-0FA9-44AF-8BB5-3E7C3465BBC8}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laraue.Apps.RealEstate.Telegram", "src\Laraue.Apps.RealEstate.Telegram\Laraue.Apps.RealEstate.Telegram.csproj", "{AFF041CB-9DD6-424F-85E4-2A7C275FDC7D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laraue.Apps.RealEstate.AppServices.Telegram", "src\Laraue.Apps.RealEstate.AppServices.Telegram\Laraue.Apps.RealEstate.AppServices.Telegram.csproj", "{AFF041CB-9DD6-424F-85E4-2A7C275FDC7D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laraue.Apps.RealEstate.GpuWorkerHost", "src\Laraue.Apps.RealEstate.GpuWorkerHost\Laraue.Apps.RealEstate.GpuWorkerHost.csproj", "{EA3AA985-DDDB-4412-8C3F-09D3E5FE3CD6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laraue.Apps.RealEstate.UnitTests", "tests\Laraue.Apps.RealEstate.UnitTests\Laraue.Apps.RealEstate.UnitTests.csproj", "{9E014506-0CE6-45B2-91AC-68A6C3465F7C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laraue.Apps.RealEstate.CrawlingHost", "src\Laraue.Apps.RealEstate.CrawlingHost\Laraue.Apps.RealEstate.CrawlingHost.csproj", "{A41059D8-1F0D-4D5D-AADF-E5C4A802FD11}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{C8A3C27A-165F-4A12-9EF9-FF0292EE7740}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -113,10 +113,10 @@ Global
 		{41B8D356-8801-4326-B1A9-26B5AACAF654} = {560070C4-6166-49F6-9D4E-0408518AA41F}
 		{A877731C-130E-4452-8290-239197454E40} = {7AC4807E-55B9-4F27-B6D2-0EBA99AEFFD2}
 		{928BE7AF-29B4-4A6D-A9CC-904507CC05A4} = {7AC4807E-55B9-4F27-B6D2-0EBA99AEFFD2}
-		{815D9DB1-0FA9-44AF-8BB5-3E7C3465BBC8} = {AC8F37B5-607C-4287-9C63-5F298FCCE041}
-		{AFF041CB-9DD6-424F-85E4-2A7C275FDC7D} = {AC8F37B5-607C-4287-9C63-5F298FCCE041}
 		{EA3AA985-DDDB-4412-8C3F-09D3E5FE3CD6} = {7AC4807E-55B9-4F27-B6D2-0EBA99AEFFD2}
 		{9E014506-0CE6-45B2-91AC-68A6C3465F7C} = {560070C4-6166-49F6-9D4E-0408518AA41F}
 		{A41059D8-1F0D-4D5D-AADF-E5C4A802FD11} = {7AC4807E-55B9-4F27-B6D2-0EBA99AEFFD2}
+		{AFF041CB-9DD6-424F-85E4-2A7C275FDC7D} = {C8A3C27A-165F-4A12-9EF9-FF0292EE7740}
+		{815D9DB1-0FA9-44AF-8BB5-3E7C3465BBC8} = {C8A3C27A-165F-4A12-9EF9-FF0292EE7740}
 	EndGlobalSection
 EndGlobal
