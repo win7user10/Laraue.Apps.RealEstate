@@ -1,4 +1,4 @@
-﻿namespace Laraue.Apps.RealEstate.AppServices.Telegram.Extensions;
+﻿namespace Laraue.Apps.RealEstate.Telegram.AppServices.Extensions;
 
 public static class TimeSpanExtensions
 {

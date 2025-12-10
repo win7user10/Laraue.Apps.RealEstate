@@ -1,4 +1,4 @@
-﻿namespace Laraue.Apps.RealEstateAppServices.TransportStops;
+﻿namespace Laraue.Apps.RealEstate.AppServices.TransportStops;
 
 /// <summary>
 /// Metro stations data from the <see cref="IMetroStationsStorage"/>.

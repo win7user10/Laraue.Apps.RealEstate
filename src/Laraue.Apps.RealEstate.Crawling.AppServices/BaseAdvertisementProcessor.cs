@@ -1,11 +1,11 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using Laraue.Apps.RealEstate.AppServices.TransportStops;
 using Laraue.Apps.RealEstate.Contracts;
 using Laraue.Apps.RealEstate.Crawling.Contracts;
 using Laraue.Apps.RealEstate.DataAccess;
 using Laraue.Apps.RealEstate.DataAccess.Models;
 using Laraue.Apps.RealEstate.DataAccess.Storage;
 using Laraue.Apps.RealEstate.Db;
-using Laraue.Apps.RealEstateAppServices.TransportStops;
 using Laraue.Core.DataAccess.EFCore.Extensions;
 using Laraue.Core.DateTime.Services.Abstractions;
 using LinqToDB;

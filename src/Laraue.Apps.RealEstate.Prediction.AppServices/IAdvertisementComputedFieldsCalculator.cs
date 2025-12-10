@@ -1,6 +1,6 @@
 ﻿using Laraue.Apps.RealEstate.Contracts;
 
-namespace Laraue.Apps.RealEstate.Prediction.Abstractions;
+namespace Laraue.Apps.RealEstate.Prediction.AppServices;
 
 public interface IAdvertisementComputedFieldsCalculator
 {

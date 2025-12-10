@@ -3,8 +3,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Laraue.Apps.RealEstate.Crawling.Contracts\Laraue.Apps.RealEstate.Crawling.Contracts.csproj" />
     <ProjectReference Include="..\Laraue.Apps.RealEstate.DataAccess\Laraue.Apps.RealEstate.DataAccess.csproj" />
-    <ProjectReference Include="..\Laraue.Apps.RealEstate.Prediction.Abstractions\Laraue.Apps.RealEstate.Prediction.Abstractions.csproj" />
-    <ProjectReference Include="..\Laraue.Apps.RealEstateAppServices\Laraue.Apps.RealEstateAppServices.csproj" />
+    <ProjectReference Include="..\Laraue.Apps.RealEstate.AppServices\Laraue.Apps.RealEstate.AppServices.csproj" />
   </ItemGroup>
 
   <ItemGroup>

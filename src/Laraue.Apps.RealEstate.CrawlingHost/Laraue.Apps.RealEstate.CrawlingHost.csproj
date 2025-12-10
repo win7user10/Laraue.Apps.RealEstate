@@ -7,7 +7,7 @@
     <ItemGroup>
         <ProjectReference Include="..\Laraue.Apps.RealEstate.Crawling.AppServices\Laraue.Apps.RealEstate.Crawling.AppServices.csproj" />
         <ProjectReference Include="..\Laraue.Apps.RealEstate.DataAccess\Laraue.Apps.RealEstate.DataAccess.csproj" />
-        <ProjectReference Include="..\Laraue.Apps.RealEstate.Prediction.Impl\Laraue.Apps.RealEstate.Prediction.Impl.csproj" />
+        <ProjectReference Include="..\Laraue.Apps.RealEstate.Prediction.AppServices\Laraue.Apps.RealEstate.Prediction.AppServices.csproj" />
     </ItemGroup>
 
 </Project>

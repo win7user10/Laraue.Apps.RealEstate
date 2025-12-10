@@ -7,8 +7,8 @@
   
   <ItemGroup>
     <ProjectReference Include="..\Laraue.Apps.RealEstate.DataAccess\Laraue.Apps.RealEstate.DataAccess.csproj" />
-    <ProjectReference Include="..\Laraue.Apps.RealEstate.Prediction.Impl\Laraue.Apps.RealEstate.Prediction.Impl.csproj" />
-    <ProjectReference Include="..\Laraue.Apps.RealEstate.AppServices.Telegram\Laraue.Apps.RealEstate.AppServices.Telegram.csproj" />
+    <ProjectReference Include="..\Laraue.Apps.RealEstate.Prediction.AppServices\Laraue.Apps.RealEstate.Prediction.AppServices.csproj" />
+    <ProjectReference Include="..\Laraue.Apps.RealEstate.Telegram.AppServices\Laraue.Apps.RealEstate.Telegram.AppServices.csproj" />
   </ItemGroup>
 
 </Project>

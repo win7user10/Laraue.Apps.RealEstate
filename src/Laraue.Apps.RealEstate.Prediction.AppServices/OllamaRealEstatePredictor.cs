@@ -1,4 +1,4 @@
-﻿namespace Laraue.Apps.RealEstate.Prediction.Impl;
+﻿namespace Laraue.Apps.RealEstate.Prediction.AppServices;
 
 public interface IPredictor
 {

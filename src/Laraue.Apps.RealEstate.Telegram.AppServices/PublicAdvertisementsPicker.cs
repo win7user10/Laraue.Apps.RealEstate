@@ -1,11 +1,10 @@
 ﻿using Laraue.Apps.RealEstate.Contracts;
 using Laraue.Apps.RealEstate.DataAccess;
-using Laraue.Apps.RealEstate.Db;
 using Laraue.Core.DataAccess.Contracts;
 using Laraue.Core.DateTime.Services.Abstractions;
 using LinqToDB.EntityFrameworkCore;
 
-namespace Laraue.Apps.RealEstate.AppServices.Telegram;
+namespace Laraue.Apps.RealEstate.Telegram.AppServices;
 
 public sealed class PublicAdvertisementsPicker : IPublicAdvertisementsPicker
 {

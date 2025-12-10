@@ -1,4 +1,4 @@
-﻿using Laraue.Apps.RealEstateAppServices.TransportStops;
+﻿using Laraue.Apps.RealEstate.AppServices.TransportStops;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Laraue.Apps.RealEstate.ApiHost.Controllers;

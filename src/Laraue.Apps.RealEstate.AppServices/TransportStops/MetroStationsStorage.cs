@@ -1,9 +1,8 @@
 ﻿using Laraue.Apps.RealEstate.DataAccess;
-using Laraue.Apps.RealEstate.Db;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Laraue.Apps.RealEstateAppServices.TransportStops;
+namespace Laraue.Apps.RealEstate.AppServices.TransportStops;
 
 public sealed class MetroStationsStorage : IMetroStationsStorage
 {

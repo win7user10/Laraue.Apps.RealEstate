@@ -1,4 +1,4 @@
-﻿namespace Laraue.Apps.RealEstate.Prediction.Abstractions;
+﻿namespace Laraue.Apps.RealEstate.Prediction.AppServices;
 
 public record PredictionResult
 {

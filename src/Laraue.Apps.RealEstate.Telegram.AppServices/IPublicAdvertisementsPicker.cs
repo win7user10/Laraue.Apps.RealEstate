@@ -1,6 +1,6 @@
 ﻿using Laraue.Apps.RealEstate.Contracts;
 
-namespace Laraue.Apps.RealEstate.AppServices.Telegram;
+namespace Laraue.Apps.RealEstate.Telegram.AppServices;
 
 public interface IPublicAdvertisementsPicker
 {

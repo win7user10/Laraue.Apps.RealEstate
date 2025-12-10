@@ -1,6 +1,6 @@
 ﻿using Telegram.Bot.Types;
 
-namespace Laraue.Apps.RealEstate.AppServices.Telegram;
+namespace Laraue.Apps.RealEstate.Telegram.AppServices;
 
 public static class StaticBotMenu
 {

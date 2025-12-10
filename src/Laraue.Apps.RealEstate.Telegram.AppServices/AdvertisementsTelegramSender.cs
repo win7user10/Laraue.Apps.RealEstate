@@ -1,10 +1,9 @@
-﻿using Laraue.Apps.RealEstate.AppServices.Telegram.Extensions;
-using Laraue.Apps.RealEstate.Contracts;
+﻿using Laraue.Apps.RealEstate.Contracts;
 using Laraue.Apps.RealEstate.Contracts.Extensions;
 using Laraue.Apps.RealEstate.DataAccess;
 using Laraue.Apps.RealEstate.DataAccess.Extensions;
 using Laraue.Apps.RealEstate.DataAccess.Models;
-using Laraue.Apps.RealEstate.Db;
+using Laraue.Apps.RealEstate.Telegram.AppServices.Extensions;
 using Laraue.Core.DataAccess.Contracts;
 using Laraue.Core.DateTime.Services.Abstractions;
 using Laraue.Telegram.NET.Core.Extensions;
@@ -18,7 +17,7 @@ using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
 
-namespace Laraue.Apps.RealEstate.AppServices.Telegram;
+namespace Laraue.Apps.RealEstate.Telegram.AppServices;
 
 public sealed class AdvertisementsTelegramSender : IAdvertisementsTelegramSender
 {

@@ -1,8 +1,7 @@
-﻿using Laraue.Apps.RealEstate.Prediction.Abstractions;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using SkiaSharp;
 
-namespace Laraue.Apps.RealEstate.Prediction.Impl;
+namespace Laraue.Apps.RealEstate.Prediction.AppServices;
 
 public sealed class RemoteImagesPredictor : IRemoteImagesPredictor
 {

@@ -1,8 +1,8 @@
-﻿using Laraue.Apps.RealEstate.Contracts;
+﻿using Laraue.Apps.RealEstate.AppServices.TransportStops;
+using Laraue.Apps.RealEstate.Contracts;
 using Laraue.Apps.RealEstate.DataAccess;
 using Laraue.Apps.RealEstate.DataAccess.Storage;
 using Laraue.Apps.RealEstate.Db;
-using Laraue.Apps.RealEstateAppServices.TransportStops;
 using Laraue.Core.DateTime.Services.Abstractions;
 using Microsoft.Extensions.Logging;
 

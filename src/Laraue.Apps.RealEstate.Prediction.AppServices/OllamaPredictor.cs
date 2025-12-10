@@ -5,7 +5,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Logging;
 
-namespace Laraue.Apps.RealEstate.Prediction.Impl;
+namespace Laraue.Apps.RealEstate.Prediction.AppServices;
 
 public interface IOllamaPredictor
 {

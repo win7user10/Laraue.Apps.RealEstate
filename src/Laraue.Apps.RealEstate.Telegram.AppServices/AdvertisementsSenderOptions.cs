@@ -1,4 +1,4 @@
-namespace Laraue.Apps.RealEstate.AppServices.Telegram;
+namespace Laraue.Apps.RealEstate.Telegram.AppServices;
 
 public sealed record AdvertisementsSenderOptions
 {

@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="$(MicrosoftPackagesVersion)" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Polly" Version="$(PollyVersion)" />
+    <PackageReference Include="SkiaSharp" Version="3.119.1" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\Laraue.Apps.RealEstate.Contracts\Laraue.Apps.RealEstate.Contracts.csproj" />
+  </ItemGroup>
+
+</Project>
