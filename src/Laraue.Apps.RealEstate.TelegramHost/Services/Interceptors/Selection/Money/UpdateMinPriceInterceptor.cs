@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using Laraue.Apps.RealEstate.DataAccess;
 using Laraue.Apps.RealEstate.Db;
 using Laraue.Telegram.NET.Authentication.Services;
 using Laraue.Telegram.NET.Interceptors.Services;
@@ -17,7 +18,7 @@ public class UpdateMinPriceInterceptor : BaseMoneyInterceptor
     }
 
     public override string Id => nameof(UpdateMinPriceInterceptor);
-    protected override Expression<Func<Db.Models.Selection, decimal?>> FieldSelectorExpression => selection => selection.MinPrice;
+    protected override Expression<Func<DataAccess.Models.Selection, decimal?>> FieldSelectorExpression => selection => selection.MinPrice;
     public override string FieldName => "Мин цена";
     public override string Description => "Значение ограничивает попадание в выборку квартир с ценой меньшей заданной";
 }

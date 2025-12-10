@@ -1,4 +1,5 @@
-﻿using Laraue.Apps.RealEstate.Abstractions.Extensions;
+﻿using Laraue.Apps.RealEstate.Contracts.Extensions;
+using Laraue.Apps.RealEstate.DataAccess;
 using Laraue.Apps.RealEstate.Db;
 using Laraue.Telegram.NET.Authentication.Services;
 using Laraue.Telegram.NET.Interceptors.Services;

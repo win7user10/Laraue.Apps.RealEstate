@@ -12,7 +12,7 @@ public interface IUpdateInterceptor
     /// </summary>
     /// <param name="value"></param>
     /// <returns></returns>
-    Task<string?> FormatTextAsync(Db.Models.Selection value);
+    Task<string?> FormatTextAsync(DataAccess.Models.Selection value);
 
     /// <summary>
     /// Field description for the user.

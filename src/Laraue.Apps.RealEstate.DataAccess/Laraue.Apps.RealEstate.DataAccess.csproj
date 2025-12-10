@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <PackageReference Include="Laraue.Core.Extensions.Hosting.EfCore" Version="$(LaraueHostingVersion)" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="$(EfCoreVersion)">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="$(EfCoreVersion)" />
+    <PackageReference Include="Laraue.Core.DataAccess.Linq2DB" Version="$(LaraueCoreDataAccessVersion)" />
+    <PackageReference Include="linq2db.EntityFrameworkCore" Version="$(Linq2DbEfCoreVersion)" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="$(NpgsqlEfCoreVersion)" />
+    <PackageReference Include="EFCore.NamingConventions" Version="$(EfCoreNamingConventionsVersion)" />
+    <PackageReference Include="Laraue.Telegram.NET.Authentication" Version="$(LaraueTelegramVersion)" />
+    <PackageReference Include="Laraue.Telegram.NET.Interceptors.EFCore" Version="$(LaraueTelegramVersion)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Laraue.Apps.RealEstate.Contracts\Laraue.Apps.RealEstate.Contracts.csproj" />
+    <ProjectReference Include="..\Laraue.Apps.RealEstate.Crawling.Contracts\Laraue.Apps.RealEstate.Crawling.Contracts.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Data\metro.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Migrations\AdvertisimentsDbContextModelSnapshot.cs" />
+  </ItemGroup>
+
+</Project>

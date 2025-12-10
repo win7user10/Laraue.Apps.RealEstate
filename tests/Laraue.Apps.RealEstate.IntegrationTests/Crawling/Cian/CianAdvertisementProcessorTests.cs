@@ -1,8 +1,8 @@
-﻿using Laraue.Apps.RealEstate.Abstractions;
-using Laraue.Apps.RealEstate.Crawling.Abstractions.Contracts;
-using Laraue.Apps.RealEstate.Crawling.Impl.Cian;
-using Laraue.Apps.RealEstate.Db.Models;
-using Laraue.Apps.RealEstate.Db.Storage;
+﻿using Laraue.Apps.RealEstate.Contracts;
+using Laraue.Apps.RealEstate.Crawling.AppServices.Cian;
+using Laraue.Apps.RealEstate.Crawling.Contracts;
+using Laraue.Apps.RealEstate.DataAccess.Models;
+using Laraue.Apps.RealEstate.DataAccess.Storage;
 using Laraue.Core.DateTime.Services.Abstractions;
 using Laraue.Core.DateTime.Services.Impl;
 using Microsoft.EntityFrameworkCore;
@@ -10,10 +10,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
-using Advertisement = Laraue.Apps.RealEstate.Crawling.Abstractions.Contracts.Advertisement;
+using Xunit.Categories;
+using Advertisement = Laraue.Apps.RealEstate.Crawling.Contracts.Advertisement;
 
 namespace Laraue.Apps.RealEstate.IntegrationTests.Crawling.Cian;
 
+[IntegrationTest]
 public class CianAdvertisementProcessorTests : TestWithDatabase
 {
     private readonly CianAdvertisementProcessor _processor;
@@ -89,7 +91,7 @@ public class CianAdvertisementProcessorTests : TestWithDatabase
     [Fact]
     public async Task Process_EarlySavedItems_ShouldUpdateThemInDatabaseAsync()
     {
-        DbContext.Advertisements.Add(new Laraue.Apps.RealEstate.Db.Models.Advertisement
+        DbContext.Advertisements.Add(new DataAccess.Models.Advertisement
         {
             UpdatedAt = new DateTime(2022, 01, 01, 0, 0, 0, DateTimeKind.Utc),
             SourceType = AdvertisementSource.Cian,

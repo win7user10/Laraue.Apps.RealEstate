@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    
+    <ItemGroup>
+      <ProjectReference Include="..\Laraue.Apps.RealEstate.DataAccess\Laraue.Apps.RealEstate.DataAccess.csproj" />
+    </ItemGroup>
+
+</Project>

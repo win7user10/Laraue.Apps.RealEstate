@@ -1,4 +1,5 @@
-﻿using Laraue.Apps.RealEstate.Crawling.Impl;
+﻿using Laraue.Apps.RealEstate.Crawling.AppServices;
+using Laraue.Apps.RealEstate.DataAccess;
 using Laraue.Apps.RealEstate.Db;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

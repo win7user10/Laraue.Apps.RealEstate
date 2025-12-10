@@ -1,4 +1,4 @@
-﻿using Laraue.Apps.RealEstate.Crawling.Impl.Cian;
+﻿using Laraue.Apps.RealEstate.Crawling.AppServices.Cian;
 using Laraue.Crawling.Dynamic.PuppeterSharp;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;

@@ -1,5 +1,5 @@
 ﻿using System.Net;
-using Laraue.Apps.RealEstate.Crawling.Impl.Avito;
+using Laraue.Apps.RealEstate.Crawling.AppServices.Avito;
 using Laraue.Core.DateTime.Services.Impl;
 using Laraue.Core.Testing.Logging;
 using Laraue.Crawling.Dynamic.PuppeterSharp;
@@ -7,9 +7,11 @@ using Microsoft.Extensions.Logging;
 using PuppeteerSharp;
 using Xunit;
 using Xunit.Abstractions;
+using Xunit.Categories;
 
 namespace Laraue.Apps.RealEstate.IntegrationTests.Crawling.Avito;
 
+[IntegrationTest]
 public sealed class AvitoCrawlingSchemaTests : IAsyncLifetime
 {
     private readonly ITestOutputHelper _outputHelper;

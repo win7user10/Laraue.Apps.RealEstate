@@ -1,9 +1,9 @@
-using Laraue.Apps.RealEstate.Abstractions;
+using Laraue.Apps.RealEstate.Contracts;
+using Laraue.Apps.RealEstate.DataAccess;
+using Laraue.Apps.RealEstate.DataAccess.Storage;
 using Laraue.Apps.RealEstate.Db;
-using Laraue.Apps.RealEstate.Db.Storage;
-using Laraue.Apps.RealEstate.Prediction.Abstractions;
-using Laraue.Apps.RealEstate.Prediction.Impl;
-using Laraue.Apps.RealEstate.Telegram;
+using Laraue.Apps.RealEstate.Prediction.AppServices;
+using Laraue.Apps.RealEstate.Telegram.AppServices;
 using Laraue.Apps.RealEstate.WorkerHost.Jobs;
 using Laraue.Core.DataAccess.Linq2DB.Extensions;
 using Laraue.Core.DateTime.Services.Abstractions;

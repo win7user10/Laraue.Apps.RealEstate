@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using Laraue.Apps.RealEstate.DataAccess;
 using Laraue.Apps.RealEstate.Db;
 using Laraue.Telegram.NET.Authentication.Services;
 using Laraue.Telegram.NET.Interceptors.Services;
@@ -19,7 +20,7 @@ public class UpdateLimitInterceptor : BaseInterceptor<int>
     }
 
     public override string Id => nameof(UpdateLimitInterceptor);
-    protected override Expression<Func<Db.Models.Selection, int>> FieldSelectorExpression => x => x.PerPage;
+    protected override Expression<Func<DataAccess.Models.Selection, int>> FieldSelectorExpression => x => x.PerPage;
     public override string FieldName => "Количество объявлений на странице";
     protected override Task<string> FormatTextAsync(int value) => Task.FromResult(value.ToString());
     public override string Description => "Указывает количество записей, которое должно попасть в выборку. " +

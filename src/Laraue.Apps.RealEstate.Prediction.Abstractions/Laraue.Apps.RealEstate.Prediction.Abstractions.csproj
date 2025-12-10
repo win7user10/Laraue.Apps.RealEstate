@@ -1,5 +1,0 @@
-<Project Sdk="Microsoft.NET.Sdk">
-  <ItemGroup>
-    <ProjectReference Include="..\Laraue.Apps.RealEstate.Abstractions\Laraue.Apps.RealEstate.Abstractions.csproj" />
-  </ItemGroup>
-</Project>

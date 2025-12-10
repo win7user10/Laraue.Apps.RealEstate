@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using Laraue.Apps.RealEstate.DataAccess;
 using Laraue.Apps.RealEstate.Db;
 using Laraue.Telegram.NET.Authentication.Services;
 using Laraue.Telegram.NET.Interceptors.Services;
@@ -18,7 +19,7 @@ public class SelectionIntervalInterceptor : BaseIntervalInterceptor
 
     public override string Id => nameof(SelectionIntervalInterceptor);
 
-    protected override Expression<Func<Db.Models.Selection, TimeSpan?>> FieldSelectorExpression
+    protected override Expression<Func<DataAccess.Models.Selection, TimeSpan?>> FieldSelectorExpression
         => selection => selection.NotificationInterval;
 
     public override string FieldName => "Интервал уведомлений";

@@ -1,0 +1,34 @@
+﻿using Laraue.Apps.RealEstate.Contracts;
+using Laraue.Apps.RealEstate.Crawling.Contracts;
+
+namespace Laraue.Apps.RealEstate.Crawling.AppServices;
+
+public interface IAdvertisementProcessor
+{
+    /// <summary>
+    /// Advertisement source of this processor.
+    /// </summary>
+    AdvertisementSource Source { get; }
+    
+    /// <summary>
+    /// Process advertisements.
+    /// </summary>
+    /// <returns>Identifiers of the passed advs that have been saved or updated.</returns>
+    Task<ProcessResult> ProcessAsync(
+        Advertisement[] advertisements,
+        long cityId,
+        CancellationToken ct = default);
+}
+
+public record ProcessResult
+{
+    /// <summary>
+    /// Identifiers of the passed advs that have been saved or updated.
+    /// </summary>
+    public required Dictionary<long, Advertisement> UpdatedAdvertisements { get; init; }
+    
+    /// <summary>
+    /// Items that were crawled in older sessions.
+    /// </summary>
+    public required HashSet<long> OutdatedItemsIds { get; init; }
+}

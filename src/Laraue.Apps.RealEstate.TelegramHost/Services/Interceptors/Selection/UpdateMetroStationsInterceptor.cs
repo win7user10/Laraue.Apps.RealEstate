@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using Laraue.Apps.RealEstate.DataAccess;
 using Laraue.Apps.RealEstate.Db;
 using Laraue.Telegram.NET.Authentication.Services;
 using Laraue.Telegram.NET.Core.Utils;
@@ -22,7 +23,7 @@ public class UpdateMetroStationsInterceptor : BaseInterceptor<IList<long>?>
         _context = context;
     }
 
-    protected override Expression<Func<Db.Models.Selection, IList<long>?>> FieldSelectorExpression => x => x.MetroIds;
+    protected override Expression<Func<DataAccess.Models.Selection, IList<long>?>> FieldSelectorExpression => x => x.MetroIds;
     public override string FieldName => "Станции метро";
 
     protected override bool StayOnPreviousPageAfterEdit => true;

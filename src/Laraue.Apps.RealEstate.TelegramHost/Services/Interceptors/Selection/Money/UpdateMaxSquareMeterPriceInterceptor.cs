@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using Laraue.Apps.RealEstate.DataAccess;
 using Laraue.Apps.RealEstate.Db;
 using Laraue.Telegram.NET.Authentication.Services;
 using Laraue.Telegram.NET.Interceptors.Services;
@@ -17,7 +18,7 @@ public class UpdateMaxSquareMeterPriceInterceptor : BaseMoneyInterceptor
     }
 
     public override string Id => nameof(UpdateMaxPriceInterceptor);
-    protected override Expression<Func<Db.Models.Selection, decimal?>> FieldSelectorExpression => selection => selection.MaxPerSquareMeterPrice;
+    protected override Expression<Func<DataAccess.Models.Selection, decimal?>> FieldSelectorExpression => selection => selection.MaxPerSquareMeterPrice;
     public override string FieldName => "Макс цена, м2";
     public override string Description => "Значение ограничивает попадание в выборку квартир с ценой за м2 большей заданной";
 }

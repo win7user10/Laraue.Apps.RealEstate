@@ -1,7 +1,6 @@
-﻿using Laraue.Apps.RealEstate.Crawling.Abstractions.Contracts;
-using Laraue.Apps.RealEstate.Crawling.Abstractions.Crawler;
-using Laraue.Apps.RealEstate.Crawling.Impl;
-using Laraue.Apps.RealEstate.Crawling.Impl.Cian;
+﻿using Laraue.Apps.RealEstate.Crawling.AppServices;
+using Laraue.Apps.RealEstate.Crawling.AppServices.Cian;
+using Laraue.Apps.RealEstate.Crawling.Contracts;
 using Laraue.Core.DateTime.Services.Abstractions;
 using Laraue.Crawling.Crawler;
 using Microsoft.Extensions.Logging;

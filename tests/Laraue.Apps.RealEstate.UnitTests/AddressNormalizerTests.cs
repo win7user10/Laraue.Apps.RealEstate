@@ -1,4 +1,4 @@
-﻿using Laraue.Apps.RealEstate.Crawling.Impl;
+﻿using Laraue.Apps.RealEstate.Crawling.AppServices;
 
 namespace Laraue.Apps.RealEstate.UnitTests;
 

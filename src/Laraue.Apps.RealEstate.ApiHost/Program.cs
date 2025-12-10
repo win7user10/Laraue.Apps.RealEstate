@@ -1,7 +1,8 @@
-using Laraue.Apps.RealEstate.Abstractions;
-using Laraue.Apps.RealEstate.Crawling.Abstractions.Crawler.TransportStops;
+using Laraue.Apps.RealEstate.AppServices.TransportStops;
+using Laraue.Apps.RealEstate.Contracts;
+using Laraue.Apps.RealEstate.DataAccess;
+using Laraue.Apps.RealEstate.DataAccess.Storage;
 using Laraue.Apps.RealEstate.Db;
-using Laraue.Apps.RealEstate.Db.Storage;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 

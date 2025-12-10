@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Laraue.Apps.RealEstate.Abstractions;
+using Laraue.Apps.RealEstate.Contracts;
 using Laraue.Core.DataAccess.Contracts;
 
 namespace Laraue.Apps.RealEstate.ApiHost.Requests;

@@ -1,13 +1,15 @@
-﻿using Laraue.Apps.RealEstate.Crawling.Impl.Cian;
+﻿using Laraue.Apps.RealEstate.Crawling.AppServices.Cian;
 using Laraue.Core.Testing.Logging;
 using Laraue.Crawling.Dynamic.PuppeterSharp;
 using Microsoft.Extensions.Logging;
 using PuppeteerSharp;
 using Xunit;
 using Xunit.Abstractions;
+using Xunit.Categories;
 
 namespace Laraue.Apps.RealEstate.IntegrationTests.Crawling.Cian;
 
+[IntegrationTest]
 public sealed class CianCrawlingSchemaTests : IAsyncLifetime
 {
     private readonly ITestOutputHelper _outputHelper;

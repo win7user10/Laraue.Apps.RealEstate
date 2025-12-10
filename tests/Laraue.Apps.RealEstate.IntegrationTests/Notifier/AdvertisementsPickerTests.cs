@@ -1,13 +1,15 @@
-﻿using Laraue.Apps.RealEstate.Abstractions;
-using Laraue.Apps.RealEstate.Db.Models;
-using Laraue.Apps.RealEstate.Db.Storage;
-using Laraue.Apps.RealEstate.Telegram;
+﻿using Laraue.Apps.RealEstate.Contracts;
+using Laraue.Apps.RealEstate.DataAccess.Models;
+using Laraue.Apps.RealEstate.DataAccess.Storage;
+using Laraue.Apps.RealEstate.Telegram.AppServices;
 using Laraue.Core.DateTime.Services.Abstractions;
 using Moq;
 using Xunit;
+using Xunit.Categories;
 
 namespace Laraue.Apps.RealEstate.IntegrationTests.Notifier;
 
+[IntegrationTest]
 public sealed class AdvertisementsPickerTests : TestWithDatabase
 {
     private readonly PublicAdvertisementsPicker _picker;
@@ -24,7 +26,7 @@ public sealed class AdvertisementsPickerTests : TestWithDatabase
     [Fact(Skip = "No now used")]
     public async Task Advertisements_ShouldBeCorrectlyTaken_WhenSessionIdIsNullAsync()
     {
-        DbContext.Advertisements.Add(new Db.Models.Advertisement
+        DbContext.Advertisements.Add(new Advertisement
         {
             UpdatedAt = new DateTime(2022, 01, 01, 0, 0, 0, DateTimeKind.Utc),
             TotalPrice = 5_500_000,
@@ -41,7 +43,7 @@ public sealed class AdvertisementsPickerTests : TestWithDatabase
             }
         });
         
-        DbContext.Advertisements.Add(new Db.Models.Advertisement
+        DbContext.Advertisements.Add(new Advertisement
         {
             UpdatedAt = new DateTime(2022, 01, 02, 0, 0, 0, DateTimeKind.Utc),
             TotalPrice = 5_600_000,

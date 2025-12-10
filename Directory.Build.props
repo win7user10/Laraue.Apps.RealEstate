@@ -16,16 +16,16 @@
   </PropertyGroup>
   
   <PropertyGroup>
-    <MicrosoftPackagesVersion>10.0.1</MicrosoftPackagesVersion>
+    <MicrosoftPackagesVersion>10.0.0</MicrosoftPackagesVersion>
     <Linq2DbEfCoreVersion>10.0.0</Linq2DbEfCoreVersion>
     <XUnitAbstractionsVersion>2.0.3</XUnitAbstractionsVersion>
-    <LaraueTelegramVersion>3.2.1</LaraueTelegramVersion>
+    <LaraueTelegramVersion>3.2.2</LaraueTelegramVersion>
     <LaraueCoreDataAccessVersion>10.4.0</LaraueCoreDataAccessVersion>
     <LaraueHostingVersion>10.5.0</LaraueHostingVersion>
     <LaraueCoreDateTimeVersion>10.0.0</LaraueCoreDateTimeVersion>
     <LaraueCoreTestingVersion>10.0.0</LaraueCoreTestingVersion>
     <LaraueCrawlingVersion>0.11.0</LaraueCrawlingVersion>
-    <EfCoreVersion>10.0.1</EfCoreVersion>
+    <EfCoreVersion>10.0.0</EfCoreVersion>
     <NpgsqlEfCoreVersion>10.0.0</NpgsqlEfCoreVersion>
     <EfCoreNamingConventionsVersion>10.0.0-rc.2</EfCoreNamingConventionsVersion>
     <PollyVersion>8.6.5</PollyVersion>
