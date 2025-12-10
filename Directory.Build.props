@@ -16,19 +16,19 @@
   </PropertyGroup>
   
   <PropertyGroup>
-    <MicrosoftPackagesVersion>[10.0.0, 11)</MicrosoftPackagesVersion>
-    <Linq2DbEfCoreVersion>9.0.0</Linq2DbEfCoreVersion>
-    <XUnitAbstractionsVersion>[2.0.3, 3)</XUnitAbstractionsVersion>
-    <LaraueTelegramVersion>[3.1.0, 4)</LaraueTelegramVersion>
-    <LaraueCoreDataAccessVersion>[10.3.0, 11)</LaraueCoreDataAccessVersion>
-    <LaraueHostingVersion>[10.4.1, 11)</LaraueHostingVersion>
-    <LaraueCoreDateTimeVersion>[10.0.0, 11)</LaraueCoreDateTimeVersion>
-    <LaraueCoreTestingVersion>[10.0.0, 11)</LaraueCoreTestingVersion>
-    <LaraueCrawlingVersion>[0.10.0, 1.0.0)</LaraueCrawlingVersion>
-    <EfCoreVersion>9.0.9</EfCoreVersion>
-    <NpgsqlEfCoreVersion>[9.0.0, 10)</NpgsqlEfCoreVersion>
-    <EfCoreNamingConventionsVersion>[9.0.0, 10)</EfCoreNamingConventionsVersion>
-    <PollyVersion>[8.6.5, 9)</PollyVersion>
-    <ScalarVersion>[2.11.0, 3)</ScalarVersion>
+    <MicrosoftPackagesVersion>10.0.1</MicrosoftPackagesVersion>
+    <Linq2DbEfCoreVersion>10.0.0</Linq2DbEfCoreVersion>
+    <XUnitAbstractionsVersion>2.0.3</XUnitAbstractionsVersion>
+    <LaraueTelegramVersion>3.2.1</LaraueTelegramVersion>
+    <LaraueCoreDataAccessVersion>10.4.0</LaraueCoreDataAccessVersion>
+    <LaraueHostingVersion>10.5.0</LaraueHostingVersion>
+    <LaraueCoreDateTimeVersion>10.0.0</LaraueCoreDateTimeVersion>
+    <LaraueCoreTestingVersion>10.0.0</LaraueCoreTestingVersion>
+    <LaraueCrawlingVersion>0.11.0</LaraueCrawlingVersion>
+    <EfCoreVersion>10.0.1</EfCoreVersion>
+    <NpgsqlEfCoreVersion>10.0.0</NpgsqlEfCoreVersion>
+    <EfCoreNamingConventionsVersion>10.0.0-rc.2</EfCoreNamingConventionsVersion>
+    <PollyVersion>8.6.5</PollyVersion>
+    <ScalarVersion>2.11.0</ScalarVersion>
   </PropertyGroup>
 </Project>
