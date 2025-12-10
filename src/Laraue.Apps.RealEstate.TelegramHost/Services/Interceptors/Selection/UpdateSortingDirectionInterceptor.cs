@@ -1,5 +1,6 @@
 ﻿using System.Linq.Expressions;
 using Laraue.Apps.RealEstate.Contracts;
+using Laraue.Apps.RealEstate.DataAccess;
 using Laraue.Apps.RealEstate.Db;
 using Laraue.Telegram.NET.Authentication.Services;
 using Laraue.Telegram.NET.Core.Utils;
@@ -27,7 +28,7 @@ public class UpdateSortingDirectionInterceptor : BaseInterceptor<SortOrder>
 
     public override string Id => nameof(UpdateSortingDirectionInterceptor);
 
-    protected override Expression<Func<Db.Models.Selection, SortOrder>> FieldSelectorExpression
+    protected override Expression<Func<DataAccess.Models.Selection, SortOrder>> FieldSelectorExpression
         => x => x.SortOrderBy;
 
     public override string FieldName => "Направление сортировки";

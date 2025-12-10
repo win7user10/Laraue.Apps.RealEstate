@@ -1,4 +1,5 @@
-﻿using Laraue.Apps.RealEstate.Db;
+﻿using Laraue.Apps.RealEstate.DataAccess;
+using Laraue.Apps.RealEstate.Db;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 

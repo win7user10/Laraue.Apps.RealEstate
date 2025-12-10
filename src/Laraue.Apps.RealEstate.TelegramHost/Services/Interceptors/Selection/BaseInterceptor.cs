@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using Laraue.Apps.RealEstate.DataAccess;
 using Laraue.Apps.RealEstate.Db;
 using Laraue.Telegram.NET.Authentication.Services;
 using Laraue.Telegram.NET.Core.Extensions;
@@ -14,8 +15,8 @@ public abstract class BaseInterceptor<TProperty> : BaseRequestInterceptor<Guid, 
     private readonly TelegramRequestContext<Guid> _requestContext;
     private readonly AdvertisementsDbContext _context;
     private readonly ITelegramMessageSender _messageSender;
-    protected abstract Expression<Func<Db.Models.Selection, TProperty?>> FieldSelectorExpression { get; }
-    private Func<Db.Models.Selection, TProperty?> FieldSelector => FieldSelectorExpression.Compile();
+    protected abstract Expression<Func<DataAccess.Models.Selection, TProperty?>> FieldSelectorExpression { get; }
+    private Func<DataAccess.Models.Selection, TProperty?> FieldSelector => FieldSelectorExpression.Compile();
 
     private const string Cancel = "cancel";
 
@@ -31,7 +32,7 @@ public abstract class BaseInterceptor<TProperty> : BaseRequestInterceptor<Guid, 
 
     protected virtual bool StayOnPreviousPageAfterEdit => false;
 
-    public Task<string?> FormatTextAsync(Db.Models.Selection value)
+    public Task<string?> FormatTextAsync(DataAccess.Models.Selection value)
     {
         var propertyValue = FieldSelector(value);
 

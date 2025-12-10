@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using Laraue.Apps.RealEstate.DataAccess;
 using Laraue.Apps.RealEstate.Db;
 using Laraue.Telegram.NET.Authentication.Services;
 using Laraue.Telegram.NET.Interceptors.Services;
@@ -18,7 +19,7 @@ public class MinDateInterceptor : BaseDateInterceptor
 
     public override string Id => nameof(MinDateInterceptor);
 
-    protected override Expression<Func<Db.Models.Selection, MayBeRelativeDate?>> FieldSelectorExpression
+    protected override Expression<Func<DataAccess.Models.Selection, MayBeRelativeDate?>> FieldSelectorExpression
         => selection => selection.MinDate;
     public override string FieldName => "Мин. дата";
 

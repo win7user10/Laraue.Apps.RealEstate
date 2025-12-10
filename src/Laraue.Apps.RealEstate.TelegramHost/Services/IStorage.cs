@@ -1,4 +1,4 @@
-﻿using Laraue.Apps.RealEstate.Db.Models;
+﻿using Laraue.Apps.RealEstate.DataAccess.Models;
 
 namespace Laraue.Apps.RealEstate.TelegramHost.Services;
 

@@ -1,6 +1,6 @@
 ﻿using Laraue.Apps.RealEstate.Contracts;
-using Laraue.Apps.RealEstate.Db.Models;
-using Laraue.Apps.RealEstate.Db.Storage;
+using Laraue.Apps.RealEstate.DataAccess.Models;
+using Laraue.Apps.RealEstate.DataAccess.Storage;
 using Laraue.Core.DataAccess.Contracts;
 using Xunit;
 

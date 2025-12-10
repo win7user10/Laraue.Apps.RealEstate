@@ -1,9 +1,10 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Laraue.Apps.RealEstate.Contracts;
 using Laraue.Apps.RealEstate.Crawling.Contracts;
+using Laraue.Apps.RealEstate.DataAccess;
+using Laraue.Apps.RealEstate.DataAccess.Models;
+using Laraue.Apps.RealEstate.DataAccess.Storage;
 using Laraue.Apps.RealEstate.Db;
-using Laraue.Apps.RealEstate.Db.Models;
-using Laraue.Apps.RealEstate.Db.Storage;
 using Laraue.Apps.RealEstateAppServices.TransportStops;
 using Laraue.Core.DataAccess.EFCore.Extensions;
 using Laraue.Core.DateTime.Services.Abstractions;
@@ -299,7 +300,7 @@ public abstract class BaseAdvertisementProcessor<TExternalIdentifier> : IAdverti
         var updatedItemsCount = 0;
         var outdatedItemsIds = new HashSet<long>();
         
-        var processedItems = new List<Db.Models.Advertisement>();
+        var processedItems = new List<DataAccess.Models.Advertisement>();
         foreach (var parsedPage in advertisements)
         {
             if (parsedPage.Square == 0
@@ -312,7 +313,7 @@ public abstract class BaseAdvertisementProcessor<TExternalIdentifier> : IAdverti
                 continue;
             }
 
-            var dbAdvertisement = new Db.Models.Advertisement();
+            var dbAdvertisement = new DataAccess.Models.Advertisement();
             
             if (!existsAdvertisements.TryGetValue(parsedPage.Id, out var advertisement))
             {
@@ -371,7 +372,7 @@ public abstract class BaseAdvertisementProcessor<TExternalIdentifier> : IAdverti
     }
 
     private void FillAdvertisement(
-        Db.Models.Advertisement model,
+        DataAccess.Models.Advertisement model,
         Advertisement parsedAdvertisement)
     {
         // Upd common fields

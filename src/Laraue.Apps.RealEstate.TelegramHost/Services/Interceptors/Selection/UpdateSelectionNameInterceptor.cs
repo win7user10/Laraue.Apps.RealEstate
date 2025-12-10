@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using Laraue.Apps.RealEstate.DataAccess;
 using Laraue.Apps.RealEstate.Db;
 using Laraue.Telegram.NET.Authentication.Services;
 using Laraue.Telegram.NET.Interceptors.Services;
@@ -16,7 +17,7 @@ public class UpdateSelectionNameInterceptor : BaseInterceptor<string>
     {
     }
 
-    protected override Expression<Func<Db.Models.Selection, string?>> FieldSelectorExpression =>
+    protected override Expression<Func<DataAccess.Models.Selection, string?>> FieldSelectorExpression =>
         x => x.Name;
 
     public override string FieldName => "Название выборки";

@@ -1,3 +1,4 @@
+using Laraue.Apps.RealEstate.DataAccess;
 using Laraue.Apps.RealEstate.Db;
 using Laraue.Apps.RealEstate.GpuWorkerHost.Jobs;
 using Laraue.Apps.RealEstate.Prediction.Abstractions;

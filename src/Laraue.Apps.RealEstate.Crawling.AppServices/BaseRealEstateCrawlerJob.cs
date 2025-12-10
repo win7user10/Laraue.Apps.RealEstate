@@ -1,6 +1,7 @@
 ﻿using Laraue.Apps.RealEstate.Crawling.Contracts;
+using Laraue.Apps.RealEstate.DataAccess;
+using Laraue.Apps.RealEstate.DataAccess.Models;
 using Laraue.Apps.RealEstate.Db;
-using Laraue.Apps.RealEstate.Db.Models;
 using Laraue.Core.DateTime.Services.Abstractions;
 using Laraue.Core.Extensions.Hosting;
 using Laraue.Crawling.Crawler;

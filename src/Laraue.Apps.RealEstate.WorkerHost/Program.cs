@@ -1,7 +1,8 @@
 using Laraue.Apps.RealEstate.AppServices.Telegram;
 using Laraue.Apps.RealEstate.Contracts;
+using Laraue.Apps.RealEstate.DataAccess;
+using Laraue.Apps.RealEstate.DataAccess.Storage;
 using Laraue.Apps.RealEstate.Db;
-using Laraue.Apps.RealEstate.Db.Storage;
 using Laraue.Apps.RealEstate.Prediction.Abstractions;
 using Laraue.Apps.RealEstate.Prediction.Impl;
 using Laraue.Apps.RealEstate.WorkerHost.Jobs;

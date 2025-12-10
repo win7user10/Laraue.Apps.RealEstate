@@ -1,9 +1,10 @@
 ﻿using Laraue.Apps.RealEstate.AppServices.Telegram.Extensions;
 using Laraue.Apps.RealEstate.Contracts;
 using Laraue.Apps.RealEstate.Contracts.Extensions;
+using Laraue.Apps.RealEstate.DataAccess;
+using Laraue.Apps.RealEstate.DataAccess.Extensions;
+using Laraue.Apps.RealEstate.DataAccess.Models;
 using Laraue.Apps.RealEstate.Db;
-using Laraue.Apps.RealEstate.Db.Extensions;
-using Laraue.Apps.RealEstate.Db.Models;
 using Laraue.Core.DataAccess.Contracts;
 using Laraue.Core.DateTime.Services.Abstractions;
 using Laraue.Telegram.NET.Core.Extensions;
