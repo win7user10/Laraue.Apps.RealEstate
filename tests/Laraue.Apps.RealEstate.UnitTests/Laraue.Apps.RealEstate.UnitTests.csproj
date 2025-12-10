@@ -13,7 +13,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\Laraue.Apps.RealEstate.Crawling.Impl\Laraue.Apps.RealEstate.Crawling.Impl.csproj" />
+      <ProjectReference Include="..\..\src\Laraue.Apps.RealEstate.Crawling.AppServices\Laraue.Apps.RealEstate.Crawling.AppServices.csproj" />
     </ItemGroup>
 
     <ItemGroup>

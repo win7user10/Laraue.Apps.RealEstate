@@ -1,5 +1,0 @@
-﻿namespace Laraue.Apps.RealEstate.Crawling.Contracts.Crawler.Avito;
-
-public interface IAvitoAdvertisementProcessor : IAdvertisementProcessor
-{
-}

@@ -1,5 +1,5 @@
 ﻿using Laraue.Apps.RealEstate.Contracts;
-using Laraue.Apps.RealEstate.Crawling.Contracts.Crawler;
+using Laraue.Apps.RealEstate.Crawling.Contracts;
 
 namespace Laraue.Apps.RealEstate.Db.Models;
 

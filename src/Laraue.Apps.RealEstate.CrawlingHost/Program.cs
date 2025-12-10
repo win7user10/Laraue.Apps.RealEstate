@@ -1,11 +1,11 @@
 using Laraue.Apps.RealEstate.Contracts;
-using Laraue.Apps.RealEstate.Crawling.Contracts.Crawler.TransportStops;
-using Laraue.Apps.RealEstate.Crawling.Impl;
+using Laraue.Apps.RealEstate.Crawling.AppServices;
 using Laraue.Apps.RealEstate.CrawlingHost;
 using Laraue.Apps.RealEstate.Db;
 using Laraue.Apps.RealEstate.Db.Storage;
 using Laraue.Apps.RealEstate.Prediction.Abstractions;
 using Laraue.Apps.RealEstate.Prediction.Impl;
+using Laraue.Apps.RealEstateAppServices.TransportStops;
 using Laraue.Core.DataAccess.Linq2DB.Extensions;
 using Laraue.Core.DateTime.Services.Abstractions;
 using Laraue.Core.DateTime.Services.Impl;

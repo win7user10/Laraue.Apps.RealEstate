@@ -1,9 +1,6 @@
-﻿using Laraue.Apps.RealEstate.Crawling.Contracts.Contracts;
-using Laraue.Apps.RealEstate.Crawling.Contracts.Crawler;
-using Laraue.Apps.RealEstate.Crawling.Contracts.Crawler.Avito;
-using Laraue.Apps.RealEstate.Crawling.Contracts.Crawler.Cian;
-using Laraue.Apps.RealEstate.Crawling.Impl.Avito;
-using Laraue.Apps.RealEstate.Crawling.Impl.Cian;
+﻿using Laraue.Apps.RealEstate.Crawling.AppServices.Avito;
+using Laraue.Apps.RealEstate.Crawling.AppServices.Cian;
+using Laraue.Apps.RealEstate.Crawling.Contracts;
 using Laraue.Crawling.Crawler.EfCore;
 
 namespace Laraue.Apps.RealEstate.CrawlingHost;

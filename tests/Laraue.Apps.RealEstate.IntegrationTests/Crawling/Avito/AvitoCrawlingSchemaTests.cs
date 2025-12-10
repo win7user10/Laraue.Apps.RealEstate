@@ -1,5 +1,5 @@
 ﻿using System.Net;
-using Laraue.Apps.RealEstate.Crawling.Impl.Avito;
+using Laraue.Apps.RealEstate.Crawling.AppServices.Avito;
 using Laraue.Core.DateTime.Services.Impl;
 using Laraue.Core.Testing.Logging;
 using Laraue.Crawling.Dynamic.PuppeterSharp;

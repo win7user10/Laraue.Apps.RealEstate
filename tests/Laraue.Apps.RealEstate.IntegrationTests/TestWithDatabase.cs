@@ -1,6 +1,5 @@
-﻿using Laraue.Apps.RealEstate.Crawling.Contracts.Crawler.TransportStops;
-using Laraue.Apps.RealEstate.Db;
-using Laraue.Apps.RealEstate.Db.Storage;
+﻿using Laraue.Apps.RealEstate.Db;
+using Laraue.Apps.RealEstateAppServices.TransportStops;
 using Laraue.Core.DataAccess.Linq2DB.Extensions;
 using LinqToDB;
 using LinqToDB.EntityFrameworkCore;

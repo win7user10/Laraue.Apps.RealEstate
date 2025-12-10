@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Laraue.Apps.RealEstate.Crawling.Impl\Laraue.Apps.RealEstate.Crawling.Impl.csproj" />
+    <ProjectReference Include="..\..\src\Laraue.Apps.RealEstate.Crawling.AppServices\Laraue.Apps.RealEstate.Crawling.AppServices.csproj" />
     <ProjectReference Include="..\..\src\Laraue.Apps.RealEstate.Prediction.Impl\Laraue.Apps.RealEstate.Prediction.Impl.csproj" />
     <ProjectReference Include="..\..\src\Laraue.Apps.RealEstate.WorkerHost\Laraue.Apps.RealEstate.WorkerHost.csproj" />
   </ItemGroup>
