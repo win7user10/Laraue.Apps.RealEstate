@@ -2,6 +2,7 @@
     
     <ItemGroup>
       <ProjectReference Include="..\Laraue.Apps.RealEstate.DataAccess\Laraue.Apps.RealEstate.DataAccess.csproj" />
+      <ProjectReference Include="..\Laraue.Apps.RealEstate.AppServices\Laraue.Apps.RealEstate.AppServices.csproj" />
     </ItemGroup>
 
 </Project>

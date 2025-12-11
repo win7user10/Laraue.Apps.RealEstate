@@ -10,17 +10,17 @@ namespace Laraue.Apps.RealEstate.ApiHost.Controllers;
 [ApiController]
 public sealed class AdvertisementsController : ControllerBase
 {
-   private readonly IAdvertisementStorage _storage;
+   private readonly IAdvertisementService _service;
 
-   public AdvertisementsController(IAdvertisementStorage storage)
+   public AdvertisementsController(IAdvertisementService service)
    {
-      _storage = storage;
+      _service = service;
    }
 
    [HttpPost("list")]
    public Task<IShortPaginatedResult<AdvertisementDto>> GetAdvertisementsAsync([FromBody] GetAdvertisementsRequest request)
    {
-      return _storage.GetAdvertisementsAsync(
+      return _service.GetAdvertisementsAsync(
          new AdvertisementsRequest
          {
             Filter = new Filter
@@ -56,7 +56,7 @@ public sealed class AdvertisementsController : ControllerBase
    [HttpGet("chart")]
    public Task<IList<MainChartDayItemDto>> GetMainChartAsync(GetMainChartRequest request)
    {
-      return _storage.GetMainChartAsync(
+      return _service.GetMainChartAsync(
          new RangeChartRequest
          {
             MaxDate = request.MaxDate,
@@ -67,7 +67,7 @@ public sealed class AdvertisementsController : ControllerBase
    [HttpGet("{id:long}")]
    public Task<AdvertisementDto?> GetAdvertisementByIdAsync([FromRoute] long id)
    {
-      return _storage.GetAdvertisementByIdAsync(
+      return _service.GetAdvertisementByIdAsync(
          new AdvertisementByIdRequest
          {
             Id = id

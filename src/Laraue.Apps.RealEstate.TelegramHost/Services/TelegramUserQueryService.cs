@@ -1,6 +1,5 @@
 ﻿using Laraue.Apps.RealEstate.DataAccess;
 using Laraue.Apps.RealEstate.DataAccess.Models;
-using Laraue.Apps.RealEstate.Db;
 using Laraue.Telegram.NET.Authentication.Services;
 using Microsoft.EntityFrameworkCore;
 

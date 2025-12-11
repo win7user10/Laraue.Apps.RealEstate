@@ -1,8 +1,8 @@
+using Laraue.Apps.RealEstate.AppServices.Services;
 using Laraue.Apps.RealEstate.AppServices.TransportStops;
 using Laraue.Apps.RealEstate.Contracts;
 using Laraue.Apps.RealEstate.DataAccess;
 using Laraue.Apps.RealEstate.DataAccess.Storage;
-using Laraue.Apps.RealEstate.Db;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 
@@ -18,8 +18,8 @@ services.AddDbContext<AdvertisementsDbContext>(s =>
     s.UseNpgsql(builder.Configuration.GetConnectionString("Postgre"))
         .UseSnakeCaseNamingConvention());
 
-services.AddScoped<IHousesStorage, HousesStorage>();
-services.AddScoped<IAdvertisementStorage, AdvertisementStorage>();
+services.AddScoped<IHousesStorage, HousesService>();
+services.AddScoped<IAdvertisementService, AdvertisementService>();
 services.AddSingleton<IMetroStationsStorage, MetroStationsStorage>();
 
 // Build the app

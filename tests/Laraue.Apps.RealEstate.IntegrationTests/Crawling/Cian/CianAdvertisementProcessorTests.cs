@@ -24,7 +24,7 @@ public class CianAdvertisementProcessorTests : TestWithDatabase
     {
         var sp = ServiceCollection.AddSingleton<CianAdvertisementProcessor>()
             .AddSingleton<IDateTimeProvider, DateTimeProvider>()
-            .AddScoped<IHousesStorage, HousesStorage>()
+            .AddScoped<IHousesStorage, HousesService>()
             .AddSingleton(new Mock<ILogger<CianAdvertisementProcessor>>().Object)
             .BuildServiceProvider();
 

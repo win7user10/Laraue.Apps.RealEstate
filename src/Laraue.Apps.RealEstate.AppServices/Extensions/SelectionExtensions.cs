@@ -2,7 +2,7 @@
 using Laraue.Apps.RealEstate.DataAccess.Models;
 using Laraue.Core.DataAccess.Contracts;
 
-namespace Laraue.Apps.RealEstate.DataAccess.Extensions;
+namespace Laraue.Apps.RealEstate.AppServices.Extensions;
 
 public static class SelectionExtensions
 {

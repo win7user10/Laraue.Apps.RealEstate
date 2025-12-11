@@ -1,6 +1,5 @@
 ﻿using System.Linq.Expressions;
 using Laraue.Apps.RealEstate.DataAccess;
-using Laraue.Apps.RealEstate.Db;
 using Laraue.Telegram.NET.Authentication.Services;
 using Laraue.Telegram.NET.Core.Extensions;
 using Laraue.Telegram.NET.Core.Utils;

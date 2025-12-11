@@ -10,16 +10,16 @@ public sealed class PublicAdvertisementsPicker : IPublicAdvertisementsPicker
 {
     private readonly AdvertisementsDbContext _dbContext;
     private readonly IDateTimeProvider _dateTimeProvider;
-    private readonly IAdvertisementStorage _advertisementStorage;
+    private readonly IAdvertisementService _advertisementService;
 
     public PublicAdvertisementsPicker(
         AdvertisementsDbContext dbContext,
         IDateTimeProvider dateTimeProvider,
-        IAdvertisementStorage advertisementStorage)
+        IAdvertisementService advertisementService)
     {
         _dbContext = dbContext;
         _dateTimeProvider = dateTimeProvider;
-        _advertisementStorage = advertisementStorage;
+        _advertisementService = advertisementService;
     }
 
     public async Task<BestAdvertisementsGroupResponse> GetBestSinceSessionAsync(
@@ -60,7 +60,7 @@ public sealed class PublicAdvertisementsPicker : IPublicAdvertisementsPicker
             }
         };
 
-        var advertisements = await _advertisementStorage
+        var advertisements = await _advertisementService
             .GetAdvertisementsAsync(request);
 
         return new BestAdvertisementsGroupResponse

@@ -1,7 +1,7 @@
 ﻿using System.Linq.Expressions;
 using Laraue.Apps.RealEstate.Contracts;
 
-namespace Laraue.Apps.RealEstate.DataAccess.Storage;
+namespace Laraue.Apps.RealEstate.AppServices.Services;
 
 public static class QueryableExtensions
 {

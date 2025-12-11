@@ -1,7 +1,7 @@
-﻿using Laraue.Apps.RealEstate.Contracts;
+﻿using Laraue.Apps.RealEstate.AppServices.Extensions;
+using Laraue.Apps.RealEstate.Contracts;
 using Laraue.Apps.RealEstate.Contracts.Extensions;
 using Laraue.Apps.RealEstate.DataAccess;
-using Laraue.Apps.RealEstate.DataAccess.Extensions;
 using Laraue.Apps.RealEstate.DataAccess.Models;
 using Laraue.Apps.RealEstate.Telegram.AppServices.Extensions;
 using Laraue.Core.DataAccess.Contracts;
@@ -23,7 +23,7 @@ public sealed class AdvertisementsTelegramSender : IAdvertisementsTelegramSender
 {
     private readonly ITelegramBotClient _botClient;
     private readonly AdvertisementsSenderOptions _options;
-    private readonly IAdvertisementStorage _storage;
+    private readonly IAdvertisementService _service;
     private readonly AdvertisementsDbContext _dbContext;
     private readonly IDateTimeProvider _dateTimeProvider;
 
@@ -33,12 +33,12 @@ public sealed class AdvertisementsTelegramSender : IAdvertisementsTelegramSender
     public AdvertisementsTelegramSender(
         ITelegramBotClient botClient,
         IOptions<AdvertisementsSenderOptions> options,
-        IAdvertisementStorage storage,
+        IAdvertisementService service,
         AdvertisementsDbContext dbContext,
         IDateTimeProvider dateTimeProvider)
     {
         _botClient = botClient;
-        _storage = storage;
+        _service = service;
         _dbContext = dbContext;
         _dateTimeProvider = dateTimeProvider;
         _options = options.Value;
@@ -264,7 +264,7 @@ public sealed class AdvertisementsTelegramSender : IAdvertisementsTelegramSender
         int? messageId,
         CancellationToken ct)
     {
-        var result = await _storage.GetAdvertisementsAsync(request);
+        var result = await _service.GetAdvertisementsAsync(request);
         if (!result.Data.Any())
         {
             return;

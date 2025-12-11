@@ -2,7 +2,7 @@
 
 namespace Laraue.Apps.RealEstate.Contracts;
 
-public interface IAdvertisementStorage
+public interface IAdvertisementService
 {
     /// <summary>
     /// Get top advertisements for the passed criteria.

@@ -2,7 +2,6 @@
 using Laraue.Apps.RealEstate.Contracts.Extensions;
 using Laraue.Apps.RealEstate.DataAccess;
 using Laraue.Apps.RealEstate.DataAccess.Models;
-using Laraue.Apps.RealEstate.Db;
 using Microsoft.EntityFrameworkCore;
 
 namespace Laraue.Apps.RealEstate.TelegramHost.Services;

@@ -1,20 +1,22 @@
 ﻿using System.Linq.Expressions;
+using Laraue.Apps.RealEstate.AppServices.Extensions;
 using Laraue.Apps.RealEstate.Contracts;
 using Laraue.Apps.RealEstate.Contracts.Extensions;
-using Laraue.Apps.RealEstate.DataAccess.Extensions;
+using Laraue.Apps.RealEstate.DataAccess;
 using Laraue.Apps.RealEstate.DataAccess.Models;
+using Laraue.Apps.RealEstate.DataAccess.Storage;
 using Laraue.Core.DataAccess.Contracts;
 using Laraue.Core.DataAccess.EFCore.Extensions;
 using Microsoft.EntityFrameworkCore;
 
-namespace Laraue.Apps.RealEstate.DataAccess.Storage;
+namespace Laraue.Apps.RealEstate.AppServices.Services;
 
-public sealed class AdvertisementStorage : IAdvertisementStorage
+public sealed class AdvertisementService : IAdvertisementService
 {
     private readonly AdvertisementsDbContext _dbContext;
     private readonly IHousesStorage _housesStorage;
 
-    public AdvertisementStorage(
+    public AdvertisementService(
         AdvertisementsDbContext dbContext,
         IHousesStorage housesStorage)
     {

@@ -1,10 +1,10 @@
+using Laraue.Apps.RealEstate.AppServices.Services;
 using Laraue.Apps.RealEstate.AppServices.TransportStops;
 using Laraue.Apps.RealEstate.Contracts;
 using Laraue.Apps.RealEstate.Crawling.AppServices;
 using Laraue.Apps.RealEstate.CrawlingHost;
 using Laraue.Apps.RealEstate.DataAccess;
 using Laraue.Apps.RealEstate.DataAccess.Storage;
-using Laraue.Apps.RealEstate.Db;
 using Laraue.Apps.RealEstate.Prediction.AppServices;
 using Laraue.Core.DataAccess.Linq2DB.Extensions;
 using Laraue.Core.DateTime.Services.Abstractions;
@@ -38,7 +38,7 @@ services.AddDbContext<AdvertisementsDbContext>(s =>
 
 services.AddScoped<IJobsDbContext>(sp => sp.GetRequiredService<AdvertisementsDbContext>());
 services.AddScoped<IMetroStationsStorage, MetroStationsStorage>();
-services.AddScoped<IHousesStorage, HousesStorage>();
+services.AddScoped<IHousesStorage, HousesService>();
 services.AddSingleton<IMemoryCache>(new MemoryCache(new MemoryCacheOptions()));
 services.AddSingleton<IAdvertisementComputedFieldsCalculator, AdvertisementComputedFieldsCalculator>();
 services.AddSingleton<IPageParser, PageParser>();
@@ -50,7 +50,7 @@ services.AddLinq2Db();
 services.AddCianCrawlers(builder.Configuration);
 services.AddAvitoCrawlers(builder.Configuration);
 
-services.AddScoped<IAdvertisementStorage, AdvertisementStorage>();
+services.AddScoped<IAdvertisementService, AdvertisementService>();
 services.AddControllers();
 
 // Build the app

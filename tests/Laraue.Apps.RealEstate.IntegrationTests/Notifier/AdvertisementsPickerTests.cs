@@ -1,4 +1,5 @@
-﻿using Laraue.Apps.RealEstate.Contracts;
+﻿using Laraue.Apps.RealEstate.AppServices.Services;
+using Laraue.Apps.RealEstate.Contracts;
 using Laraue.Apps.RealEstate.DataAccess.Models;
 using Laraue.Apps.RealEstate.DataAccess.Storage;
 using Laraue.Apps.RealEstate.Telegram.AppServices;
@@ -20,7 +21,7 @@ public sealed class AdvertisementsPickerTests : TestWithDatabase
         _picker = new PublicAdvertisementsPicker(
             DbContext,
             _dateTimeProviderMock.Object,
-            new AdvertisementStorage(DbContext, new HousesStorage(DbContext)));
+            new AdvertisementService(DbContext, new HousesService(DbContext)));
     }
 
     [Fact(Skip = "No now used")]

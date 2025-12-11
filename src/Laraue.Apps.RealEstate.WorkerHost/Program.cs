@@ -1,7 +1,7 @@
+using Laraue.Apps.RealEstate.AppServices.Services;
 using Laraue.Apps.RealEstate.Contracts;
 using Laraue.Apps.RealEstate.DataAccess;
 using Laraue.Apps.RealEstate.DataAccess.Storage;
-using Laraue.Apps.RealEstate.Db;
 using Laraue.Apps.RealEstate.Prediction.AppServices;
 using Laraue.Apps.RealEstate.Telegram.AppServices;
 using Laraue.Apps.RealEstate.WorkerHost.Jobs;
@@ -10,8 +10,6 @@ using Laraue.Core.DateTime.Services.Abstractions;
 using Laraue.Core.DateTime.Services.Impl;
 using Laraue.Core.Extensions.Hosting;
 using Laraue.Core.Extensions.Hosting.EfCore;
-using Laraue.Crawling.Dynamic.PuppeterSharp;
-using Laraue.Crawling.Dynamic.PuppeterSharp.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
@@ -29,7 +27,7 @@ services.AddDbContext<AdvertisementsDbContext>(s =>
         .UseSnakeCaseNamingConvention());
 
 services.AddScoped<IJobsDbContext>(sp => sp.GetRequiredService<AdvertisementsDbContext>());
-services.AddScoped<IHousesStorage, HousesStorage>();
+services.AddScoped<IHousesStorage, HousesService>();
 services.AddScoped<UpdateAdvertisementsPredictionJob.IRepository, UpdateAdvertisementsPredictionJob.Repository>();
 services.AddSingleton<IMemoryCache>(new MemoryCache(new MemoryCacheOptions()));
 services.AddSingleton<IAdvertisementComputedFieldsCalculator, AdvertisementComputedFieldsCalculator>();
@@ -45,7 +43,7 @@ services.AddSingleton<ITelegramBotClient>(
         sp.GetRequiredService<IOptions<AdvertisementsSenderOptions>>().Value.Token));
 
 services.AddScoped<IAdvertisementsTelegramSender, AdvertisementsTelegramSender>();
-services.AddScoped<IAdvertisementStorage, AdvertisementStorage>();
+services.AddScoped<IAdvertisementService, AdvertisementService>();
         
 services.AddScoped<IPublicAdvertisementsPicker, PublicAdvertisementsPicker>();
 

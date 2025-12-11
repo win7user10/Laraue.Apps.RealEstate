@@ -1,9 +1,8 @@
 using System.Reflection;
+using Laraue.Apps.RealEstate.AppServices.Services;
 using Laraue.Apps.RealEstate.Contracts;
 using Laraue.Apps.RealEstate.DataAccess;
 using Laraue.Apps.RealEstate.DataAccess.Models;
-using Laraue.Apps.RealEstate.DataAccess.Storage;
-using Laraue.Apps.RealEstate.Db;
 using Laraue.Apps.RealEstate.Telegram.AppServices;
 using Laraue.Apps.RealEstate.TelegramHost;
 using Laraue.Apps.RealEstate.TelegramHost.Services;
@@ -35,7 +34,7 @@ builder.Services.AddLinq2Db();
 builder.Services.AddScoped<ITelegramMessageSender, TelegramMessageSender>();
 builder.Services.AddScoped<UpdateInterceptorsFactory>();
 builder.Services.AddScoped<IStorage, Storage>();
-builder.Services.AddScoped<IAdvertisementStorage, AdvertisementStorage>();
+builder.Services.AddScoped<IAdvertisementService, AdvertisementService>();
 
 builder.Services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
 builder.Services.AddScoped<IAdvertisementsTelegramSender, AdvertisementsTelegramSender>();

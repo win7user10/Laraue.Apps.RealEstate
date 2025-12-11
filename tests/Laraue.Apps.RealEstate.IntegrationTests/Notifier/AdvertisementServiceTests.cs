@@ -1,4 +1,5 @@
-﻿using Laraue.Apps.RealEstate.Contracts;
+﻿using Laraue.Apps.RealEstate.AppServices.Services;
+using Laraue.Apps.RealEstate.Contracts;
 using Laraue.Apps.RealEstate.DataAccess.Models;
 using Laraue.Apps.RealEstate.DataAccess.Storage;
 using Laraue.Core.DataAccess.Contracts;
@@ -8,13 +9,13 @@ using Xunit.Categories;
 namespace Laraue.Apps.RealEstate.IntegrationTests.Notifier;
 
 [IntegrationTest]
-public sealed class AdvertisementStorageTests : TestWithDatabase
+public sealed class AdvertisementServiceTests : TestWithDatabase
 {
-    private readonly AdvertisementStorage _storage;
+    private readonly AdvertisementService _service;
 
-    public AdvertisementStorageTests()
+    public AdvertisementServiceTests()
     {
-        _storage = new AdvertisementStorage(DbContext, new HousesStorage(DbContext));
+        _service = new AdvertisementService(DbContext, new HousesService(DbContext));
         
         DbContext.Advertisements.Add(new Advertisement
         {
@@ -58,7 +59,7 @@ public sealed class AdvertisementStorageTests : TestWithDatabase
     [Fact]
     public async Task Advertisements_ShouldHasCorrectedPredictedPriceAsync()
     {
-        var results = await _storage.GetAdvertisementsAsync(
+        var results = await _service.GetAdvertisementsAsync(
             new AdvertisementsRequest
             {
                 Filter = new Filter()

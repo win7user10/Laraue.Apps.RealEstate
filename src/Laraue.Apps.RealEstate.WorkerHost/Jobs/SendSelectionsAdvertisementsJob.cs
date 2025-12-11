@@ -1,5 +1,4 @@
 ﻿using Laraue.Apps.RealEstate.DataAccess;
-using Laraue.Apps.RealEstate.Db;
 using Laraue.Apps.RealEstate.Telegram.AppServices;
 using Laraue.Core.DateTime.Services.Abstractions;
 using Laraue.Core.Extensions.Hosting;

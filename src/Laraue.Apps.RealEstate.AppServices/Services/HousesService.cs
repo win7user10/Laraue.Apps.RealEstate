@@ -15,7 +15,7 @@ public interface IHousesStorage
         CancellationToken ct = default);
 }
 
-public class HousesStorage(AdvertisementsDbContext dbContext) : IHousesStorage
+public class HousesService(AdvertisementsDbContext dbContext) : IHousesStorage
 {
     public async Task<Dictionary<SearchableByStreetNameFlatAddress, long>> GetHouses(
         long cityId,

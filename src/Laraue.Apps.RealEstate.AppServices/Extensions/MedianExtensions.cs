@@ -1,6 +1,6 @@
 ﻿using System.Numerics;
 
-namespace Laraue.Apps.RealEstate.DataAccess.Extensions;
+namespace Laraue.Apps.RealEstate.AppServices.Extensions;
 
 public static class MedianExtensions
 {

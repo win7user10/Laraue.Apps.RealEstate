@@ -15,20 +15,20 @@ public sealed class TelegramMessageSender : ITelegramMessageSender
     private readonly ITelegramBotClient _client;
     private readonly UpdateInterceptorsFactory _factory;
     private readonly IStorage _storage;
-    private readonly IAdvertisementStorage _advertisementStorage;
+    private readonly IAdvertisementService _advertisementService;
     private readonly IHealthChecker _healthChecker;
 
     public TelegramMessageSender(
         ITelegramBotClient client,
         UpdateInterceptorsFactory factory,
         IStorage storage,
-        IAdvertisementStorage advertisementStorage,
+        IAdvertisementService advertisementService,
         IHealthChecker healthChecker)
     {
         _client = client;
         _factory = factory;
         _storage = storage;
-        _advertisementStorage = advertisementStorage;
+        _advertisementService = advertisementService;
         _healthChecker = healthChecker;
     }
 
@@ -187,7 +187,7 @@ public sealed class TelegramMessageSender : ITelegramMessageSender
         var yesterdayDate = DateTime.UtcNow.AddDays(-1).Date;
         var weekAgoDate = DateTime.UtcNow.AddDays(-7).Date;
         
-        var stat = await _advertisementStorage.GetMainChartAsync(
+        var stat = await _advertisementService.GetMainChartAsync(
             new[]
             {
                 todayDate,
