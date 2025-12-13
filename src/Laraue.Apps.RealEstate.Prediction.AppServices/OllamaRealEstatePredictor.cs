@@ -1,4 +1,6 @@
-﻿namespace Laraue.Apps.RealEstate.Prediction.AppServices;
+﻿using Microsoft.Extensions.Options;
+
+namespace Laraue.Apps.RealEstate.Prediction.AppServices;
 
 public interface IPredictor
 {
@@ -6,7 +8,8 @@ public interface IPredictor
 }
 
 public class OllamaRealEstatePredictor(
-    IOllamaPredictor ollamaPredictor)
+    IOllamaPredictor ollamaPredictor,
+    IOptions<PredictionOptions> options)
     : IPredictor
 {
     public async Task<OllamaPredictionResult> PredictAsync(string base64EncodedImage, CancellationToken ct = default)
@@ -33,7 +36,7 @@ Return as JSON.
 ";
         
         var predictionResult = await ollamaPredictor.PredictAsync<OllamaPredictionResult>(
-            "qwen2.5vl:7b",
+            options.Value.Model,
             promptImageAnalyze,
             base64EncodedImage,
             ct);

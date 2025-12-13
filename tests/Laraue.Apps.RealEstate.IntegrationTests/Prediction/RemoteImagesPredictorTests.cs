@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using Laraue.Apps.RealEstate.Prediction.AppServices;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Moq;
 using Xunit;
 using Xunit.Abstractions;
@@ -11,18 +12,22 @@ namespace Laraue.Apps.RealEstate.IntegrationTests.Prediction;
 [IntegrationTest]
 public class RemoteImagesPredictorTests
 {
-    private readonly ITestOutputHelper _testOutputHelper;
     private readonly RemoteImagesPredictor _predictor;
 
-    public RemoteImagesPredictorTests(ITestOutputHelper testOutputHelper)
+    public RemoteImagesPredictorTests()
     {
-        _testOutputHelper = testOutputHelper;
         _predictor = new RemoteImagesPredictor(
             new Mock<ILogger<RemoteImagesPredictor>>().Object,
             new OllamaRealEstatePredictor(
                 new OllamaPredictor(
                     new HttpClient { BaseAddress = new Uri("http://localhost:11434/") },
-                    new Mock<ILogger<OllamaPredictor>>().Object)),
+                    new Mock<ILogger<OllamaPredictor>>().Object),
+                Options.Create(new PredictionOptions
+                {
+                    Model = "qwen2.5vl:7b",
+                    OllamaBaseAddress = string.Empty,
+                    Timeout = new TimeSpan(0, 0, 30),
+                })),
             new HttpClient());
     }
 

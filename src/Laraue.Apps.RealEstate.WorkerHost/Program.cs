@@ -34,34 +34,31 @@ services.AddSingleton<IAdvertisementComputedFieldsCalculator, AdvertisementCompu
 
 services.AddLinq2Db();
 
-// Configure advertisements sending
-services.AddOptions<AdvertisementsSenderOptions>();
-services.Configure<AdvertisementsSenderOptions>(builder.Configuration.GetRequiredSection("Telegram"));
+// Configure advertisements sending if is set
+if (builder.Configuration.GetSection("Telegram").GetChildren().Any())
+{
+    services.AddOptions<AdvertisementsSenderOptions>();
+    services.Configure<AdvertisementsSenderOptions>(builder.Configuration.GetRequiredSection("Telegram"));
 
-services.AddSingleton<ITelegramBotClient>(
-    sp => new TelegramBotClient(
-        sp.GetRequiredService<IOptions<AdvertisementsSenderOptions>>().Value.Token));
+    services.AddSingleton<ITelegramBotClient>(
+        sp => new TelegramBotClient(
+            sp.GetRequiredService<IOptions<AdvertisementsSenderOptions>>().Value.Token));
 
-services.AddScoped<IAdvertisementsTelegramSender, AdvertisementsTelegramSender>();
+    services.AddScoped<IAdvertisementsTelegramSender, AdvertisementsTelegramSender>();
+    
+    services.AddBackgroundJob<SendPublicAdvertisementsJob, SendPublicAdvertisementsJobContext>("SendPublicAdvertisementsJob");
+    services.AddBackgroundJob<SendSelectionsAdvertisementsJob, EmptyJobData>("SendSelectionsAdvertisementsJob");
+}
+
 services.AddScoped<IAdvertisementService, AdvertisementService>();
         
 services.AddScoped<IPublicAdvertisementsPicker, PublicAdvertisementsPicker>();
 
-services.AddBackgroundJob<SendPublicAdvertisementsJob, SendPublicAdvertisementsJobContext>("SendPublicAdvertisementsJob");
-services
-    .AddBackgroundJob<SendSelectionsAdvertisementsJob, EmptyJobData>(
-        "SendSelectionsAdvertisementsJob");
-services
-    .AddBackgroundJob<UpdateAdvertisementsPredictionJob, EmptyJobData>(
-        "UpdateAdvertisementsPredictionJob");
-services
-    .AddBackgroundJob<CleanUnavailableLinksJob, EmptyJobData>(
-        "CleanUnavailableLinksJob");
+services.AddBackgroundJob<UpdateAdvertisementsPredictionJob, EmptyJobData>("UpdateAdvertisementsPredictionJob");
+services.AddBackgroundJob<CleanUnavailableLinksJob, EmptyJobData>("CleanUnavailableLinksJob");
 services.AddHttpClient<CleanUnavailableLinksJob>();
 
-services
-    .AddBackgroundJob<ArchiveAdvertisementsWithoutImagesJob, EmptyJobData>(
-        "ArchiveAdvertisementsWithoutImagesJob");
+services.AddBackgroundJob<ArchiveAdvertisementsWithoutImagesJob, EmptyJobData>("ArchiveAdvertisementsWithoutImagesJob");
 
 services.AddControllers();
 
