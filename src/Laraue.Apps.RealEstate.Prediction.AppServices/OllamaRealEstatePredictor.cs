@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Laraue.Core.Ollama;
+using Microsoft.Extensions.Options;
 
 namespace Laraue.Apps.RealEstate.Prediction.AppServices;
 

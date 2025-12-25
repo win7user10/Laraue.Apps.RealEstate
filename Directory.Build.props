@@ -21,6 +21,7 @@
     <XUnitAbstractionsVersion>2.0.3</XUnitAbstractionsVersion>
     <LaraueTelegramVersion>3.2.2</LaraueTelegramVersion>
     <LaraueCoreDataAccessVersion>10.4.0</LaraueCoreDataAccessVersion>
+    <LaraueCoreOllamaVersion>2.1.4</LaraueCoreOllamaVersion>
     <LaraueHostingVersion>10.5.0</LaraueHostingVersion>
     <LaraueCoreDateTimeVersion>10.0.0</LaraueCoreDateTimeVersion>
     <LaraueCoreTestingVersion>10.0.0</LaraueCoreTestingVersion>

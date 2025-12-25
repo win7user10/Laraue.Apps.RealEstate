@@ -5,6 +5,7 @@ using Laraue.Core.DateTime.Services.Abstractions;
 using Laraue.Core.DateTime.Services.Impl;
 using Laraue.Core.Extensions.Hosting;
 using Laraue.Core.Extensions.Hosting.EfCore;
+using Laraue.Core.Ollama;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 

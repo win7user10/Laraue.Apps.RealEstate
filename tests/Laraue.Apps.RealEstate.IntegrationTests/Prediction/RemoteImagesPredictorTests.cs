@@ -1,10 +1,10 @@
 ﻿using System.Text;
 using Laraue.Apps.RealEstate.Prediction.AppServices;
+using Laraue.Core.Ollama;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using Xunit;
-using Xunit.Abstractions;
 using Xunit.Categories;
 
 namespace Laraue.Apps.RealEstate.IntegrationTests.Prediction;

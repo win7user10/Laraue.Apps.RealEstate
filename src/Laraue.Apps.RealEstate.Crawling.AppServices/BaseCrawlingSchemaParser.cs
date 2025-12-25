@@ -38,8 +38,11 @@ public abstract class BaseCrawlingSchemaParser : ICrawlingSchemaParser
     public Task<CrawlingResult> ParseLinkAsync(string link, CancellationToken cancellationToken = default)
     {
         return Policy.Handle<PageOpenException>()
-            .WaitAndRetryAsync(10, i => TimeSpan.FromSeconds(i * 30))
-            .ExecuteAsync(() => ParseLinkInternalAsync(link, cancellationToken));
+            .WaitAndRetryAsync(
+                10,
+                i => TimeSpan.FromSeconds(i * 100),
+                (ex, timeSpan) => _logger.LogError(ex, "The page scheduled to be opened again in {Time}", timeSpan))
+            .ExecuteAsync(ct => ParseLinkInternalAsync(link, ct), cancellationToken);
     }
 
     protected abstract Task SetupBrowserPageAsync(IPage page);

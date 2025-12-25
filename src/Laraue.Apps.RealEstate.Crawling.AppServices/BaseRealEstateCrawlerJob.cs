@@ -27,7 +27,7 @@ public abstract class BaseRealEstateCrawlerJob : BaseCrawlerJob<CrawlingResult, 
         ILogger<BaseCrawlerJob<CrawlingResult, string, State>> logger,
         IOptions<BaseCrawlerServiceOptions> options,
         IDateTimeProvider dateTimeProvider,
-        AdvertisementsDbContext dbContext,
+        AdvertisementsDbContext dbContext, // TODO - Should be a factory to prevent long opening
         IAdvertisementProcessor processor,
         ICrawlingSchemaParser parser,
         ISessionInterrupter sessionInterrupter)
