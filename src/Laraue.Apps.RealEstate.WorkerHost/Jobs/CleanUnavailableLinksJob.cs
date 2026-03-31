@@ -74,14 +74,14 @@ public class CleanUnavailableLinksJob(
                     }
                     catch (Exception e)
                     {
-                        logger.LogError(e, $"Job takes the error requesting '{image.Url}', continue after restart excepted");
+                        logger.LogError(e, $"Job takes the error requesting '{image.Url}', continue after Job restart excepted");
                         hasError = true;
                     }
                 });
 
             if (hasError)
             {
-                return TimeSpan.FromMinutes(5);
+                return TimeSpan.FromMinutes(1);
             }
 
             var removedCount = await dbContext.Images
