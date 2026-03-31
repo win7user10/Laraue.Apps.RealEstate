@@ -30,12 +30,12 @@ public sealed class CianCrawlingSchema : CompiledDocumentSchema<IElementHandle, 
                     var linkElement = await e.QuerySelectorAsync("div[data-name=LinkArea] a");
                     var href = await linkElement.GetAttributeValueAsync("href");
 
-                    if (href is null)
+                    if (href is null || !Uri.TryCreate(href, UriKind.Absolute, out var url))
                     {
                         return;
                     }
                     
-                    b.BindProperty(x => x.Id, href.GetIntOrDefault().ToString());
+                    b.BindProperty(x => x.Id, url.AbsolutePath.GetIntOrDefault().ToString());
                     b.BindProperty(x => x.Link, new Uri(href).LocalPath);
                 });
                 pageBuilder.HasProperty(

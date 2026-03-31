@@ -273,7 +273,10 @@ public abstract class BaseAdvertisementProcessor<TExternalIdentifier> : IAdverti
             }
             
             var existsLinkUrls = existsLinks.Select(x => x.Url).ToArray();
-            var newImageUrls = advertisement.Value.ImageLinks.Except(existsLinkUrls).ToHashSet();
+            var newImageUrls = advertisement.Value.ImageLinks
+                .Where(url => !string.IsNullOrEmpty(url))
+                .Except(existsLinkUrls)
+                .ToHashSet();
 
             foreach (var newLinkUrl in newImageUrls)
             {
