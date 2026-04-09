@@ -3,6 +3,7 @@ using System;
 using Laraue.Apps.RealEstate.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Laraue.Apps.RealEstate.Db.Migrations
 {
     [DbContext(typeof(AdvertisementsDbContext))]
-    partial class AdvertisementsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260409201418_AddMissingIndexes")]
+    partial class AddMissingIndexes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

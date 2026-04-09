@@ -78,6 +78,9 @@ public sealed class AdvertisementsDbContext : DbContext, IJobsDbContext, IInterc
             entity.HasIndex(x => x.FloorNumber);
             entity.HasIndex(x => x.PredictedAt);
             entity.HasIndex(x => x.ReadyAt);
+            entity.HasIndex(x => x.SquareMeterPrice);
+            entity.HasIndex(x => x.TotalPrice);
+            entity.HasIndex(x => x.RenovationRating);
             
             entity
                 .HasIndex(x => x.ShortDescription)
