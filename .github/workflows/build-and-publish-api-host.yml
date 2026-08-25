@@ -29,7 +29,11 @@ jobs:
     
     - name: Test
       run: dotnet test --filter 'Category!=IntegrationTest' --no-build --verbosity normal
-    
+
+    - name: Pack build output
+      if: github.ref == 'refs/heads/main'
+      run: tar -czf api-host.tar.gz -C src/Laraue.Apps.RealEstate.ApiHost/bin/Release/net10.0 .
+
     - name: Upload
       if: github.ref == 'refs/heads/main'
       uses: marcodallasanta/ssh-scp-deploy@v1.2.0
@@ -38,6 +42,8 @@ jobs:
        port: ${{ secrets.SSH_PORT }} # 22
        user: ${{ secrets.SSH_USER }} # "user"
        password: ${{ secrets.SSH_PASSWORD }} # "password"
-       local: src/Laraue.Apps.RealEstate.ApiHost/bin/Release/net10.0/*
+       local: api-host.tar.gz
        remote: "/home/laraue/real-estate-api-host"
-       post_upload: echo "Uploaded successfully"
+       post_upload:
+        cd /home/laraue/real-estate-api-host && find . -mindepth 1 ! -name api-host.tar.gz -delete &&
+        tar -xzf api-host.tar.gz && rm api-host.tar.gz
