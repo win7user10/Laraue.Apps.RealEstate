@@ -22,6 +22,8 @@ services.AddScoped<IHousesStorage, HousesService>();
 services.AddScoped<IAdvertisementService, AdvertisementService>();
 services.AddSingleton<IMetroStationsStorage, MetroStationsStorage>();
 
+builder.Logging.ClearProviders().AddJsonConsole();
+
 // Build the app
 var app = builder.Build();
 
