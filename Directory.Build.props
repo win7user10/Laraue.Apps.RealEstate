@@ -31,5 +31,10 @@
     <EfCoreNamingConventionsVersion>10.0.0-rc.2</EfCoreNamingConventionsVersion>
     <PollyVersion>8.6.5</PollyVersion>
     <ScalarVersion>2.11.0</ScalarVersion>
+    <OpenTelemetryExtensionsHostingVersion>1.18.0</OpenTelemetryExtensionsHostingVersion>
+    <OpenTelemetryExporterPrometheusAspNetCoreVersion>1.18.0-beta.1</OpenTelemetryExporterPrometheusAspNetCoreVersion>
+    <OpenTelemetryInstrumentationAspNetCoreVersion>1.18.0</OpenTelemetryInstrumentationAspNetCoreVersion>
+    <OpenTelemetryInstrumentationHttpVersion>1.18.0</OpenTelemetryInstrumentationHttpVersion>
+    <OpenTelemetryInstrumentationRuntimeVersion>1.18.0</OpenTelemetryInstrumentationRuntimeVersion>
   </PropertyGroup>
 </Project>

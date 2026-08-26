@@ -4,6 +4,7 @@ using Laraue.Apps.RealEstate.Contracts;
 using Laraue.Apps.RealEstate.DataAccess;
 using Laraue.Apps.RealEstate.DataAccess.Storage;
 using Microsoft.EntityFrameworkCore;
+using OpenTelemetry.Metrics;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,6 +24,14 @@ services.AddScoped<IAdvertisementService, AdvertisementService>();
 services.AddSingleton<IMetroStationsStorage, MetroStationsStorage>();
 
 builder.Logging.ClearProviders().AddJsonConsole();
+
+builder.Services
+    .AddOpenTelemetry()
+    .WithMetrics(metrics => metrics
+        .AddAspNetCoreInstrumentation()
+        .AddHttpClientInstrumentation()
+        .AddRuntimeInstrumentation()
+        .AddPrometheusExporter());
 
 // Build the app
 var app = builder.Build();
@@ -55,5 +64,7 @@ app.UseCors(corsPolicyBuilder =>
 using var scope = app.Services.CreateScope();
 var dbContext = scope.ServiceProvider.GetRequiredService<AdvertisementsDbContext>();
 await dbContext.Database.MigrateAsync();
+
+app.MapPrometheusScrapingEndpoint("/_metrics");
 
 app.Run();
