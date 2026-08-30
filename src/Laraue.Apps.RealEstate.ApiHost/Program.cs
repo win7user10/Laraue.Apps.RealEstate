@@ -14,6 +14,7 @@ var services = builder.Services;
 services.AddControllers();
 services.AddEndpointsApiExplorer();
 services.AddOpenApi();
+services.AddHealthChecks();
 
 services.AddDbContext<AdvertisementsDbContext>(s =>
     s.UseNpgsql(builder.Configuration.GetConnectionString("Postgre"))
@@ -65,6 +66,7 @@ using var scope = app.Services.CreateScope();
 var dbContext = scope.ServiceProvider.GetRequiredService<AdvertisementsDbContext>();
 await dbContext.Database.MigrateAsync();
 
+app.MapHealthChecks("/_health");
 app.MapPrometheusScrapingEndpoint("/_metrics");
 
 app.Run();
